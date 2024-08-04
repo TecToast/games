@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+
 const jeopardy = useJeopardyStore();
+const { status } = storeToRefs(jeopardy);
+await until(status).not.toBe('pending')
 function handleBeforeUnload(event: BeforeUnloadEvent) {
   if (!jeopardy.unsavedChanges) return;
   event.preventDefault();
