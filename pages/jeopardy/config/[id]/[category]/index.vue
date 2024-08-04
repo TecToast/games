@@ -28,7 +28,7 @@ function defaultPoints() {
 
 <template>
   <template v-if="jdata">
-    <ConfigLinkGroup name="Punkte" :mapper :list="jdata.categories[route.params.category.toString()]"></ConfigLinkGroup>
+    <ConfigLinkGroup name="Points" :mapper :list="jdata.categories[route.params.category.toString()]"></ConfigLinkGroup>
     <ControlButton v-if="Object.keys(cat!).length == 0" @click="defaultPoints()" class="bg-yellow-600 mt-4">
       Use default point distribution (100 - 500)
     </ControlButton>
