@@ -23,4 +23,9 @@ export default defineNuxtConfig({
       }
     }
   },
+  runtimeConfig: {
+    public: {
+      protectedUrls: ['/jeopardy']
+    }
+  }
 })

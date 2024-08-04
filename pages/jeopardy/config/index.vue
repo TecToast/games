@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { data, refresh } = useFetch<string[]>('/api/jeopardy/my')
+const { data, refresh } = await useFetch<string[]>('/api/jeopardy/my')
 
 function createNewQuiz() {
   let quizName: string | null = "";
