@@ -22,11 +22,11 @@ function removeFromList(thing: unknown) {
 function createNew() {
   let thing: string | null = "";
   while (thing == "") {
-    thing = prompt("Wie soll das neue Element heißen?");
+    thing = prompt("Name of new thing?");
   }
   if (thing == null) return;
   if (props.list.includes(thing)) {
-    alert("Ein Element mit diesem Namen existiert bereits.");
+    alert("This name is already taken.");
     return;
   }
   props.list.push(thing);
@@ -42,7 +42,7 @@ function createNew() {
         <ControlDiv> {{ thing }}</ControlDiv>
         <ConfigTrashCan @click="removeFromList(thing)" />
       </div>
-      <ControlButton @click="createNew()">+ Neu</ControlButton>
+      <ControlButton @click="createNew()">+ New</ControlButton>
     </div>
   </div>
 </template>

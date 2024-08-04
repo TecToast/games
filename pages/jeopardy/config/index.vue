@@ -26,13 +26,13 @@ function createNewQuiz() {
     <div class="flex justify-center mt-4">
       <TextBox class="px-4">Jeopardy Config</TextBox>
     </div>
-    <div class="text-gray-300 font-bold text-3xl text-center mt-4">Wähle ein Quiz aus:</div>
+    <div class="text-gray-300 font-bold text-3xl text-center mt-4">Choose a quiz:</div>
     <div class="flex flex-col items-center w-[50vw] gap-4 mt-10">
       <NuxtLink v-for="quiz of data" :to="`/jeopardy/config/${quiz}`">
         <ControlButton> {{ quiz }}</ControlButton>
       </NuxtLink>
     </div>
     <div class="border-t-2 border-gray-500 w-48 my-8"></div>
-    <ControlButton @click="createNewQuiz()">+ Neues Quiz erstellen</ControlButton>
+    <ControlButton @click="createNewQuiz()">+ Create a new quiz</ControlButton>
   </DefaultBackground>
 </template>

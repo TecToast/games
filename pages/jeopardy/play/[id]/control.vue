@@ -51,11 +51,20 @@ const { id } = useRoute().params;
         <TextBox class="text-2xl rounded-lg p-2">Control</TextBox>
         <ControlButton @click="jeopardy.nextPlayerAndMainPage();">Next player + Main Page</ControlButton>
         <ControlButton @click="jeopardy.mainPage()">Main Page</ControlButton>
-        <ControlButton @click="jeopardy.refreshData()">Reload data</ControlButton>
+        <ControlButton @click="jeopardy.refreshData()">Reload data from server</ControlButton>
       </div>
-      <ControlButton class="p-2">
-        <NuxtLink target="_blank" :to="`/jeopardy/play/${id}/main`">Open main page to stream</NuxtLink>
-      </ControlButton>
+      <div class="flex">
+        <NuxtLink target="_blank" :to="`/jeopardy/play/${id}/main`">
+          <ControlButton class="p-2">
+            Open main page to stream
+          </ControlButton>
+        </NuxtLink>
+        <NuxtLink :to="`/jeopardy/config/${id}`">
+          <ControlButton class="p-2">
+            Back to config
+          </ControlButton>
+        </NuxtLink>
+      </div>
     </div>
   </DefaultBackground>
 </template>

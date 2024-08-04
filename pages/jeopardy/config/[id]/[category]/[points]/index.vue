@@ -16,10 +16,10 @@ watch(
 
 <template>
   <div v-if="qData">
-    <JeopardyQAConfig name="Frage" v-model:text="qData.question.title" v-model:file="qData.question.image" />
-    <JeopardyQAConfig name="Antwort" v-model:text="qData.answer.title" v-model:file="qData.answer.image" />
+    <JeopardyQAConfig name="Question" v-model:text="qData.question.title" v-model:file="qData.question.image" />
+    <JeopardyQAConfig name="Answer" v-model:text="qData.answer.title" v-model:file="qData.answer.image" />
     <NuxtLink :to="`/jeopardy/config/${id}/${category}`" class="flex justify-center">
-      <ControlButton class="mt-4">Zurück zu {{ category }}</ControlButton>
+      <ControlButton class="mt-4">Back to {{ category }}</ControlButton>
     </NuxtLink>
   </div>
 </template>

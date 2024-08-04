@@ -10,10 +10,10 @@ const mapper = (thing: string) => {
   jeopardy.markUnsaved();
   return {
     question: {
-      title: 'Hier Frage einfügen'
+      title: 'Insert question here'
     },
     answer: {
-      title: 'Hier Antwort einfügen'
+      title: 'Insert answer here'
     },
     used: false
   }
@@ -30,11 +30,11 @@ function defaultPoints() {
   <template v-if="jdata">
     <ConfigLinkGroup name="Punkte" :mapper :list="jdata.categories[route.params.category.toString()]"></ConfigLinkGroup>
     <ControlButton v-if="Object.keys(cat!).length == 0" @click="defaultPoints()" class="bg-yellow-600 mt-4">
-      Standard-Punkteverteilung anwenden
+      Use default point distribution (100 - 500)
     </ControlButton>
     <NuxtLink :to="`/jeopardy/config/${id}`" class="flex justify-center">
-      <ControlButton class="mt-16">Zurück zu {{ id }}</ControlButton>
+      <ControlButton class="mt-16">Back to {{ id }}</ControlButton>
     </NuxtLink>
   </template>
-  <TextBox v-else>Wie bist du hierher gekommen?</TextBox>
+  <TextBox v-else>You shouldn't be here.</TextBox>
 </template>

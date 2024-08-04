@@ -21,6 +21,6 @@ onBeforeUnmount(() => {
     <NuxtPage />
   </DefaultBackground>
   <div v-if="jeopardy.unsavedChanges" class="fixed bottom-0 right-0 p-4">
-    <ControlButton @click="jeopardy.saveToDB()">Speichern</ControlButton>
+    <ControlButton @click="jeopardy.saveToDB()" class="bg-orange-600">Save to server</ControlButton>
   </div>
 </template>

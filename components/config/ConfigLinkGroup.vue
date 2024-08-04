@@ -18,7 +18,7 @@ const props = defineProps({
 })
 
 function removeFromList(thing: string) {
-  const confirm = window.confirm(`Soll das gesamte Element "${thing}" wirklich gelöscht werden?`);
+  const confirm = window.confirm(`Should "${thing}" really be deleted?`);
   if (!confirm) return;
   if (!Array.isArray(props.list)) {
     delete props.list[thing];
@@ -37,21 +37,21 @@ function createNew() {
 
   const isArray = Array.isArray(props.list)
   while (thing == "") {
-    thing = prompt("Wie soll das neue Element heißen?");
+    thing = prompt("Name of new thing?");
   }
   if (thing == null) return;
-  const mapped = props.mapper(thing);
-  if (mapped == null) return alert("Ungültige Eingabe!");
+  const mappedResult = props.mapper(thing);
+  if (mappedResult == null) return alert("Ungültige Eingabe!");
   if (isArray && props.list.includes(thing) || (!isArray && props.list[thing])) {
-    alert("Ein Element mit diesem Namen existiert bereits.");
+    alert("This name is already taken.");
     return;
   }
   if (!isArray) {
-    props.list[thing] = mapped;
+    props.list[thing] = (mappedResult == thing) ? {} : mappedResult;
     jeopardy.markUnsaved();
     return;
   }
-  props.list.push(mapped);
+  props.list.push(mappedResult);
   jeopardy.markUnsaved();
 }
 const iterateString = computed(() => {
@@ -62,7 +62,7 @@ const iterateString = computed(() => {
 
 <template>
   <div>
-    <div class="text-gray-300 font-bold text-3xl text-center mt-4">{{ props.name }}:</div>
+    <div class="text-gray-300 font-bold text-3xl text-center">{{ props.name }}:</div>
     <div class="flex flex-col items-center w-[50vw] gap-4 mt-4">
       <div class="flex gap-2" v-for="thing of iterateString">
         <NuxtLink :to="`${route.fullPath}/${thing}`">
@@ -70,7 +70,7 @@ const iterateString = computed(() => {
         </NuxtLink>
         <ConfigTrashCan @click="removeFromList(thing)" />
       </div>
-      <ControlButton @click="createNew()">+ Neu</ControlButton>
+      <ControlButton @click="createNew()">+ New</ControlButton>
     </div>
   </div>
 </template>

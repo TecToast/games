@@ -29,7 +29,7 @@ function prepareUpload() {
     <div class="text-gray-300 font-bold text-3xl text-center mt-4">{{ props.name }}:</div>
     <textarea class="w-[50vw] h-[10vh] bg-gray-800 text-white p-2 mt-4" v-model="text"></textarea>
     <div class="flex items-center gap-2 mt-4 bg-gray-700 p-2 text-gray-400">
-      <div>Bild hochladen:</div>
+      <div>Upload image:</div>
       <input type="file" ref="fileInput" @change="prepareUpload" />
     </div>
   </div>
