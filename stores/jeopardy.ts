@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { watch } from 'vue'
 import { AnswerState, type JeopardyData } from '~/utils/jeopardy/types'
+import { useRoute } from 'vue-router'
 
 export const useJeopardyStore = defineStore('jeopardy', () => {
   const router = useRouter()
