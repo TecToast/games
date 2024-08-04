@@ -6,7 +6,7 @@ export type JeopardyData = {
     participants: {
         [key: string]: UserData;
     },
-    host: number
+    host: string
     ;
 }
 export type Category = {
