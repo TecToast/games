@@ -50,11 +50,16 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
   function selectQuestion(category: string, points: number) {
     if (!jdata.value) return
     const question = jdata.value.categories[category][points]
-    question.used = !question.used
-    if (!question.used) return
+    if (question.used) {
+      question.used = false
+      return
+    }
     questionRevealed.value = false
     answerState.value = AnswerState.Unanswered
     currentQuestion.value = { category, points }
+    setTimeout(() => {
+      question.used = !question.used
+    }, 20)
   }
 
   function navigateTo(path: string) {
