@@ -15,6 +15,29 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
 
   const unsavedChanges = ref(false)
 
+  function toID(param: string | number) {
+    return param.toString().replace(idReplaceRegex, '')
+  }
+
+  const nameUnwrapper = computed(() => {
+    const data = jdata.value
+    if (!data) return null
+    const unwrapper: { categories: { [x: string]: string }, questions: { [x: string]: { [x: string]: string } } } = {
+      categories: {},
+      questions: {}
+    }
+    for (const [key, value] of Object.entries(data.categories)) {
+      const keyID = toID(key)
+      unwrapper.categories[keyID] = key
+      unwrapper.questions[keyID] = {}
+      for (const innerKey of Object.keys(value)) {
+        unwrapper.questions[keyID][innerKey] = innerKey
+      }
+    }
+    return unwrapper
+
+  })
+
 
 
   function toggleJokerFromUser(user: string, joker: string) {
@@ -100,6 +123,8 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
     questionRevealed,
     answerState,
     unsavedChanges,
+    nameUnwrapper,
+    toID,
     toggleJokerFromUser,
     addPointsToUser,
     nextPlayerAndMainPage,
@@ -110,3 +135,7 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
     saveToDB
   }
 })
+
+
+export const idRegex = /^[A-Za-z0-9]+$/g
+export const idReplaceRegex = /[^A-Za-z0-9]/g

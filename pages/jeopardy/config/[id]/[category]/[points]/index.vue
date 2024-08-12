@@ -3,7 +3,18 @@ const route = useRoute();
 const { id, category, points } = route.params;
 const jeopardy = useJeopardyStore();
 const { jdata } = storeToRefs(jeopardy);
-const qData = computed(() => jdata.value?.categories[category.toString()][points.toString()])
+const catNameResolved = computed(() => {
+  const unwrap = jeopardy.nameUnwrapper
+  if (!unwrap) return ''
+  return unwrap.categories[category.toString()]
+})
+const qData = computed(() => {
+  const data = jdata.value
+  if (!data) return null
+  const unwrap = jeopardy.nameUnwrapper!
+  const catName = category.toString()
+  return data.categories[catNameResolved.value][unwrap.questions[catName][points.toString()]];
+})
 watch(
   [
     () => qData.value?.question.title,
@@ -18,8 +29,8 @@ watch(
   <div v-if="qData">
     <JeopardyQAConfig name="Question" v-model:text="qData.question.title" v-model:file="qData.question.image" />
     <JeopardyQAConfig name="Answer" v-model:text="qData.answer.title" v-model:file="qData.answer.image" />
-    <NuxtLink :to="`/jeopardy/config/${id}/${category}`" class="flex justify-center">
-      <ControlButton class="mt-4">Back to {{ category }}</ControlButton>
+    <NuxtLink :to="`/jeopardy/config/${id}/${jeopardy.toID(category.toString())}`" class="flex justify-center">
+      <ControlButton class="mt-4">Back to {{ catNameResolved }}</ControlButton>
     </NuxtLink>
   </div>
 </template>

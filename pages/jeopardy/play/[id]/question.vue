@@ -24,7 +24,7 @@ const questionData = computed(() => {
         }}
       </TextBox>
       <img v-if="questionRevealed && questionData.question.image && answerState == AnswerState.Unanswered"
-        :src="`/api/jeopardy/media/${jdata?.host}/${route.params.id}/${currentQuestion.category}/${currentQuestion.points}/Question/${questionData.question.image}`"
+        :src="`/api/jeopardy/media/${jdata?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.category)}/${jeopardy.toID(currentQuestion.points)}/Question/${questionData.question.image}`"
         alt="Bild" class="h-[60vh]">
       <TextBox v-if="answerState != AnswerState.Unanswered"
         class="flex justify-center items-center text-wrap min-w-[50vw] max-w-[50vw] h-52 overflow-auto border-8"
@@ -32,7 +32,7 @@ const questionData = computed(() => {
         {{ questionData.answer.title }}
       </TextBox>
       <img v-if="questionData.answer.image && answerState != AnswerState.Unanswered"
-        :src="`/api/jeopardy/media/${jdata?.host}/${route.params.id}/${currentQuestion.category}/${currentQuestion.points}/Answer/${questionData.answer.image}`"
+        :src="`/api/jeopardy/media/${jdata?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.category)}/${jeopardy.toID(currentQuestion.points)}/Answer/${questionData.answer.image}`"
         alt="Bild" class="h-[60vh]">
     </div>
   </div>

@@ -12,14 +12,21 @@ const fileName = defineModel('file', { type: String })
 const fileInput = ref<HTMLInputElement | null>(null)
 function prepareUpload() {
   const file = fileInput.value!.files![0]
+  if (!file) return
   const formData = new FormData()
-  formData.append("path", `${id}/${category}/${points}/${props.name}`)
+  formData.append("id", id.toString())
+  formData.append("category", category.toString())
+  formData.append("points", points.toString())
+  formData.append("type", props.name)
   formData.append("file", file)
   $fetch<string>("/api/jeopardy/upload", {
     method: "POST",
     body: formData
   }).then((res) => {
     fileName.value = res
+  }).catch((err) => {
+    console.error(err)
+    alert("An error occurred while uploading the file, please contact @tectoast.")
   })
 }
 </script>

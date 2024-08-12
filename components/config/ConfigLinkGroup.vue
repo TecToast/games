@@ -62,10 +62,13 @@ const iterateString = computed(() => {
 
 <template>
   <div>
-    <div class="text-gray-300 font-bold text-3xl text-center">{{ props.name }}:</div>
+    <div class="flex justify-center">
+      <div class="text-gray-300 font-bold text-3xl text-center">{{ props.name }}:</div>
+      <slot></slot>
+    </div>
     <div class="flex flex-col items-center w-[50vw] gap-4 mt-4">
       <div class="flex gap-2" v-for="thing of iterateString">
-        <NuxtLink :to="`${route.fullPath}/${thing}`">
+        <NuxtLink :to="`${route.path}/${jeopardy.toID(thing)}`">
           <ControlButton class="h-full"> {{ thing }}</ControlButton>
         </NuxtLink>
         <ConfigTrashCan @click="removeFromList(thing)" />

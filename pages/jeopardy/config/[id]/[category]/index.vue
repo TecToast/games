@@ -3,7 +3,7 @@ const route = useRoute();
 const jeopardy = useJeopardyStore();
 const { jdata } = storeToRefs(jeopardy);
 const { id, category } = route.params;
-const cat = computed(() => jdata.value?.categories[category.toString()])
+const cat = computed(() => jdata.value?.categories[jeopardy.nameUnwrapper?.categories[category.toString()]!])
 
 const mapper = (thing: string) => {
   if (Number.isNaN(Number.parseInt(thing))) return null;
@@ -28,7 +28,7 @@ function defaultPoints() {
 
 <template>
   <template v-if="jdata">
-    <ConfigLinkGroup name="Points" :mapper :list="jdata.categories[route.params.category.toString()]"></ConfigLinkGroup>
+    <ConfigLinkGroup name="Points" :mapper :list="cat!"></ConfigLinkGroup>
     <ControlButton v-if="Object.keys(cat!).length == 0" @click="defaultPoints()" class="bg-yellow-600 mt-4">
       Use default point distribution (100 - 500)
     </ControlButton>

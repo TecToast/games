@@ -36,7 +36,10 @@ function createNew() {
 
 <template>
   <div>
-    <div class="text-gray-300 font-bold text-3xl text-center mt-4">{{ props.name }}:</div>
+    <div class="flex justify-center items-center mt-4 gap-2">
+      <div class="text-gray-300 font-bold text-3xl text-center">{{ props.name }}:</div>
+      <slot></slot>
+    </div>
     <div class="flex flex-col items-center w-[50vw] gap-4 mt-4">
       <div class="flex gap-2" v-for="thing of props.list">
         <ControlDiv> {{ thing }}</ControlDiv>
