@@ -10,7 +10,7 @@ const jdata = computed(() => jAllData.value?.categories);
     <div v-if="jdata" style="background-image: linear-gradient(#8902c7, #4402c7);" class="min-h-screen">
         <div class="flex flex-col justify-start items-center">
             <div class="flex justify-evenly items-start min-w-full" style="min-height: 50vh;">
-                <div v-for="cat of Object.keys(jdata)" class="mt-5 flex flex-col">
+                <div v-for="cat of Object.keys(jdata)" class="mt-5 flex flex-col items-center">
                     <TextBox class="px-8">{{ cat }}</TextBox>
                     <div class="justify-start items-center w-full h-full mt-5">
                         <div v-for="q of Object.keys(jdata[cat])" class="flex justify-center items-center mt-4">

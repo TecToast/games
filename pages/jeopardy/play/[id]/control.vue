@@ -10,7 +10,7 @@ const { id } = useRoute().params;
 <template>
   <DefaultBackground v-if="jdata">
     <div class="flex justify-around">
-      <div v-for="cat of Object.keys(jdata)" class="flex flex-col mt-8">
+      <div v-for="cat of Object.keys(jdata)" class="flex flex-col items-center mt-8">
         <TextBox class="text-2xl px-2 rounded-lg">{{ cat }}</TextBox>
         <div class="flex flex-col gap-4 mt-4">
           <div v-for="q of Object.keys(jdata[cat])" class="flex justify-center items-center">
