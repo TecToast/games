@@ -4,11 +4,15 @@ const { data, refresh } = await useFetch<string[]>('/api/jeopardy/my')
 function createNewQuiz() {
   let quizName: string | null = "";
   while (quizName == "") {
-    quizName = prompt("Wie soll das Quiz heißen?");
+    quizName = prompt("Name of quiz? (must not contain spaces or special characters)");
   }
   if (quizName == null) return;
+  if (!quizName.match(idRegex)) {
+    alert("The quiz name must not contain spaces or special characters.");
+    return;
+  }
   if (data.value?.includes(quizName)) {
-    alert("Ein Quiz mit diesem Namen existiert bereits.");
+    alert("You already have a quiz with this name.");
     return;
   }
   $fetch('/api/jeopardy/create', {
@@ -16,7 +20,7 @@ function createNewQuiz() {
     body: quizName
   }).then(() => refresh()).catch((error) => {
     console.error(error);
-    alert("Es ist ein Fehler beim Erstellen des Quizzes aufgetreten, melde dich bitte bei Flo | TecToast.");
+    alert("An error occured on creation of the quiz, please contact @tectoast.");
   });
 }
 </script>
