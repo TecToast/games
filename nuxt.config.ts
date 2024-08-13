@@ -2,20 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', "@vueuse/nuxt"],
+  modules: ["@nuxt/ui", '@nuxtjs/tailwindcss', '@pinia/nuxt', "@vueuse/nuxt"],
   routeRules: {
     "/api/**": {
       proxy: {
         to: "http://localhost:9934/api/**",
-        fetchOptions: {
-          redirect: "manual",
-          credentials: "include"
-        }
-      }
-    },
-    "/upload": {
-      proxy: {
-        to: "http://localhost:8080/upload",
         fetchOptions: {
           redirect: "manual",
           credentials: "include"
@@ -27,5 +18,8 @@ export default defineNuxtConfig({
     public: {
       protectedUrls: ['/jeopardy']
     }
+  },
+  ui: {
+    disableGlobalStyles: true
   }
 })

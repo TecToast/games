@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/ui": "^2.18.4",
     "@nuxtus/nuxt-localtunnel": "^1.0.1",
     "@pinia/nuxt": "^0.5.2",
     "@vueuse/nuxt": "^10.11.0",
