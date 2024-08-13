@@ -100,8 +100,11 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
     $fetch(`/api/jeopardy/update/${route.params.id}`, {
       method: 'POST',
       body: JSON.stringify(data)
+    }).then(() => {
+      unsavedChanges.value = false
+    }).catch(() => {
+      alert('Error saving data')
     })
-    unsavedChanges.value = false
   }
 
 

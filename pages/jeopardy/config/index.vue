@@ -27,8 +27,12 @@ function createNewQuiz() {
 
 <template>
   <DefaultBackground class="items-center">
-    <div class="flex justify-center mt-4">
+    <div class="flex justify-center mt-4 items-center gap-2">
       <TextBox class="px-4">Jeopardy Config</TextBox>
+      <HelpModal name="Jeopardy Overview">
+        Here you can create and manage your Jeopardy quizzes. Click on a quiz to continue.
+        Click on "+ Create a new quiz" to create a new quiz.
+      </HelpModal>
     </div>
     <div class="text-gray-300 font-bold text-3xl text-center mt-4">Choose a quiz:</div>
     <div class="flex flex-col items-center w-[50vw] gap-4 mt-10">

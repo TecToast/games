@@ -62,7 +62,7 @@ const iterateString = computed(() => {
 
 <template>
   <div>
-    <div class="flex justify-center">
+    <div class="flex justify-center items-center gap-2">
       <div class="text-gray-300 font-bold text-3xl text-center">{{ props.name }}:</div>
       <slot></slot>
     </div>

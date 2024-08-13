@@ -28,7 +28,13 @@ function defaultPoints() {
 
 <template>
   <template v-if="jdata">
-    <ConfigLinkGroup name="Points" :mapper :list="cat!"></ConfigLinkGroup>
+    <ConfigLinkGroup name="Points" :mapper :list="cat!" class="mt-4">
+      <HelpModal name="Points">
+        <p>Click on the points to add/edit questions and answers.</p><br>
+        <p>If there are no points visible, you normally want to use the "Use default point distribution" button.</p><br>
+        <p>Alternatively, you can add new points by clicking on the "+ New" button.</p>
+      </HelpModal>
+    </ConfigLinkGroup>
     <ControlButton v-if="Object.keys(cat!).length == 0" @click="defaultPoints()" class="bg-yellow-600 mt-4">
       Use default point distribution (100 - 500)
     </ControlButton>

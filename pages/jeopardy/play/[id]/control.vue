@@ -31,11 +31,13 @@ const { id } = useRoute().params;
     </div>
     <div class="flex gap-10 mt-12 ml-16">
       <div v-if="users" v-for="user of Object.keys(users)" class="flex flex-col gap-4">
-        <ControlButton class="bg-[#2b6499]" @click="jeopardy.currentUser = user">{{ users[user].displayName }}
+        <ControlButton class="bg-[#2b6499]" :class="jeopardy.currentUser == user ? '!bg-gray-500' : ''"
+          :disabled="jeopardy.currentUser == user" @click="jeopardy.currentUser = user">{{ users[user].displayName }}
         </ControlButton>
         <div class="flex">
           <ControlButton v-if="jAllData" v-for="joker of jAllData.jokers"
-            @click="jeopardy.toggleJokerFromUser(user, joker)">{{ joker }}</ControlButton>
+            @click="jeopardy.toggleJokerFromUser(user, joker)"
+            :class="users[user].jokers.includes(joker) ? '' : '!bg-gray-500'">{{ joker }}</ControlButton>
         </div>
         <div class="flex justify-center">
           <ControlButton v-for="num of [100, 50]" @click="jeopardy.addPointsToUser(user, num)">{{ num }}</ControlButton>
@@ -51,20 +53,36 @@ const { id } = useRoute().params;
         <TextBox class="text-2xl rounded-lg p-2">Control</TextBox>
         <ControlButton @click="jeopardy.nextPlayerAndMainPage();">Next player + Main Page</ControlButton>
         <ControlButton @click="jeopardy.mainPage()">Main Page</ControlButton>
-        <ControlButton @click="jeopardy.refreshData()">Reload data from server</ControlButton>
+        <!-- <ControlButton @click="jeopardy.refreshData()">Reload data from server</ControlButton> -->
       </div>
-      <div class="flex">
+      <div class="flex gap-2">
         <NuxtLink target="_blank" :to="`/jeopardy/play/${id}/main`">
-          <ControlButton class="p-2">
+          <ControlButton class="p-2 bg-cyan-600">
             Open main page to stream
           </ControlButton>
         </NuxtLink>
         <NuxtLink :to="`/jeopardy/config/${id}`">
-          <ControlButton class="p-2">
+          <ControlButton class="p-2 bg-red-900">
             Back to config
           </ControlButton>
         </NuxtLink>
       </div>
     </div>
+    <HelpModal name="Control" class="ml-16 mt-4 !w-12 !h-12 !text-2xl">
+      On the top you can select a question by clicking on the points. You can then reveal the question, mark the answer
+      as correct or incorrect, or hide the answer again (to see the question if you are using images).
+      <br>
+      <br>
+      Below you can select a user by clicking on their name. You can also toggle their jokers and add or remove points
+      from them.
+      <br>
+      <br>
+      At the bottom you can control the game flow. You can go to the next player and the main page, or directly to the
+      main page.
+      <br>
+      <br>
+      In the bottom right corner, you have two buttons: One to get back to the config and one to open the main page in a
+      new tab, which can then be streamed on discord.
+    </HelpModal>
   </DefaultBackground>
 </template>
