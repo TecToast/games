@@ -23,12 +23,12 @@ const jdata = computed(() => jAllData.value?.categories);
                 </div>
             </div>
             <div v-if="users" class="flex justify-around items-center min-w-full mt-10">
-                <div v-for="user of Object.keys(users)" class="flex flex-col items-center justify-end gap-8 h-full">
+                <div v-for="user of users.list" class="flex flex-col items-center justify-end gap-8 h-full">
                     <div class="flex justify-evenly w-48">
                         <template v-if="jAllData" v-for="joker of jAllData.jokers">
-                            <div v-if="users[user].jokers != undefined"
+                            <div v-if="users.data[user].jokers != undefined"
                                 class="w-12 h-12 rounded-full flex justify-center items-center text-3xl text-white"
-                                :class="{ 'bg-[#888888]': !(users[user].jokers.includes(joker)), 'bg-[#007800]': users[user].jokers.includes(joker) }">
+                                :class="{ 'bg-[#888888]': !(users.data[user].jokers.includes(joker)), 'bg-[#007800]': users.data[user].jokers.includes(joker) }">
 
                                 {{ joker }}
                             </div>
@@ -36,8 +36,8 @@ const jdata = computed(() => jAllData.value?.categories);
                     </div>
                     <img class="w-52 rounded-full"
                         :class="{ 'border-yellow-400 border-4': user == jeopardy.currentUser }"
-                        :src="users[user].avatarUrl" :alt="user">
-                    <TextBox class="px-2">{{ users[user].points }}</TextBox>
+                        :src="users.data[user].avatarUrl" :alt="user">
+                    <TextBox class="px-2">{{ users.data[user].points }}</TextBox>
                 </div>
             </div>
         </div>

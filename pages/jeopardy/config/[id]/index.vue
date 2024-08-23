@@ -45,8 +45,8 @@ function reload() {
           After that, click on the reload button to see the new participants.
         </HelpModal>
       </div>
-      <ControlDiv class="px-2" v-for="user of Object.keys(users!)">
-        {{ users![user].displayName }}
+      <ControlDiv class="px-2" v-for="user of users?.list">
+        {{ users?.data![user].displayName }}
       </ControlDiv>
     </div>
   </div>

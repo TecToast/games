@@ -30,14 +30,15 @@ const { id } = useRoute().params;
       <ControlButton @click="jeopardy.answerState = AnswerState.Unanswered">Hide Answer</ControlButton>
     </div>
     <div class="flex gap-10 mt-12 ml-16">
-      <div v-if="users" v-for="user of Object.keys(users)" class="flex flex-col gap-4">
+      <div v-if="users" v-for="user of users.list" class="flex flex-col gap-4">
         <ControlButton class="bg-[#2b6499]" :class="jeopardy.currentUser == user ? '!bg-gray-500' : ''"
-          :disabled="jeopardy.currentUser == user" @click="jeopardy.currentUser = user">{{ users[user].displayName }}
+          :disabled="jeopardy.currentUser == user" @click="jeopardy.currentUser = user">{{ users.data[user].displayName
+          }}
         </ControlButton>
         <div class="flex">
           <ControlButton v-if="jAllData" v-for="joker of jAllData.jokers"
             @click="jeopardy.toggleJokerFromUser(user, joker)"
-            :class="users[user].jokers.includes(joker) ? '' : '!bg-gray-500'">{{ joker }}</ControlButton>
+            :class="users.data[user].jokers.includes(joker) ? '' : '!bg-gray-500'">{{ joker }}</ControlButton>
         </div>
         <div class="flex justify-center">
           <ControlButton v-for="num of [100, 50]" @click="jeopardy.addPointsToUser(user, num)">{{ num }}</ControlButton>

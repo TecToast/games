@@ -6,6 +6,7 @@ export type JeopardyData = {
     participants: {
         [key: string]: UserData;
     },
+    participantList: string[],
     host: string
     ;
 }

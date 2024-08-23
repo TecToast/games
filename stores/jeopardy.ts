@@ -7,7 +7,11 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
   const router = useRouter()
   const route = useRoute()
   const { data: jdata, status, error, refresh: refreshData } = useFetch<JeopardyData>(`/api/jeopardy/data/${route.params.id}`)
-  const users = computed(() => jdata.value?.participants)
+  const users = computed(() => {
+    const data = jdata.value
+    if (!data) return null
+    return { list: data.participantList, data: data.participants }
+  })
   const currentUser = ref('')
   const currentQuestion: Ref<{ category: string, points: number } | undefined> = ref(undefined)
   const questionRevealed = ref(false)
@@ -43,7 +47,7 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
   function toggleJokerFromUser(user: string, joker: string) {
     const userdata = users.value
     if (!userdata) return
-    const jokers = userdata[user].jokers
+    const jokers = userdata.data[user].jokers
     const jokerIndex = jokers.indexOf(joker)
     if (jokerIndex === -1) {
       jokers.push(joker)
@@ -55,7 +59,7 @@ export const useJeopardyStore = defineStore('jeopardy', () => {
   function addPointsToUser(user: string, points: number) {
     const userdata = users.value
     if (!userdata) return
-    userdata[user].points += points
+    userdata.data[user].points += points
   }
 
   function nextPlayerAndMainPage() {
