@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 const route = useRoute();
 const jeopardy = useJeopardyStore();
-const { jdata, users } = storeToRefs(jeopardy);
+const { jdata, users, status } = storeToRefs(jeopardy);
 const id = route.params.id;
+
+await until(status).not.toBe('pending')
 
 function reload() {
   if (jeopardy.unsavedChanges) {
