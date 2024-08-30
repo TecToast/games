@@ -4,18 +4,17 @@ const jeopardy = useJeopardyStore();
 const props = defineProps({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   list: {
     type: [Array, Object],
-    required: true
+    required: true,
   },
   mapper: {
     type: Function,
-    default: (thing: string) => thing
-  }
-
-})
+    default: (thing: string) => thing,
+  },
+});
 
 function removeFromList(thing: string) {
   const confirm = window.confirm(`Should "${thing}" really be deleted?`);
@@ -35,19 +34,22 @@ function removeFromList(thing: string) {
 function createNew() {
   let thing: string | null = "";
 
-  const isArray = Array.isArray(props.list)
+  const isArray = Array.isArray(props.list);
   while (thing == "") {
     thing = prompt("Name of new thing?");
   }
   if (thing == null) return;
   const mappedResult = props.mapper(thing);
   if (mappedResult == null) return alert("Ungültige Eingabe!");
-  if (isArray && props.list.includes(thing) || (!isArray && props.list[thing])) {
+  if (
+    (isArray && props.list.includes(thing)) ||
+    (!isArray && props.list[thing])
+  ) {
     alert("This name is already taken.");
     return;
   }
   if (!isArray) {
-    props.list[thing] = (mappedResult == thing) ? {} : mappedResult;
+    props.list[thing] = mappedResult == thing ? {} : mappedResult;
     jeopardy.markUnsaved();
     return;
   }
@@ -57,16 +59,18 @@ function createNew() {
 const iterateString = computed(() => {
   if (Array.isArray(props.list)) return props.list;
   return Object.keys(props.list);
-})
+});
 </script>
 
 <template>
   <div>
-    <div class="flex justify-center items-center gap-2">
-      <div class="text-gray-300 font-bold text-3xl text-center">{{ props.name }}:</div>
+    <div class="flex items-center justify-center gap-2">
+      <div class="text-center text-3xl font-bold text-gray-300">
+        {{ props.name }}:
+      </div>
       <slot></slot>
     </div>
-    <div class="flex flex-col items-center w-[50vw] gap-4 mt-4">
+    <div class="mt-4 flex w-[50vw] flex-col items-center gap-4">
       <div class="flex gap-2" v-for="thing of iterateString">
         <NuxtLink :to="`${route.path}/${jeopardy.toID(thing)}`">
           <ControlButton class="h-full"> {{ thing }}</ControlButton>

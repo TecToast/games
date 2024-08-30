@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-[#22507a] text-white text-xl min-w-24 min-h-10 rounded-lg flex justify-center items-center px-4">
+  <div
+    class="flex min-h-10 min-w-24 items-center justify-center rounded-lg bg-[#22507a] px-4 text-xl text-white"
+  >
     <slot></slot>
   </div>
 </template>

@@ -1,10 +1,8 @@
-<script lang="ts" setup>
-
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <DefaultBackground>
-    <h1 class="text-white text-center mt-8 text-4xl">
+    <h1 class="mt-8 text-center text-4xl text-white">
       <NuxtPage />
     </h1>
   </DefaultBackground>

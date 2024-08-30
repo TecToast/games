@@ -1,5 +1,7 @@
 <template>
-  <div class="text-center w-max rounded py-2 text-4xl tracking-wide bg-[#828282] font-semibold">
+  <div
+    class="w-max rounded bg-[#828282] py-2 text-center text-4xl font-semibold tracking-wide"
+  >
     <slot></slot>
   </div>
 </template>

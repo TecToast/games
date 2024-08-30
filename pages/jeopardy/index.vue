@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-await navigateTo('/jeopardy/config')
+await navigateTo("/jeopardy/config");
 </script>
 
 <template>
-  <div>
-
-  </div>
+  <div></div>
 </template>

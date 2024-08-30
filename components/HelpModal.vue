@@ -1,13 +1,18 @@
 <script lang="ts" setup>
-const isOpen = ref(false)
+const isOpen = ref(false);
 const props = defineProps<{
-  name: string
-}>()
+  name: string;
+}>();
 </script>
 
 <template>
-  <button @click="isOpen = true" class="w-8 h-8 text-xl rounded-full bg-blue-700 text-white"
-    :class="$attrs.class">?</button>
+  <button
+    @click="isOpen = true"
+    class="h-8 w-8 rounded-full bg-blue-700 text-xl text-white"
+    :class="$attrs.class"
+  >
+    ?
+  </button>
   <UModal v-model="isOpen">
     <UCard>
       <template #header>
