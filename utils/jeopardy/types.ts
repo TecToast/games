@@ -36,7 +36,3 @@ export enum AnswerState {
     Unanswered
 }
 
-export type GameMeta = {
-    displayName: string,
-    url: string
-}
