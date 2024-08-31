@@ -21,7 +21,7 @@ await until(status).not.toBe("pending");
             to continue.
           </HelpModal>
         </div>
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col items-center gap-4">
           <NuxtLink v-for="game of data" :key="game.displayName" :to="game.url">
             <ControlButton>
               {{ game.displayName }}

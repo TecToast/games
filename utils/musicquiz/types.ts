@@ -1,18 +1,19 @@
-export type JeopardyData = {
+export type MusicQuizData = HasUser<UserData> & {
   tracks: Track[];
-  jokers: string[];
-  participants: {
-    [key: string]: UserData;
-  };
-  participantList: string[];
-  host: string;
 };
 
-export type Track = {};
+export type Track = {
+  name: string;
+  game: string;
+  type: string;
+  url: string;
+  region: string;
+};
 
 export type UserData = {
   avatarUrl: string;
   displayName: string;
   points: number;
-  jokers: string[];
+  guess: string;
+  visible: boolean;
 };

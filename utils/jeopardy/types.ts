@@ -1,12 +1,8 @@
-export type JeopardyData = {
+export type JeopardyData = HasUser<UserData> & {
   categories: {
     [key: string]: Category;
   };
   jokers: string[];
-  participants: {
-    [key: string]: UserData;
-  };
-  participantList: string[];
   host: string;
 };
 export type Category = {

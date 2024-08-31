@@ -1,38 +1,27 @@
 import { defineStore } from "pinia";
 import { watch } from "vue";
 import { AnswerState, type JeopardyData } from "~/utils/jeopardy/types";
+import type { UserData } from "~/utils/jeopardy/types";
 import { useRoute } from "vue-router";
+import useGameConfig from "~/composables/useGameConfig";
 
 export const useJeopardyStore = defineStore("jeopardy", () => {
   const route = useRoute();
-  // @ts-ignore
   const {
-    data: jdata,
+    gdata: jdata,
     status,
     error,
-    refresh: refreshData,
-  } = useAsyncData(
-    () => {
-      if (route.params.id)
-        return $fetch<JeopardyData>(`/api/jeopardy/data/${route.params.id}`);
-      return new Promise<null>((resolve) =>
-        setTimeout(() => resolve(null), 200),
-      );
-    },
-    { watch: () => route.params.id },
-  );
-  const users = computed(() => {
-    const data = jdata.value;
-    if (!data) return null;
-    return { list: data.participantList, data: data.participants };
-  });
+    refreshData,
+    users,
+    unsavedChanges,
+    markUnsaved,
+    saveToDB,
+  } = useGameConfig<JeopardyData, UserData>("jeopardy");
   const currentUser = ref("");
   const currentQuestion: Ref<{ category: string; points: number } | undefined> =
     ref(undefined);
   const questionRevealed = ref(false);
   const answerState = ref(AnswerState.Unanswered);
-
-  const unsavedChanges = ref(false);
 
   function toID(param: string | number) {
     return param.toString().replace(idReplaceRegex, "");
@@ -103,25 +92,6 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
     setTimeout(() => {
       question.used = !question.used;
     }, 20);
-  }
-
-  function markUnsaved() {
-    unsavedChanges.value = true;
-  }
-
-  function saveToDB() {
-    const data = jdata.value;
-    if (!data) return;
-    $fetch(`/api/jeopardy/update/${route.params.id}`, {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-      .then(() => {
-        unsavedChanges.value = false;
-      })
-      .catch(() => {
-        alert("Error saving data");
-      });
   }
 
   watch(
