@@ -1,4 +1,4 @@
-import { useRoute } from "vue-router";
+import { type RouteLocationNormalizedGeneric, useRoute } from "vue-router";
 import type { AsyncDataRequestStatus, NuxtError } from "#app";
 
 export default function <T extends HasUser<V>, V>(gameId: string) {
@@ -57,6 +57,7 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
   }
 
   return {
+    route,
     gdata,
     status,
     error,
@@ -66,9 +67,10 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
     markUnsaved,
     saveToDB,
   } as {
+    route: RouteLocationNormalizedGeneric;
     gdata: Ref<T | null>;
     status: Ref<AsyncDataRequestStatus>;
-    error: Ref<NuxtError<unknown> | null>;
+    error: Ref<NuxtError | null>;
     refreshData: () => void;
     users: Ref<{ list: string[]; data: { [key: string]: V } } | null>;
     unsavedChanges: Ref<boolean>;
