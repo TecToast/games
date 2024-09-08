@@ -7,7 +7,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (store.status !== "success") {
       return navigateTo("/");
     }
-    if (!data.value!.find((game) => to.path.startsWith(game.url))) {
+    if (
+      !data.value!.find((game) =>
+        to.path.startsWith("/" + game.url.split("/")[1]),
+      )
+    ) {
       return navigateTo("/");
     }
   }
