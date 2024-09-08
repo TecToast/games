@@ -1,16 +1,17 @@
 import { defineStore } from "pinia";
 import type { MusicQuizData, UserData } from "~/utils/musicquiz/types";
+import useTypedWebsocket from "~/composables/useTypedWebsocket";
 
 export const useMusicQuizStore = defineStore("musicquiz", () => {
   const {
     gdata: gdata,
     status,
-    error,
     refreshData,
     users,
     unsavedChanges,
     markUnsaved,
     saveToDB,
+    route,
   } = useGameConfig<MusicQuizData, UserData>("musicquiz");
   const gamemode = ref("Hauptspiel");
   const levelnum = ref(-1);
@@ -46,29 +47,32 @@ export const useMusicQuizStore = defineStore("musicquiz", () => {
     if (!userdata) return;
     userdata.data[user].points += points;
   }
-  function nextTrack() {
+  function nextTrack(): string | null {
     const data = gdata.value;
-    if (!data) return;
-    revealed.value = false;
+    if (!data) return null;
+    revealReset();
+    resetGuesses();
     levelnum.value++;
     if (levelnum.value >= data.tracks.length) {
       levelnum.value = data.tracks.length - 1;
     }
     const newTrack = data.tracks[levelnum.value];
     currentSongData.value = `${newTrack.name}\nSpiel: ${newTrack.game}`;
+    gamemode.value = newTrack.game;
+    return newTrack.url;
   }
-  function pause() {}
-  function resume() {}
-  function restart() {}
-  function jumpToTrack(track: number) {
-    const data = gdata.value;
+  function resetGuesses() {
+    const data = users.value;
     if (!data) return;
-    const num = Math.min(Math.max(0, track), data.tracks.length - 1);
-    levelnum.value = num;
-    revealReset();
-    playTrack(num);
+    for (const user of Object.keys(data.data)) {
+      data.data[user].guess = "...";
+    }
   }
-  function playTrack(track: number | string) {}
+  function setGuess(user: string, guess: string) {
+    const data = users.value;
+    if (!data) return;
+    data.data[user].guess = guess;
+  }
   return {
     gdata,
     status,
@@ -87,10 +91,7 @@ export const useMusicQuizStore = defineStore("musicquiz", () => {
     revealReset,
     addPoints,
     nextTrack,
-    pause,
-    resume,
-    restart,
-    jumpToTrack,
-    playTrack,
+    setGuess,
+    resetGuesses,
   };
 });

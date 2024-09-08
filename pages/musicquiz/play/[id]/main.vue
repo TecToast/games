@@ -48,7 +48,13 @@ const { users, revealed, gamemode, currentSongNumber, currentSongData } =
           <div
             class="h-20 w-max min-w-64 max-w-64 overflow-auto whitespace-pre-line text-wrap rounded bg-[#828282] py-2 text-center !text-2xl"
           >
-            {{ users.data[user].visible ? users.data[user].guess : "...\n..." }}
+            {{
+              users.data[user].visible
+                ? users.data[user].guess
+                : users.data[user].guess == "..."
+                  ? "...\n..."
+                  : "***\nSpiel: ***"
+            }}
           </div>
         </div>
       </div>
