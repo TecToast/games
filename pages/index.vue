@@ -10,7 +10,7 @@ await until(status).not.toBe("pending");
       >Unknown error occured.</TextBox
     >
     <div v-else class="mt-4 flex flex-col items-center">
-      <TextBox v-if="!data?.length" class="p-4"
+      <TextBox v-if="!data?.games?.length" class="p-4"
         >You don't have permission to access a game.</TextBox
       >
       <div v-else class="flex flex-col items-center gap-4">
@@ -22,7 +22,11 @@ await until(status).not.toBe("pending");
           </HelpModal>
         </div>
         <div class="flex flex-col items-center gap-4">
-          <NuxtLink v-for="game of data" :key="game.displayName" :to="game.url">
+          <NuxtLink
+            v-for="game of data.games"
+            :key="game.displayName"
+            :to="game.url"
+          >
             <ControlButton>
               {{ game.displayName }}
             </ControlButton>
