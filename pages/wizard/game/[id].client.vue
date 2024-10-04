@@ -1,62 +1,34 @@
 <script setup lang="ts">
-import {
-  type Card,
-  type LayedCard,
-  NOTHINGCARD,
-  Rules,
-  type WizardState,
-} from "~/utils/wizard/types";
+import { type LayedCard, NOTHINGCARD, Rules } from "~/utils/wizard/types";
 import { useTrumpShift } from "~/composables/wizard/trumpshifts";
 import { useFirstCard } from "~/composables/wizard/firstcard";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
-import { useWebsocketRef, watchMessage } from "~/utils/wsutils";
+import { watchMessage } from "~/utils/wsutils";
 import { useWizardNumbers } from "~/composables/wizard/wizardNumbers";
 import { usePlayerCards } from "~/composables/wizard/playercards";
+import { useRules } from "~/composables/wizard/rules";
+import { useGamePhase } from "~/composables/wizard/gamephase";
+import { useGeneralData } from "~/composables/wizard/generaldata";
 
-const id = useRoute().params.id;
 const auth = useAuthStore();
-const gamestate = ref<WizardState>("lobby");
-const { data, status, sendWS } = useWizardConnection();
-const { result: playersInLobby } = useWebsocketRef<string[]>(
-  data,
-  "GameInfo",
-  "players",
-  [],
-);
-const isOwner = computed(() => playersInLobby.value[0] == auth.data?.name);
-const { result: rules, notSet } = useWebsocketRef<{
-  [k: string]: string;
-}>(
-  data,
-  "RuleChange",
-  "rules",
-  Object.fromEntries(
-    Object.entries(Rules).map(([key, value]) => [key, value[0]]),
-  ),
-);
-const startButtonClickedAmount = ref(0);
-const { result: currentPlayer } = useWebsocketRef(
-  data,
-  "CurrentPlayer",
-  "player",
-  "",
-);
-const { result: round } = useWebsocketRef(data, "Round", "round", 1);
-const { result: firstCome } = useWebsocketRef(data, "Round", "firstCome", "");
-const { result: trump } = useWebsocketRef<Card>(
-  data,
-  "Trump",
-  "trump",
-  NOTHINGCARD,
-);
-const { result: isPredict } = useWebsocketRef(
-  data,
-  "IsPredict",
-  "isPredict",
-  true,
-);
-const trumpShift = useTrumpShift();
+const playerName = computed(() => auth.data?.name ?? "");
+
+const { data } = useWizardConnection();
+const {
+  isPredict,
+  round,
+  trump,
+  firstCome,
+  currentPlayer,
+  playersInLobby,
+  currentStitchWinner,
+} = useGeneralData();
+const isOwner = computed(() => playersInLobby.value[0] == playerName.value);
+const { rules, notSet, switchRule } = useRules();
 const layedCards = ref<LayedCard[]>([]);
+const { startGame, noStart, leaveGame, stopGame, ranks, gamephase } =
+  useGamePhase(playersInLobby, layedCards);
+const trumpShift = useTrumpShift();
 const { playerCards, removeCardFromDeck } = usePlayerCards(trump);
 const firstCard = useFirstCard(layedCards);
 const {
@@ -67,75 +39,24 @@ const {
   stitchesPredicted,
   saveStitches,
   stitchReset,
-} = useWizardNumbers();
-const playersTurn = computed(() => currentPlayer.value == auth.data?.name);
-const { result: currentStitchWinner } = useWebsocketRef(
-  data,
-  "NewSubRound",
-  "winner",
-  "",
-);
-const noStart = computed(() => {
-  const playerAmount = playersInLobby.value.length;
-  return (
-    playerAmount < 3 &&
-    (playerAmount < 2 || startButtonClickedAmount.value < 10)
-  );
-});
-
-function startGame() {
-  if (noStart.value) {
-    startButtonClickedAmount.value++;
-    return;
-  }
-  sendWS("StartGame", {});
-}
-
-function leaveGame() {
-  sendWS("LeaveGame", { gameID: id });
-}
-
-function stopGame() {
-  if (confirm("Möchtest du das Spiel wirklich beenden?")) {
-    leaveGame();
-  }
-}
-
-function switchRule(rule: string, value: string) {
-  sendWS("RuleChangeRequest", { rule, value });
-}
-
-until(status)
-  .toBe("OPEN")
-  .then(() => {
-    sendWS("JoinGame", { gameID: id });
-  });
+} = useWizardNumbers(firstCome, playerName);
+const playersTurn = computed(() => currentPlayer.value == playerName.value);
 
 watchMessage(data, "RedirectHome", () => {
   navigateTo("/wizard");
 });
-watchMessage(data, "GameStarted", (d) => {
-  gamestate.value = "game";
-  const players: string[] = d.players;
-  layedCards.value = players.map(
-    (x) => ({ player: x, card: NOTHINGCARD }) as LayedCard,
-  );
-});
+
 watch(isPredict, (newVal) => {
   if (!newVal) {
     firstCome.value = "";
     hasPredicted.value = [];
   }
 });
-watchMessage(data, "StitchGoal", (d) => {
-  if (d.name == auth.data?.name) {
-    firstCome.value = "";
-  }
-});
+
 watchMessage(data, "PlayerCard", (d) => {
   const card = d.card.card;
   layedCards.value.find((x) => x.player == d.card.player)!.card = card;
-  if (d.card.player == auth.data?.name) {
+  if (d.card.player == playerName.value) {
     removeCardFromDeck(card);
   }
 });
@@ -158,21 +79,12 @@ watchMessage(data, "AcceptedGoal", () => {
 watch(round, () => {
   stitchReset();
 });
-const { result: ranks } = useWebsocketRef<{ player: string; points: number }[]>(
-  data,
-  "EndGame",
-  "players",
-  [],
-);
-watch(ranks, (newVal) => {
-  if (newVal.length > 0) gamestate.value = "finished";
-});
 </script>
 
 <template>
   <DefaultBackground>
     <div
-      v-if="gamestate === 'lobby'"
+      v-if="gamephase === 'lobby'"
       class="mt-20 flex flex-row justify-center"
     >
       <div class="w-1/3">
@@ -226,7 +138,7 @@ watch(ranks, (newVal) => {
         </div>
       </div>
     </div>
-    <div v-if="gamestate === 'game'">
+    <div v-if="gamephase === 'game'">
       <div class="absolute right-2 top-2">
         <button
           @click="stopGame()"
@@ -346,7 +258,7 @@ watch(ranks, (newVal) => {
         ></WizardCard>
       </div>
     </div>
-    <div v-if="gamestate == 'finished'">
+    <div v-if="gamephase == 'finished'">
       <div
         class="absolute top-1/3 flex min-w-full flex-row justify-evenly align-middle text-gray-100"
       >

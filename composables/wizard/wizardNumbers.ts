@@ -1,7 +1,10 @@
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 import { watchMessage } from "~/utils/wsutils";
 
-export function useWizardNumbers() {
+export function useWizardNumbers(
+  firstCome: Ref<string>,
+  playerName: Ref<string>,
+) {
   const { data, sendWS } = useWizardConnection();
   const stitchGoals = ref<{ [name: string]: number }>({});
   const stitchDone = ref<{ [name: string]: number }>({});
@@ -9,6 +12,9 @@ export function useWizardNumbers() {
   const results = ref<{ [name: string]: number }>({});
   watchMessage(data, "StitchGoal", (d) => {
     stitchGoals.value[d.name] = d.goal;
+    if (d.name == playerName.value) {
+      firstCome.value = "";
+    }
   });
   watchMessage(data, "UpdateDoneStitches", (d) => {
     stitchDone.value[d.player] = d.amount;

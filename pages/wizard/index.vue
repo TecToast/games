@@ -3,9 +3,12 @@ import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 import { watchMessage } from "~/utils/wsutils";
 import type { OpenGamesData } from "~/utils/wizard/types";
 
+definePageMeta({
+  keepalive: true,
+});
 const auth = useAuthStore();
 const { data: authData } = storeToRefs(auth);
-const { data: wsData, status: wsStatus, sendWS } = useWizardConnection();
+const { data: wsData, sendWS } = useWizardConnection();
 const openGames = useState<OpenGamesData>("openGames");
 
 function createGame() {
@@ -14,9 +17,21 @@ function createGame() {
 watchMessage(wsData, "GameCreated", (d) => {
   navigateTo(`/wizard/game/${d.gameID}`);
 });
+watchMessage(wsData, "ChangeUsernameResponse", (d) => {
+  authData.value!.name = d.username;
+});
 </script>
 <template>
   <DefaultBackground>
+    <DevOnly>
+      <div class="absolute left-2 top-2 flex gap-3">
+        <ControlButton
+          v-for="name of ['TestUser1', 'TestUser2', 'TestUser3']"
+          @click="sendWS('ChangeUsername', { username: name })"
+          >{{ name }}</ControlButton
+        >
+      </div>
+    </DevOnly>
     <p class="absolute right-2 top-2 text-xl font-bold text-gray-300">
       Angemeldet als {{ authData.name }}
     </p>
