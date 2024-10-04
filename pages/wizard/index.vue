@@ -10,6 +10,7 @@ const auth = useAuthStore();
 const { data: authData } = storeToRefs(auth);
 const { data: wsData, sendWS } = useWizardConnection();
 const openGames = useState<OpenGamesData>("openGames");
+preloadRouteComponents("/wizard/game/:id");
 
 function createGame() {
   sendWS("CreateGame", {});
