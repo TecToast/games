@@ -18,11 +18,14 @@ export function useGamePhase(
     );
   });
 
+  const alreadyStarted = ref(false);
   function startGame() {
+    if (alreadyStarted.value) return;
     if (noStart.value) {
       startButtonClickedAmount.value++;
       return;
     }
+    alreadyStarted.value = true;
     sendWS("StartGame", {});
   }
   function leaveGame() {
