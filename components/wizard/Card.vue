@@ -22,12 +22,13 @@ const clickable = computed(() => {
   const type = props.type;
   if (type != "hand") return false;
   if (!props.playersTurn) return false;
-  if (props.card.color == "Zauberer" || props.card.color == "Narr") return true;
   if (props.isPredict) return false;
   return isLegal.value;
 });
 const isLegal = computed(() => {
   return (
+    props.card.color == "Zauberer" ||
+    props.card.color == "Narr" ||
     props.firstCard?.color == "Zauberer" ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
