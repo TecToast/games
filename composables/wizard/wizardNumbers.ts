@@ -28,7 +28,6 @@ export function useWizardNumbers(
   const stitchesPredicted = ref(0);
 
   function saveStitches() {
-    console.info("CALLED");
     sendWS("StitchGoal", { goal: stitchesPredicted.value });
   }
   function stitchReset() {
