@@ -27,6 +27,7 @@ const clickable = computed(() => {
 });
 const isLegal = computed(() => {
   return (
+    props.firstCard?.color == "Zauberer" ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
   );
