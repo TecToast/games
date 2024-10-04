@@ -24,12 +24,11 @@ export function useWebsocketRef<T>(
   type: string,
   key: string,
   start: T,
-  mapper: (data: any) => T = (data) => data,
 ) {
   const result = ref<T>(start);
   const notSet = ref(true);
   watchMessage(reference, type, (data) => {
-    result.value = mapper(data[key]) as UnwrapRef<T>;
+    result.value = data[key];
     notSet.value = false;
   });
   return { result, notSet };
