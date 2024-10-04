@@ -255,6 +255,7 @@ watch(round, () => {
           :playerCards
           :playersTurn
           :isPredict
+          :firstCome
         ></WizardCard>
       </div>
     </div>

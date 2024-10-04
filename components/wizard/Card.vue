@@ -9,6 +9,7 @@ const props = defineProps<{
   playerCards?: Card[];
   playersTurn?: boolean;
   isPredict?: boolean;
+  firstCome?: string;
 }>();
 const src = computed(() => {
   const c = props.card.color;
@@ -46,7 +47,7 @@ function onClick() {
     @click="onClick"
     class="m-0 scale-100 transform rounded transition-transform duration-300"
     :class="[
-      type != 'hand' || clickable || isPredict
+      type != 'hand' || clickable || (isPredict && firstCome != '')
         ? 'brightness-100'
         : 'brightness-50',
       type == 'hand' ? 'hover:scale-110 hover:cursor-pointer' : '',
