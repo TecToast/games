@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { Card, CardType } from "~/utils/wizard/types";
+import {
+  type Card,
+  type CardType,
+  convertCardToHref,
+} from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 
 const props = defineProps<{
@@ -12,11 +16,7 @@ const props = defineProps<{
   firstCome?: string;
 }>();
 const src = computed(() => {
-  const c = props.card.color;
-  if (c == "Nichts") return "/api/wizard/cardimages/empty.webp";
-  const color =
-    c == "Grün" ? "Gruen" : c == "Zauberer" ? "Z" : c == "Narr" ? "N" : c;
-  return `/api/wizard/cardimages/${color}_${props.card.value}.webp`;
+  return convertCardToHref(props.card);
 });
 const clickable = computed(() => {
   const type = props.type;

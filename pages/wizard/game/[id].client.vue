@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { type LayedCard, NOTHINGCARD, Rules } from "~/utils/wizard/types";
+import {
+  AllCards,
+  convertCardToHref,
+  type LayedCard,
+  NOTHINGCARD,
+  Rules,
+} from "~/utils/wizard/types";
 import { useTrumpShift } from "~/composables/wizard/trumpshifts";
 import { useFirstCard } from "~/composables/wizard/firstcard";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
@@ -78,6 +84,13 @@ watchMessage(data, "AcceptedGoal", () => {
 });
 watch(round, () => {
   stitchReset();
+});
+useHead({
+  link: AllCards.map((c) => ({
+    rel: "preload",
+    as: "image",
+    href: convertCardToHref(c),
+  })),
 });
 </script>
 

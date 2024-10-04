@@ -28,3 +28,24 @@ export type LayedCard = {
   card: Card;
   player: string;
 };
+export const AllCards: Card[] = (function () {
+  let allCards: Card[] = [];
+  for (let color of ["Rot", "Gelb", "Grün", "Blau"]) {
+    for (let value = 1; value <= 13; value++) {
+      allCards.push(<Card>{ color, value });
+    }
+  }
+  for (let i = 1; i <= 4; i++) {
+    allCards.push({ color: "Zauberer", value: i });
+    allCards.push({ color: "Narr", value: i });
+  }
+  return allCards;
+})();
+
+export function convertCardToHref(card: Card): string {
+  const c = card.color;
+  if (c == "Nichts") return "/api/wizard/cardimages/empty.webp";
+  const color =
+    c == "Grün" ? "Gruen" : c == "Zauberer" ? "Z" : c == "Narr" ? "N" : c;
+  return `/api/wizard/cardimages/${color}_${card.value}.webp`;
+}
