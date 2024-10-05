@@ -3,7 +3,7 @@ export const Rules: { [rule: string]: string[] } = {
   Zauberer: ["Normal", "Letzter Zauberer"],
   Ansage: ["Nacheinander", "Blind"],
   Trumpf: ["Normal", "Nur Farben"],
-  Spezialkarten: ["aktiviert", "deaktiviert"],
+  Spezialkarten: ["Aktiviert", "Deaktiviert"],
 };
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
