@@ -3,6 +3,7 @@ export const Rules: { [rule: string]: string[] } = {
   Zauberer: ["Normal", "Letzter Zauberer"],
   Ansage: ["Nacheinander", "Blind"],
   Trumpf: ["Normal", "Nur Farben"],
+  Spezialkarten: ["aktiviert", "deaktiviert"],
 };
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
@@ -18,6 +19,7 @@ export type Color =
   | "Blau"
   | "Zauberer"
   | "Narr"
+  | "Spezial"
   | "Nichts";
 export type Card = {
   color: Color;
@@ -46,6 +48,15 @@ export function convertCardToHref(card: Card): string {
   const c = card.color;
   if (c == "Nichts") return "/api/wizard/cardimages/empty.webp";
   const color =
-    c == "Grün" ? "Gruen" : c == "Zauberer" ? "Z" : c == "Narr" ? "N" : c;
+    c == "Grün"
+      ? "Gruen"
+      : c == "Zauberer"
+        ? "Z"
+        : c == "Narr"
+          ? "N"
+          : c == "Spezial"
+            ? "S"
+            : c;
+  //TODO: für Spezialkarte Bombe, dh. Card(Color.Special, 1), muss richtige *.webp-Datei hinterlegt werden
   return `/api/wizard/cardimages/${color}_${card.value}.webp`;
 }

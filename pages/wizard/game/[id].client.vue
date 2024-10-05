@@ -253,7 +253,12 @@ useHead({
         style="top: 35%"
       >
         <p class="text-center text-3xl font-bold text-gray-200">
-          Der Stich geht an {{ currentStitchWinner }}!
+          Der Stich geht an
+          <span :class="{ 'text-[#141592]': currentStitchWinner == null }">
+            {{
+              currentStitchWinner ?? "Wirklich Niemanden! Es hat keiner gewonnen. Auch nicht Christian."
+            }} </span
+          >!
         </p>
       </div>
       <div
