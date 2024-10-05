@@ -60,3 +60,6 @@ export function convertCardToHref(card: Card): string {
   //TODO: für Spezialkarte Bombe, dh. Card(Color.Special, 1), muss richtige *.webp-Datei hinterlegt werden
   return `/api/wizard/cardimages/${color}_${card.value}.webp`;
 }
+export function isCard(card: Card, color: Color, value: number): boolean {
+  return card.color == color && card.value == value;
+}

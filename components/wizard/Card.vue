@@ -14,6 +14,7 @@ const props = defineProps<{
   playersTurn?: boolean;
   isPredict?: boolean;
   firstCome?: string;
+  bombFirst?: boolean;
 }>();
 const src = computed(() => {
   return convertCardToHref(props.card);
@@ -31,6 +32,7 @@ const isLegal = computed(() => {
     props.card.color == "Narr" ||
     props.card.color == "Spezial" ||
     props.firstCard?.color == "Zauberer" ||
+    props.bombFirst ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
   );

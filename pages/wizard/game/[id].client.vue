@@ -37,7 +37,7 @@ const { startGame, noStart, leaveGame, stopGame, ranks, gamephase } =
   useGamePhase(playersInLobby, layedCards);
 const trumpShift = useTrumpShift();
 const { playerCards, removeCardFromDeck } = usePlayerCards(trump);
-const { firstCard, resetFirstCard } = useFirstCard(layedCards);
+const { firstCard, resetFirstCard, bombFirst } = useFirstCard(layedCards);
 const {
   stitchGoals,
   stitchDone,
@@ -278,6 +278,7 @@ useHead({
           :playersTurn
           :isPredict
           :firstCome
+          :bombFirst
         ></WizardCard>
       </div>
     </div>
