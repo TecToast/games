@@ -37,7 +37,7 @@ const { startGame, noStart, leaveGame, stopGame, ranks, gamephase } =
   useGamePhase(playersInLobby, layedCards);
 const trumpShift = useTrumpShift();
 const { playerCards, removeCardFromDeck } = usePlayerCards(trump);
-const firstCard = useFirstCard(layedCards);
+const { firstCard, resetFirstCard } = useFirstCard(layedCards);
 const {
   stitchGoals,
   stitchDone,
@@ -74,6 +74,7 @@ watch(nextPlayer, (newValNextPlayer) => {
         player: x.player,
         card: NOTHINGCARD,
       }));
+      resetFirstCard();
       currentPlayer.value = newValNextPlayer;
       currentStitchWinner.value = "";
       nextPlayer.value = "";

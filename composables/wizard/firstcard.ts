@@ -6,10 +6,6 @@ import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 export function useFirstCard(layedCards: Ref<LayedCard[]>) {
   const { data } = useWizardConnection();
   const firstCard = ref<Card>(NOTHINGCARD);
-  watch(layedCards, (list) => {
-    if (list.every((c) => c.card.color == "Nichts"))
-      firstCard.value = NOTHINGCARD;
-  });
   watchMessage(data, "PlayerCard", (msg) => {
     const card = msg.card as LayedCard;
     if (
@@ -18,5 +14,8 @@ export function useFirstCard(layedCards: Ref<LayedCard[]>) {
       firstCard.value = card.card;
     }
   });
-  return firstCard;
+  function resetFirstCard() {
+    firstCard.value = NOTHINGCARD;
+  }
+  return { firstCard, resetFirstCard };
 }
