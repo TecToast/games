@@ -37,6 +37,12 @@ export function useGeneralData() {
     "winner",
     "",
   );
+  const { result: nextPlayer } = useWebsocketRef<string>(
+    data,
+    "NewSubRound",
+    "nextPlayer",
+    "",
+  );
   return {
     currentPlayer,
     round,
@@ -45,5 +51,6 @@ export function useGeneralData() {
     isPredict,
     playersInLobby,
     currentStitchWinner,
+    nextPlayer,
   };
 }
