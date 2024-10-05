@@ -12,7 +12,7 @@ export function useTrumpShift() {
       if (x.length > 0) x += ", ";
       x += `${amount}x ${color}`;
     }
-    if (x.length > 0) x = "Übersprungen: " + x;
+    if (x.length > 0) x = " - Übersprungen: " + x;
     return x;
   });
 }
