@@ -257,7 +257,7 @@ useHead({
       >
         <p class="text-center text-3xl font-bold text-gray-200">
           Der Stich geht an
-          <span :class="{ 'text-[#141592]': currentStitchWinner == null }">
+          <span :class="{ 'text-[#12abf5]': currentStitchWinner == null }">
             {{
               currentStitchWinner ??
               "Wirklich Niemanden! Es hat keiner gewonnen. Auch nicht Christian."
