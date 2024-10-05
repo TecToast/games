@@ -28,6 +28,7 @@ const {
   currentPlayer,
   playersInLobby,
   currentStitchWinner,
+  nextPlayer,
 } = useGeneralData();
 const isOwner = computed(() => playersInLobby.value[0] == playerName.value);
 const { rules, notSet, switchRule } = useRules();
@@ -66,15 +67,16 @@ watchMessage(data, "PlayerCard", (d) => {
     removeCardFromDeck(card);
   }
 });
-watch(currentStitchWinner, (newVal) => {
-  if (newVal != "") {
+watch(nextPlayer, (newValNextPlayer) => {
+  if (nextPlayer.value != "") {
     setTimeout(() => {
       layedCards.value = layedCards.value.map((x) => ({
         player: x.player,
         card: NOTHINGCARD,
       }));
+      currentPlayer.value = newValNextPlayer;
       currentStitchWinner.value = "";
-      currentPlayer.value = newVal;
+      nextPlayer.value = "";
     }, 4000);
   }
 });
@@ -253,7 +255,13 @@ useHead({
         style="top: 35%"
       >
         <p class="text-center text-3xl font-bold text-gray-200">
-          Der Stich geht an {{ currentStitchWinner }}!
+          Der Stich geht an
+          <span :class="{ 'text-[#141592]': currentStitchWinner == null }">
+            {{
+              currentStitchWinner ??
+              "Wirklich Niemanden! Es hat keiner gewonnen. Auch nicht Christian."
+            }} </span
+          >!
         </p>
       </div>
       <div

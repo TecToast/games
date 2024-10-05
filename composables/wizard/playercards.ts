@@ -26,6 +26,8 @@ export function usePlayerCards(trump: Ref<Card>) {
 
 function sortCards(cards: Card[], trump: Card): Card[] {
   const n: Card[] = [];
+  cards.filter((c) => c.color == "Spezial").forEach((c) => n.push(c));
+  cards = cards.filter((c) => c.color != "Spezial");
   cards.filter((c) => c.color == "Zauberer").forEach((c) => n.push(c));
   cards = cards.filter((c) => c.color != "Zauberer");
   cards.filter((c) => c.color == "Narr").forEach((c) => n.push(c));

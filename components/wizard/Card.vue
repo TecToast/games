@@ -29,6 +29,7 @@ const isLegal = computed(() => {
   return (
     props.card.color == "Zauberer" ||
     props.card.color == "Narr" ||
+    props.card.color == "Spezial" ||
     props.firstCard?.color == "Zauberer" ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
