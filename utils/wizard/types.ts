@@ -41,6 +41,9 @@ export const AllCards: Card[] = (function () {
     allCards.push({ color: "Zauberer", value: i });
     allCards.push({ color: "Narr", value: i });
   }
+  for (let i = 1; i <= 3; i++) {
+    allCards.push({ color: "Spezial", value: i });
+  }
   return allCards;
 })();
 
@@ -48,18 +51,20 @@ export function convertCardToHref(card: Card): string {
   const c = card.color;
   if (c == "Nichts") return "/api/wizard/cardimages/empty.webp";
   const color =
-    c == "Grün"
-      ? "Gruen"
-      : c == "Zauberer"
-        ? "Z"
-        : c == "Narr"
-          ? "N"
-          : c == "Spezial"
-            ? "S"
-            : c;
-  //TODO: für Spezialkarte Bombe, dh. Card(Color.Special, 1), muss richtige *.webp-Datei hinterlegt werden
+    card.value == 7.5 || card.value == 9.75
+      ? "S"
+      : c == "Grün"
+        ? "Gruen"
+        : c == "Zauberer"
+          ? "Z"
+          : c == "Narr"
+            ? "N"
+            : c == "Spezial"
+              ? "S"
+              : c;
   return `/api/wizard/cardimages/${color}_${card.value}.webp`;
 }
+
 export function isCard(card: Card, color: Color, value: number): boolean {
   return card.color == color && card.value == value;
 }

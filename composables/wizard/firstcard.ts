@@ -13,17 +13,12 @@ export function useFirstCard(layedCards: Ref<LayedCard[]>) {
       layedCards.value.every(
         (c) =>
           ["Nichts", "Narr"].includes(c.card.color) ||
-          isCard(c.card, "Spezial", 1),
+          isCard(c.card, "Spezial", 1) ||
+          isCard(c.card, "Nichts", 2) ||
+          isCard(c.card, "Spezial", 3),
       )
     ) {
       firstCard.value = card.card;
-    }
-    if (
-      card.card.color == "Spezial" &&
-      card.card.value == 1 &&
-      layedCards.value.every((c) => ["Nichts"].includes(c.card.color))
-    ) {
-      bombFirst.value = true;
     }
   });
   function resetFirstCard() {

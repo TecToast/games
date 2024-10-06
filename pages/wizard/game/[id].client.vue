@@ -15,6 +15,7 @@ import { usePlayerCards } from "~/composables/wizard/playercards";
 import { useRules } from "~/composables/wizard/rules";
 import { useGamePhase } from "~/composables/wizard/gamephase";
 import { useGeneralData } from "~/composables/wizard/generaldata";
+import { useColorSelect } from "~/composables/wizard/colorSelect";
 
 const auth = useAuthStore();
 const playerName = computed(() => auth.data?.name ?? "");
@@ -48,6 +49,8 @@ const {
   stitchReset,
 } = useWizardNumbers(firstCome, playerName);
 const playersTurn = computed(() => currentPlayer.value == playerName.value);
+const { selectColorCard, layCardWithColor } = useColorSelect();
+const modalActive = computed(() => selectColorCard.value != null);
 
 watchMessage(data, "RedirectHome", () => {
   navigateTo("/wizard");
@@ -65,10 +68,12 @@ watchMessage(data, "PlayerCard", (d) => {
   layedCards.value.find((x) => x.player == d.card.player)!.card = card;
   if (d.card.player == playerName.value) {
     removeCardFromDeck(card);
+    selectColorCard.value = null;
   }
 });
 watch(nextPlayer, (newValNextPlayer) => {
   if (nextPlayer.value != "") {
+    currentPlayer.value = "";
     setTimeout(() => {
       layedCards.value = layedCards.value.map((x) => ({
         player: x.player,
@@ -209,7 +214,41 @@ useHead({
           </div>
         </div>
       </div>
-
+      <UModal v-model="modalActive" prevent-close>
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Wähle eine Farbe aus
+            </div>
+          </template>
+          <div class="flex gap-3">
+            <button
+              @click="layCardWithColor('Rot')"
+              class="w-1/4 rounded bg-red-700 px-4 py-2"
+            >
+              Rot
+            </button>
+            <button
+              @click="layCardWithColor('Gelb')"
+              class="w-1/4 rounded bg-yellow-500 px-4 py-2"
+            >
+              Gelb
+            </button>
+            <button
+              @click="layCardWithColor('Grün')"
+              class="w-1/4 rounded bg-green-800 px-4 py-2"
+            >
+              Grün
+            </button>
+            <button
+              @click="layCardWithColor('Blau')"
+              class="w-1/4 rounded bg-blue-700 px-4 py-2"
+            >
+              Blau
+            </button>
+          </div>
+        </UCard>
+      </UModal>
       <div
         v-if="firstCome !== ''"
         class="absolute flex min-w-full flex-row justify-center text-center align-middle text-2xl font-bold text-gray-100"

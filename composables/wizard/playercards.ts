@@ -10,12 +10,17 @@ export function usePlayerCards(trump: Ref<Card>) {
     "cards",
     [],
   );
+
   function removeCardFromDeck(card: Card) {
     const index = playerCards.value.findIndex(
-      (c) => c.color == card.color && c.value == card.value,
+      (c) =>
+        (c.color == card.color && c.value == card.value) ||
+        (card.value == 7.5 && c.value == 7.5) ||
+        (card.value == 9.75 && c.value == 9.75),
     );
     if (index != -1) playerCards.value.splice(index, 1);
   }
+
   return {
     playerCards: computed(() => {
       return sortCards(playerCards.value, trump.value);
