@@ -1,3 +1,5 @@
+import Card from "~/components/wizard/Card.vue";
+
 export const Rules: { [rule: string]: string[] } = {
   Punkte: ["Normal", "Max. 30"],
   Zauberer: ["Normal", "Letzter Zauberer"],
@@ -41,9 +43,11 @@ export const AllCards: Card[] = (function () {
     allCards.push({ color: "Zauberer", value: i });
     allCards.push({ color: "Narr", value: i });
   }
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 1; i++) {
     allCards.push({ color: "Spezial", value: i });
   }
+  allCards.push({ color: "Spezial", value: 7.5 });
+  allCards.push({ color: "Spezial", value: 9.75 });
   return allCards;
 })();
 
