@@ -13,9 +13,7 @@ export function useFirstCard(layedCards: Ref<LayedCard[]>) {
       layedCards.value.every(
         (c) =>
           ["Nichts", "Narr"].includes(c.card.color) ||
-          isCard(c.card, "Spezial", 1) ||
-          isCard(c.card, "Nichts", 2) ||
-          isCard(c.card, "Spezial", 3),
+          isCard(c.card, "Spezial", 1),
       )
     ) {
       firstCard.value = card.card;
