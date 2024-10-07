@@ -18,13 +18,6 @@ export function useFirstCard(layedCards: Ref<LayedCard[]>) {
     ) {
       firstCard.value = card.card;
     }
-    if (
-      card.card.color == "Spezial" &&
-      card.card.value == 1 &&
-      layedCards.value.every((c) => ["Nichts"].includes(c.card.color))
-    ) {
-      bombFirst.value = true;
-    }
   });
   function resetFirstCard() {
     firstCard.value = NOTHINGCARD;
