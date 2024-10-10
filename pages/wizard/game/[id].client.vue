@@ -16,6 +16,7 @@ import { useRules } from "~/composables/wizard/rules";
 import { useGamePhase } from "~/composables/wizard/gamephase";
 import { useGeneralData } from "~/composables/wizard/generaldata";
 import { useColorSelect } from "~/composables/wizard/colorSelect";
+import { useChangeStitchPrediction } from "~/composables/wizard/changeStitchPrediction";
 
 const auth = useAuthStore();
 const playerName = computed(() => auth.data?.name ?? "");
@@ -29,7 +30,6 @@ const {
   currentPlayer,
   playersInLobby,
   currentStitchWinner,
-  nextPlayer,
 } = useGeneralData();
 const isOwner = computed(() => playersInLobby.value[0] == playerName.value);
 const { rules, notSet, switchRule } = useRules();
@@ -50,7 +50,9 @@ const {
 } = useWizardNumbers(firstCome, playerName);
 const playersTurn = computed(() => currentPlayer.value == playerName.value);
 const { selectColorCard, layCardWithColor } = useColorSelect();
-const modalActive = computed(() => selectColorCard.value != null);
+const isSelectColorModalActive = computed(() => selectColorCard.value != null);
+const { isChangeStitchModalActive, changeStitchPrediction } =
+  useChangeStitchPrediction();
 
 watchMessage(data, "RedirectHome", () => {
   navigateTo("/wizard");
@@ -71,21 +73,6 @@ watchMessage(data, "PlayerCard", (d) => {
     selectColorCard.value = null;
   }
 });
-watch(nextPlayer, (newValNextPlayer) => {
-  if (nextPlayer.value != "") {
-    currentPlayer.value = "";
-    setTimeout(() => {
-      layedCards.value = layedCards.value.map((x) => ({
-        player: x.player,
-        card: NOTHINGCARD,
-      }));
-      resetFirstCard();
-      currentPlayer.value = newValNextPlayer;
-      currentStitchWinner.value = "";
-      nextPlayer.value = "";
-    }, 4000);
-  }
-});
 watchMessage(data, "AcceptedGoal", () => {
   firstCome.value = "";
   currentPlayer.value = "";
@@ -99,6 +86,21 @@ useHead({
     as: "image",
     href: convertCardToHref(c),
   })),
+});
+
+//TODO maybe auslagern in generaldata.ts?
+watchMessage(data, "ClearForNewSubRound", () => {
+  layedCards.value = layedCards.value.map((x) => ({
+    player: x.player,
+    card: NOTHINGCARD,
+  }));
+  resetFirstCard();
+  currentStitchWinner.value = "";
+});
+watch(currentStitchWinner, (newWinner) => {
+  if (newWinner != "") {
+    currentPlayer.value = "";
+  }
 });
 </script>
 
@@ -214,7 +216,7 @@ useHead({
           </div>
         </div>
       </div>
-      <UModal v-model="modalActive" prevent-close>
+      <UModal v-model="isSelectColorModalActive" prevent-close>
         <UCard>
           <template #header>
             <div class="text-center text-2xl font-bold text-gray-300">
@@ -245,6 +247,30 @@ useHead({
               class="w-1/4 rounded bg-blue-700 px-4 py-2"
             >
               Blau
+            </button>
+          </div>
+        </UCard>
+      </UModal>
+      <UModal v-model="isChangeStitchModalActive" prevent-close>
+        <!-- TODO: falls Spieler 0 Stiche oder maximal mögliche Stichzahl angesagt hat: verstecke zugehörigen +1 bzw -1 button-->
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Ändere deine Vorhersage
+            </div>
+          </template>
+          <div class="flex justify-center gap-3">
+            <button
+              @click="changeStitchPrediction(-1)"
+              class="w-1/4 rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
+            >
+              - 1
+            </button>
+            <button
+              @click="changeStitchPrediction(1)"
+              class="w-1/4 rounded bg-gray-400 px-4 py-2 font-bold"
+            >
+              + 1
             </button>
           </div>
         </UCard>
