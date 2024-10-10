@@ -1,6 +1,6 @@
 export const Rules: { [rule: string]: string[] } = {
   Punkte: ["Normal", "Max. 30"],
-  Zauberer: ["Normal", "Letzter Zauberer"],
+  Zauberer: ["Normal", "Mittlerer Zauberer", "Letzter Zauberer"],
   Ansage: ["Nacheinander", "Blind"],
   Trumpf: ["Normal", "Nur Farben"],
   Spezialkarten: ["Aktiviert", "Deaktiviert"],
