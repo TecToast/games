@@ -88,7 +88,6 @@ useHead({
   })),
 });
 
-//TODO maybe auslagern in generaldata.ts?
 watchMessage(data, "ClearForNewSubRound", () => {
   layedCards.value = layedCards.value.map((x) => ({
     player: x.player,
@@ -96,11 +95,6 @@ watchMessage(data, "ClearForNewSubRound", () => {
   }));
   resetFirstCard();
   currentStitchWinner.value = "";
-});
-watch(currentStitchWinner, (newWinner) => {
-  if (newWinner != "") {
-    currentPlayer.value = "";
-  }
 });
 </script>
 
@@ -252,7 +246,6 @@ watch(currentStitchWinner, (newWinner) => {
         </UCard>
       </UModal>
       <UModal v-model="isChangeStitchModalActive" prevent-close>
-        <!-- TODO: falls Spieler 0 Stiche oder maximal mögliche Stichzahl angesagt hat: verstecke zugehörigen +1 bzw -1 button-->
         <UCard>
           <template #header>
             <div class="text-center text-2xl font-bold text-gray-300">
@@ -261,12 +254,14 @@ watch(currentStitchWinner, (newWinner) => {
           </template>
           <div class="flex justify-center gap-3">
             <button
+              v-if="stitchGoals[playerName] != 0"
               @click="changeStitchPrediction(-1)"
               class="w-1/4 rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
             >
               - 1
             </button>
             <button
+              v-if="stitchGoals[playerName] != round"
               @click="changeStitchPrediction(1)"
               class="w-1/4 rounded bg-gray-400 px-4 py-2 font-bold"
             >

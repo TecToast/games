@@ -37,7 +37,11 @@ export function useGeneralData() {
     "winner",
     "",
   );
-
+  watch(currentStitchWinner, (newWinner) => {
+    if (newWinner != "") {
+      currentPlayer.value = "";
+    }
+  });
   return {
     currentPlayer,
     round,
