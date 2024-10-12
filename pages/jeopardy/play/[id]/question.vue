@@ -10,6 +10,26 @@ const questionData = computed(() => {
   const temp = jdata?.value?.categories[currentQuestion.value.category];
   return temp ? temp[currentQuestion.value.points] : null;
 });
+const questionSrc = computed(() => {
+  if (!questionData.value || !currentQuestion.value || !jdata.value) return "";
+  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.value!.category)}/${jeopardy.toID(currentQuestion.value!.points)}/Question/${questionData.value!.question.image}`;
+});
+const answerSrc = computed(() => {
+  if (!questionData.value || !currentQuestion.value || !jdata.value) return "";
+  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.value!.category)}/${jeopardy.toID(currentQuestion.value!.points)}/Answer/${questionData.value!.answer.image}`;
+});
+const link = computed(() => [
+  ...(questionSrc.value
+    ? [{ rel: "preload", href: questionSrc.value, as: "image" }]
+    : []),
+  ...(answerSrc.value
+    ? [{ rel: "preload", href: answerSrc.value, as: "image" }]
+    : []),
+]);
+console.log(link);
+useHead({
+  link: link,
+});
 </script>
 
 <template>
@@ -38,7 +58,7 @@ const questionData = computed(() => {
           questionData.question.image &&
           answerState == AnswerState.Unanswered
         "
-        :src="`/api/jeopardy/media/${jdata?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.category)}/${jeopardy.toID(currentQuestion.points)}/Question/${questionData.question.image}`"
+        :src="questionSrc"
         alt="Bild"
         class="h-[60vh]"
       />
@@ -56,7 +76,7 @@ const questionData = computed(() => {
         v-if="
           questionData.answer.image && answerState != AnswerState.Unanswered
         "
-        :src="`/api/jeopardy/media/${jdata?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.category)}/${jeopardy.toID(currentQuestion.points)}/Answer/${questionData.answer.image}`"
+        :src="answerSrc"
         alt="Bild"
         class="h-[60vh]"
       />
