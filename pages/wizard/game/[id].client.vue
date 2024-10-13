@@ -15,6 +15,8 @@ import { usePlayerCards } from "~/composables/wizard/playercards";
 import { useRules } from "~/composables/wizard/rules";
 import { useGamePhase } from "~/composables/wizard/gamephase";
 import { useGeneralData } from "~/composables/wizard/generaldata";
+import { useColorSelect } from "~/composables/wizard/colorSelect";
+import { useChangeStitchPrediction } from "~/composables/wizard/changeStitchPrediction";
 
 const auth = useAuthStore();
 const playerName = computed(() => auth.data?.name ?? "");
@@ -28,7 +30,6 @@ const {
   currentPlayer,
   playersInLobby,
   currentStitchWinner,
-  nextPlayer,
 } = useGeneralData();
 const isOwner = computed(() => playersInLobby.value[0] == playerName.value);
 const { rules, notSet, switchRule } = useRules();
@@ -37,7 +38,7 @@ const { startGame, noStart, leaveGame, stopGame, ranks, gamephase } =
   useGamePhase(playersInLobby, layedCards);
 const trumpShift = useTrumpShift();
 const { playerCards, removeCardFromDeck } = usePlayerCards(trump);
-const { firstCard, resetFirstCard, bombFirst } = useFirstCard(layedCards);
+const { firstCard, resetFirstCard } = useFirstCard(layedCards);
 const {
   stitchGoals,
   stitchDone,
@@ -48,6 +49,10 @@ const {
   stitchReset,
 } = useWizardNumbers(firstCome, playerName);
 const playersTurn = computed(() => currentPlayer.value == playerName.value);
+const { selectColorCard, layCardWithColor } = useColorSelect();
+const isSelectColorModalActive = computed(() => selectColorCard.value != null);
+const { isChangeStitchModalActive, changeStitchPrediction } =
+  useChangeStitchPrediction();
 
 watchMessage(data, "RedirectHome", () => {
   navigateTo("/wizard");
@@ -65,20 +70,7 @@ watchMessage(data, "PlayerCard", (d) => {
   layedCards.value.find((x) => x.player == d.card.player)!.card = card;
   if (d.card.player == playerName.value) {
     removeCardFromDeck(card);
-  }
-});
-watch(nextPlayer, (newValNextPlayer) => {
-  if (nextPlayer.value != "") {
-    setTimeout(() => {
-      layedCards.value = layedCards.value.map((x) => ({
-        player: x.player,
-        card: NOTHINGCARD,
-      }));
-      resetFirstCard();
-      currentPlayer.value = newValNextPlayer;
-      currentStitchWinner.value = "";
-      nextPlayer.value = "";
-    }, 4000);
+    selectColorCard.value = null;
   }
 });
 watchMessage(data, "AcceptedGoal", () => {
@@ -94,6 +86,15 @@ useHead({
     as: "image",
     href: convertCardToHref(c),
   })),
+});
+
+watchMessage(data, "ClearForNewSubRound", () => {
+  layedCards.value = layedCards.value.map((x) => ({
+    player: x.player,
+    card: NOTHINGCARD,
+  }));
+  resetFirstCard();
+  currentStitchWinner.value = "";
 });
 </script>
 
@@ -206,10 +207,71 @@ useHead({
               :type="'layed'"
               :firstCard="firstCard"
             ></WizardCard>
+            {{ firstCard }}
           </div>
         </div>
       </div>
-
+      <UModal v-model="isSelectColorModalActive" prevent-close>
+        <!-- TODO zweite UCard einbauen um andere Spieler zu benachrichtigen, wenn jemand etwas auswählen muss -->
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Wähle eine Farbe aus
+            </div>
+          </template>
+          <div class="flex gap-3">
+            <button
+              @click="layCardWithColor('Rot')"
+              class="w-1/4 rounded bg-red-700 px-4 py-2"
+            >
+              Rot
+            </button>
+            <button
+              @click="layCardWithColor('Gelb')"
+              class="w-1/4 rounded bg-yellow-500 px-4 py-2"
+            >
+              Gelb
+            </button>
+            <button
+              @click="layCardWithColor('Grün')"
+              class="w-1/4 rounded bg-green-800 px-4 py-2"
+            >
+              Grün
+            </button>
+            <button
+              @click="layCardWithColor('Blau')"
+              class="w-1/4 rounded bg-blue-700 px-4 py-2"
+            >
+              Blau
+            </button>
+          </div>
+        </UCard>
+      </UModal>
+      <UModal v-model="isChangeStitchModalActive" prevent-close>
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Ändere deine Vorhersage
+            </div>
+          </template>
+          <div class="flex justify-center gap-3">
+            <button
+              v-if="stitchGoals[playerName] != 0"
+              @click="changeStitchPrediction(-1)"
+              class="w-1/4 rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
+            >
+              - 1
+            </button>
+            <button
+              v-if="stitchGoals[playerName] != round"
+              @click="changeStitchPrediction(1)"
+              class="w-1/4 rounded bg-gray-400 px-4 py-2 font-bold"
+            >
+              + 1
+            </button>
+          </div>
+        </UCard>
+      </UModal>
       <div
         v-if="firstCome !== ''"
         class="absolute flex min-w-full flex-row justify-center text-center align-middle text-2xl font-bold text-gray-100"
@@ -278,7 +340,6 @@ useHead({
           :playersTurn
           :isPredict
           :firstCome
-          :bombFirst
         ></WizardCard>
       </div>
     </div>

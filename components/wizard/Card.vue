@@ -3,8 +3,11 @@ import {
   type Card,
   type CardType,
   convertCardToHref,
+  isCard,
+  NOTHINGCARD,
 } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
+import { useColorSelect } from "~/composables/wizard/colorSelect";
 
 const props = defineProps<{
   card: Card;
@@ -14,7 +17,6 @@ const props = defineProps<{
   playersTurn?: boolean;
   isPredict?: boolean;
   firstCome?: string;
-  bombFirst?: boolean;
 }>();
 const src = computed(() => {
   return convertCardToHref(props.card);
@@ -31,8 +33,7 @@ const isLegal = computed(() => {
     props.card.color == "Zauberer" ||
     props.card.color == "Narr" ||
     props.card.color == "Spezial" ||
-    props.firstCard?.color == "Zauberer" ||
-    props.bombFirst ||
+    props.firstCard == NOTHINGCARD ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
   );
@@ -41,6 +42,14 @@ const { sendWS } = useWizardConnection();
 
 function onClick() {
   if (!clickable.value) return;
+  if (
+    isCard(props.card, "Spezial", 9.75) ||
+    isCard(props.card, "Spezial", 7.5)
+  ) {
+    const selectColorCard = useState<Card | null>("selectColorCard");
+    selectColorCard.value = props.card;
+    return;
+  }
   sendWS("LayCard", { card: props.card });
 }
 </script>
@@ -62,15 +71,21 @@ function onClick() {
             card.color != 'Nichts' &&
             firstCard?.color == card.color &&
             firstCard?.value == card.value
-          ? 'border-4 border-lime-400'
+          ? 'outline-dashed outline-4 outline-offset-0 outline-fuchsia-600'
           : type == 'hand'
             ? isLegal
               ? 'border-2 border-green-400'
               : 'border-2 border-red-400'
             : '',
+      type == 'layed' && (card.value == 7.5 || card.value == 9.75)
+        ? `border-4 border-${card.color == 'Grün' ? 'green' : card.color == 'Rot' ? 'red' : card.color == 'Blau' ? 'blue' : card.color == 'Gelb' ? 'yellow' : ''}-400`
+        : '',
     ]"
     style="max-width: 150px"
   />
+  <span
+    class="border-blue-400 border-green-400 border-red-400 border-yellow-400"
+  ></span>
 </template>
 
 <style scoped></style>
