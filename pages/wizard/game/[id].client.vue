@@ -38,7 +38,7 @@ const { startGame, noStart, leaveGame, stopGame, ranks, gamephase } =
   useGamePhase(playersInLobby, layedCards);
 const trumpShift = useTrumpShift();
 const { playerCards, removeCardFromDeck } = usePlayerCards(trump);
-const { firstCard, resetFirstCard, bombFirst } = useFirstCard(layedCards);
+const { firstCard, resetFirstCard } = useFirstCard(layedCards);
 const {
   stitchGoals,
   stitchDone,
@@ -207,10 +207,12 @@ watchMessage(data, "ClearForNewSubRound", () => {
               :type="'layed'"
               :firstCard="firstCard"
             ></WizardCard>
+            {{ firstCard }}
           </div>
         </div>
       </div>
       <UModal v-model="isSelectColorModalActive" prevent-close>
+        <!-- TODO zweite UCard einbauen um andere Spieler zu benachrichtigen, wenn jemand etwas auswählen muss -->
         <UCard>
           <template #header>
             <div class="text-center text-2xl font-bold text-gray-300">
@@ -338,7 +340,6 @@ watchMessage(data, "ClearForNewSubRound", () => {
           :playersTurn
           :isPredict
           :firstCome
-          :bombFirst
         ></WizardCard>
       </div>
     </div>

@@ -4,6 +4,7 @@ import {
   type CardType,
   convertCardToHref,
   isCard,
+  NOTHINGCARD,
 } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 import { useColorSelect } from "~/composables/wizard/colorSelect";
@@ -16,7 +17,6 @@ const props = defineProps<{
   playersTurn?: boolean;
   isPredict?: boolean;
   firstCome?: string;
-  bombFirst?: boolean;
 }>();
 const src = computed(() => {
   return convertCardToHref(props.card);
@@ -33,8 +33,7 @@ const isLegal = computed(() => {
     props.card.color == "Zauberer" ||
     props.card.color == "Narr" ||
     props.card.color == "Spezial" ||
-    props.firstCard?.color == "Zauberer" ||
-    props.bombFirst ||
+    props.firstCard == NOTHINGCARD ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
   );
