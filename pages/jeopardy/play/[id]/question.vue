@@ -11,11 +11,21 @@ const questionData = computed(() => {
   return temp ? temp[currentQuestion.value.points] : null;
 });
 const questionSrc = computed(() => {
-  if (!questionData.value || !currentQuestion.value || !jdata.value) return "";
+  if (
+    !questionData.value?.question?.image ||
+    !currentQuestion.value ||
+    !jdata.value
+  )
+    return "";
   return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.value!.category)}/${jeopardy.toID(currentQuestion.value!.points)}/Question/${questionData.value!.question.image}`;
 });
 const answerSrc = computed(() => {
-  if (!questionData.value || !currentQuestion.value || !jdata.value) return "";
+  if (
+    !questionData.value?.answer?.image ||
+    !currentQuestion.value ||
+    !jdata.value
+  )
+    return "";
   return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.value!.category)}/${jeopardy.toID(currentQuestion.value!.points)}/Answer/${questionData.value!.answer.image}`;
 });
 const link = computed(() => [
