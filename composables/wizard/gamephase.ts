@@ -26,7 +26,7 @@ export function useGamePhase(
       return;
     }
     alreadyStarted.value = true;
-    sendWS("StartGame", {});
+    sendWS("StartButtonClicked", {});
   }
   function leaveGame() {
     sendWS("LeaveGame", { gameID: id });

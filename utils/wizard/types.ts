@@ -4,7 +4,22 @@ export const Rules: { [rule: string]: string[] } = {
   Ansage: ["Nacheinander", "Blind"],
   Trumpf: ["Normal", "Nur Farben"],
   Spezialkarten: ["Aktiviert", "Deaktiviert"],
+  Spezialrollen: ["Deaktiviert", "Freie Auswahl", "Vorgegeben"]
 };
+
+export const SpecialRolesDescriptions: {[role: string]:string} = {
+  "Der Sprengmeister": "Du bekommst immer die Bombe, falls sie im Spiel ist",
+  "Der Obernarr": "Du bekommst immer den ersten Narren im Stapel, bevor normal ausgeteilt wird",
+  "Der Knecht": "Du bekommts immer so viele Knechte/Mägde wie möglich, bevor normal ausgeteilt wird",
+  "Der Schadenfrohe": "Du bekommst 3 Punkte jedes mal wenn ein anderer Spieler Minuspunkte bekommt",
+  "Der Pessimist": "Du bekommst 50 Punkte wenn du korrekt angesagt 0 Stiche machst, kannst dafür aber maximal 70 Punkte pro Runde machen",
+  "Der Optimist": "Du bekommts 5 Punkte pro gemachtem Stich wenn du eins neben deiner Vorhersage liegts, dafür kein +20 bei max. 3 Stichen",
+  "Der Zaubermeister": "Du hast jedes mal wenn ein anderer einen Zauberer ausgeteteilt bekommt eine 1/4 Chance ihn zu stehlen.",
+  "Das rote Schaf": "Du hast jedes mal wenn ein anderer eine rote Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen.",
+  "Das gelbe Schaf": "Du hast jedes mal wenn ein anderer eine gelbe Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen.",
+  "Das grüne Schaf": "Du hast jedes mal wenn ein anderer eine grüne Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen.",
+  "Das blaue Schaf": "Du hast jedes mal wenn ein anderer eine blaue Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen."
+}
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
 
