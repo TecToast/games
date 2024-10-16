@@ -4,7 +4,7 @@ export const Rules: { [rule: string]: string[] } = {
   Ansage: ["Nacheinander", "Blind"],
   Trumpf: ["Normal", "Nur Farben"],
   Spezialkarten: ["Aktiviert", "Deaktiviert"],
-  Spezialrollen: ["Deaktiviert", "Freie Auswahl", "Vorgegeben"]
+  Spezialrollen: ["Deaktiviert", "Freie Auswahl", "Vorgegeben", "Geheim"]
 };
 
 export const SpecialRolesDescriptions: {[role: string]:string} = {
