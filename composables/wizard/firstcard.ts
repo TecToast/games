@@ -1,6 +1,6 @@
 import type { Card, LayedCard } from "~/utils/wizard/types";
 import { watchMessage } from "~/utils/wsutils";
-import { isCard, NOTHINGCARD } from "~/utils/wizard/types";
+import { NOTHINGCARD } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 
 export function useFirstCard(layedCards: Ref<LayedCard[]>) {

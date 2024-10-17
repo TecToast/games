@@ -32,6 +32,8 @@ export type LayedCard = {
   card: Card;
   player: string;
 };
+export type SelectChangeCard = "selectCard" | "waitForOthers" | "nothing";
+
 export const AllCards: Card[] = (function () {
   let allCards: Card[] = [];
   for (let color of ["Rot", "Gelb", "Grün", "Blau"]) {

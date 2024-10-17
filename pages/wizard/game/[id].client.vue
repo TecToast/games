@@ -5,6 +5,7 @@ import {
   type LayedCard,
   NOTHINGCARD,
   Rules,
+  type SelectChangeCard,
 } from "~/utils/wizard/types";
 import { useTrumpShift } from "~/composables/wizard/trumpshifts";
 import { useFirstCard } from "~/composables/wizard/firstcard";
@@ -96,6 +97,18 @@ watchMessage(data, "ClearForNewSubRound", () => {
   resetFirstCard();
   currentStitchWinner.value = "";
 });
+const isNewCardModal = ref(false);
+const newCardImageSource = ref("");
+watchMessage(data, "Cards", (d) => {
+  isNewCardModal.value = d.newCard.color != "Nichts";
+  selectChangeCardState.value = "nothing";
+  newCardImageSource.value = convertCardToHref(d.newCard);
+});
+
+const selectChangeCardState = ref<SelectChangeCard>("nothing");
+watchMessage(data, "SevenPointFiveUsed", () => {
+  selectChangeCardState.value = "selectCard";
+});
 </script>
 
 <template>
@@ -176,6 +189,18 @@ watchMessage(data, "ClearForNewSubRound", () => {
           <strong class="text-center">Trumpf{{ trumpShift }}</strong>
           <WizardCard :card="trump" type="trump"></WizardCard>
         </div>
+        <p
+          v-if="selectChangeCardState == 'selectCard'"
+          class="px-30 absolute z-10 py-60 text-3xl font-bold text-gray-200"
+        >
+          7 1/2: Wähle eine Karte aus, die du abgeben möchtest
+        </p>
+        <p
+          v-if="selectChangeCardState == 'waitForOthers'"
+          class="px-30 absolute z-10 py-60 text-3xl font-bold text-gray-200"
+        >
+          Warte auf andere Spieler
+        </p>
         <div class="flex flex-row justify-evenly gap-5 align-middle">
           <div v-for="c of layedCards">
             <p
@@ -207,7 +232,6 @@ watchMessage(data, "ClearForNewSubRound", () => {
               :type="'layed'"
               :firstCard="firstCard"
             ></WizardCard>
-            {{ firstCard }}
           </div>
         </div>
       </div>
@@ -272,6 +296,18 @@ watchMessage(data, "ClearForNewSubRound", () => {
           </div>
         </UCard>
       </UModal>
+      <UModal v-model="isNewCardModal" :ui="{ width: 'w-64' }">
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Neue Karte:
+            </div>
+          </template>
+          <div class="flex justify-center">
+            <img alt="newCard" :src="newCardImageSource" class="w-48 rounded" />
+          </div>
+        </UCard>
+      </UModal>
       <div
         v-if="firstCome !== ''"
         class="absolute flex min-w-full flex-row justify-center text-center align-middle text-2xl font-bold text-gray-100"
@@ -322,7 +358,7 @@ watchMessage(data, "ClearForNewSubRound", () => {
           <span :class="{ 'text-[#12abf5]': currentStitchWinner == null }">
             {{
               currentStitchWinner ??
-              "Wirklich Niemanden! Es hat keiner gewonnen. Auch nicht Christian."
+              "Niemand! Es hat keiner gewonnen. Auch nicht Christian."
             }} </span
           >!
         </p>
@@ -332,6 +368,9 @@ watchMessage(data, "ClearForNewSubRound", () => {
         style="top: 45%"
       >
         <WizardCard
+          class="z-20"
+          v-model:selectChangeCardState="selectChangeCardState"
+          v-model:playerCards="playerCards"
           v-for="c of playerCards"
           type="hand"
           :card="c"
