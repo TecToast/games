@@ -4,7 +4,6 @@ import {
   type CardType,
   convertCardToHref,
   isCard,
-  NOTHINGCARD,
   type SelectChangeCard,
 } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
@@ -43,7 +42,7 @@ const isLegal = computed(() => {
     props.card.color == "Zauberer" ||
     props.card.color == "Narr" ||
     props.card.color == "Spezial" ||
-    props.firstCard == NOTHINGCARD ||
+    props.firstCard.color == "Zauberer" ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
   );
