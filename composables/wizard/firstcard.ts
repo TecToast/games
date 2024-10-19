@@ -1,34 +1,29 @@
 import type { Card, LayedCard } from "~/utils/wizard/types";
 import { watchMessage } from "~/utils/wsutils";
-import { isCard, NOTHINGCARD } from "~/utils/wizard/types";
+import { NOTHINGCARD } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 
 export function useFirstCard(layedCards: Ref<LayedCard[]>) {
   const { data } = useWizardConnection();
   const firstCard = ref<Card>(NOTHINGCARD);
-  const bombFirst = ref(false);
   watchMessage(data, "PlayerCard", (msg) => {
-    const card = msg.card as LayedCard;
-    if (
-      layedCards.value.every(
-        (c) =>
-          ["Nichts", "Narr"].includes(c.card.color) ||
-          isCard(c.card, "Spezial", 1),
-      )
-    ) {
-      firstCard.value = card.card;
+    const layCard = msg.card as LayedCard;
+    if (firstCard.value.color != "Nichts") {
+      return;
     }
+    // Bei Regenbogenkarte gilt: layCard.card.color = selectedColor (und nicht layCard.card.color = "Spezial")
     if (
-      card.card.color == "Spezial" &&
-      card.card.value == 1 &&
-      layedCards.value.every((c) => ["Nichts"].includes(c.card.color))
+      layCard.card.color == "Narr" ||
+      (layCard.card.color == "Spezial" && layCard.card.value != 3)
     ) {
-      bombFirst.value = true;
+      return;
     }
+    firstCard.value = layCard.card;
   });
+
   function resetFirstCard() {
     firstCard.value = NOTHINGCARD;
-    bombFirst.value = false;
   }
-  return { firstCard, resetFirstCard, bombFirst };
+
+  return { firstCard, resetFirstCard };
 }

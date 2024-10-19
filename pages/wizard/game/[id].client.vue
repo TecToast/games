@@ -5,6 +5,7 @@ import {
   type LayedCard,
   NOTHINGCARD,
   Rules,
+  type SelectChangeCard,
   SpecialRolesDescriptions,
 } from "~/utils/wizard/types";
 import { useTrumpShift } from "~/composables/wizard/trumpshifts";
@@ -16,6 +17,8 @@ import { usePlayerCards } from "~/composables/wizard/playercards";
 import { useRules } from "~/composables/wizard/rules";
 import { useGamePhase } from "~/composables/wizard/gamephase";
 import { useGeneralData } from "~/composables/wizard/generaldata";
+import { useColorSelect } from "~/composables/wizard/colorSelect";
+import { useChangeStitchPrediction } from "~/composables/wizard/changeStitchPrediction";
 import { useSpecialRoles } from "~/composables/wizard/specialRoles";
 
 const auth = useAuthStore();
@@ -30,7 +33,6 @@ const {
   currentPlayer,
   playersInLobby,
   currentStitchWinner,
-  nextPlayer,
 } = useGeneralData();
 const isOwner = computed(() => playersInLobby.value[0] == playerName.value);
 const { rules, notSet, switchRule } = useRules();
@@ -39,7 +41,7 @@ const { startGame, noStart, leaveGame, stopGame, ranks, gamephase } =
   useGamePhase(playersInLobby, layedCards);
 const trumpShift = useTrumpShift();
 const { playerCards, removeCardFromDeck } = usePlayerCards(trump);
-const { firstCard, resetFirstCard, bombFirst } = useFirstCard(layedCards);
+const { firstCard, resetFirstCard } = useFirstCard(layedCards);
 const {
   stitchGoals,
   stitchDone,
@@ -50,6 +52,10 @@ const {
   stitchReset,
 } = useWizardNumbers(firstCome, playerName);
 const playersTurn = computed(() => currentPlayer.value == playerName.value);
+const { selectColorCard, layCardWithColor } = useColorSelect();
+const isSelectColorModalActive = computed(() => selectColorCard.value != null);
+const { isChangeStitchModalActive, changeStitchPrediction } =
+  useChangeStitchPrediction();
 
 const { playerRoles, requestSelectedRole, currentRoleSelectingPlayer } = useSpecialRoles()
 const isRoleSelectionModalOpen = computed(() => currentRoleSelectingPlayer.value == playerName.value)
@@ -71,20 +77,7 @@ watchMessage(data, "PlayerCard", (d) => {
   layedCards.value.find((x) => x.player == d.card.player)!.card = card;
   if (d.card.player == playerName.value) {
     removeCardFromDeck(card);
-  }
-});
-watch(nextPlayer, (newValNextPlayer) => {
-  if (nextPlayer.value != "") {
-    setTimeout(() => {
-      layedCards.value = layedCards.value.map((x) => ({
-        player: x.player,
-        card: NOTHINGCARD,
-      }));
-      resetFirstCard();
-      currentPlayer.value = newValNextPlayer;
-      currentStitchWinner.value = "";
-      nextPlayer.value = "";
-    }, 4000);
+    selectColorCard.value = null;
   }
 });
 watchMessage(data, "AcceptedGoal", () => {
@@ -102,6 +95,27 @@ useHead({
   })),
 });
 
+
+watchMessage(data, "ClearForNewSubRound", () => {
+  layedCards.value = layedCards.value.map((x) => ({
+    player: x.player,
+    card: NOTHINGCARD,
+  }));
+  resetFirstCard();
+  currentStitchWinner.value = "";
+});
+const isNewCardModal = ref(false);
+const newCardImageSource = ref("");
+watchMessage(data, "Cards", (d) => {
+  isNewCardModal.value = d.newCard.color != "Nichts";
+  selectChangeCardState.value = "nothing";
+  newCardImageSource.value = convertCardToHref(d.newCard);
+});
+
+const selectChangeCardState = ref<SelectChangeCard>("nothing");
+watchMessage(data, "SevenPointFiveUsed", () => {
+  selectChangeCardState.value = "selectCard";
+});
 definePageMeta({colorMode: 'dark'})
 </script>
 
@@ -159,6 +173,18 @@ definePageMeta({colorMode: 'dark'})
           <strong class="text-center">Trumpf{{ trumpShift }}</strong>
           <WizardCard :card="trump" type="trump"></WizardCard>
         </div>
+        <p
+          v-if="selectChangeCardState == 'selectCard'"
+          class="px-30 absolute z-10 py-60 text-3xl font-bold text-gray-200"
+        >
+          7 1/2: Wähle eine Karte aus, die du abgeben möchtest
+        </p>
+        <p
+          v-if="selectChangeCardState == 'waitForOthers'"
+          class="px-30 absolute z-10 py-60 text-3xl font-bold text-gray-200"
+        >
+          Warte auf andere Spieler
+        </p>
         <div class="flex flex-row justify-evenly gap-5 align-middle">
           <div v-for="c of layedCards">
             <p class="text-center" :class="{ 'border-2 border-pink-500': currentPlayer == c.player }">
@@ -189,8 +215,81 @@ definePageMeta({colorMode: 'dark'})
           </div>
         </div>
       </div>
-
-      <div v-if="firstCome !== ''"
+      <UModal v-model="isSelectColorModalActive" prevent-close>
+        <!-- TODO zweite UCard einbauen um andere Spieler zu benachrichtigen, wenn jemand etwas auswählen muss -->
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Wähle eine Farbe aus
+            </div>
+          </template>
+          <div class="flex gap-3">
+            <button
+              @click="layCardWithColor('Rot')"
+              class="w-1/4 rounded bg-red-700 px-4 py-2"
+            >
+              Rot
+            </button>
+            <button
+              @click="layCardWithColor('Gelb')"
+              class="w-1/4 rounded bg-yellow-500 px-4 py-2"
+            >
+              Gelb
+            </button>
+            <button
+              @click="layCardWithColor('Grün')"
+              class="w-1/4 rounded bg-green-800 px-4 py-2"
+            >
+              Grün
+            </button>
+            <button
+              @click="layCardWithColor('Blau')"
+              class="w-1/4 rounded bg-blue-700 px-4 py-2"
+            >
+              Blau
+            </button>
+          </div>
+        </UCard>
+      </UModal>
+      <UModal v-model="isChangeStitchModalActive" prevent-close>
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Ändere deine Vorhersage
+            </div>
+          </template>
+          <div class="flex justify-center gap-3">
+            <button
+              v-if="stitchGoals[playerName] != 0"
+              @click="changeStitchPrediction(-1)"
+              class="w-1/4 rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
+            >
+              - 1
+            </button>
+            <button
+              v-if="stitchGoals[playerName] != round"
+              @click="changeStitchPrediction(1)"
+              class="w-1/4 rounded bg-gray-400 px-4 py-2 font-bold"
+            >
+              + 1
+            </button>
+          </div>
+        </UCard>
+      </UModal>
+      <UModal v-model="isNewCardModal" :ui="{ width: 'w-64' }">
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Neue Karte:
+            </div>
+          </template>
+          <div class="flex justify-center">
+            <img alt="newCard" :src="newCardImageSource" class="w-48 rounded" />
+          </div>
+        </UCard>
+      </UModal>
+      <div
+        v-if="firstCome !== ''"
         class="absolute flex min-w-full flex-row justify-center text-center align-middle text-2xl font-bold text-gray-100"
         style="top: 28%">
         <div>Tipp: {{ firstCome }} kommt raus!</div>
@@ -220,13 +319,28 @@ definePageMeta({colorMode: 'dark'})
           <span :class="{ 'text-[#12abf5]': currentStitchWinner == null }">
             {{
               currentStitchWinner ??
-              "Wirklich Niemanden! Es hat keiner gewonnen. Auch nicht Christian."
-            }} </span>!
+              "Niemand! Es hat keiner gewonnen. Auch nicht Christian."
+            }} </span
+          >!
         </p>
       </div>
-      <div class="absolute flex min-w-full flex-row flex-wrap justify-center gap-4 align-middle" style="top: 45%">
-        <WizardCard v-for="c of playerCards" type="hand" :card="c" :firstCard :playerCards :playersTurn :isPredict
-          :firstCome :bombFirst></WizardCard>
+      <div
+        class="absolute flex min-w-full flex-row flex-wrap justify-center gap-4 align-middle"
+        style="top: 45%"
+      >
+        <WizardCard
+          class="z-20"
+          v-model:selectChangeCardState="selectChangeCardState"
+          v-model:playerCards="playerCards"
+          v-for="c of playerCards"
+          type="hand"
+          :card="c"
+          :firstCard
+          :playerCards
+          :playersTurn
+          :isPredict
+          :firstCome
+        ></WizardCard>
       </div>
     </div>
     <div v-if="gamephase == 'finished'">

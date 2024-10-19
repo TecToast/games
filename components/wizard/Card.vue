@@ -3,8 +3,18 @@ import {
   type Card,
   type CardType,
   convertCardToHref,
+  isCard,
+  type SelectChangeCard,
 } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
+
+const selectChangeCardState = defineModel<SelectChangeCard>(
+  "selectChangeCardState",
+  { default: "nothing" },
+);
+const playerCards = defineModel<Card[]>("playerCards", {
+  default: [],
+});
 
 const props = defineProps<{
   card: Card;
@@ -14,7 +24,6 @@ const props = defineProps<{
   playersTurn?: boolean;
   isPredict?: boolean;
   firstCome?: string;
-  bombFirst?: boolean;
 }>();
 const src = computed(() => {
   return convertCardToHref(props.card);
@@ -22,8 +31,10 @@ const src = computed(() => {
 const clickable = computed(() => {
   const type = props.type;
   if (type != "hand") return false;
-  if (!props.playersTurn) return false;
   if (props.isPredict) return false;
+  if (selectChangeCardState.value == "waitForOthers") return false;
+  if (selectChangeCardState.value == "selectCard") return true;
+  if (!props.playersTurn) return false;
   return isLegal.value;
 });
 const isLegal = computed(() => {
@@ -31,8 +42,7 @@ const isLegal = computed(() => {
     props.card.color == "Zauberer" ||
     props.card.color == "Narr" ||
     props.card.color == "Spezial" ||
-    props.firstCard?.color == "Zauberer" ||
-    props.bombFirst ||
+    props.firstCard.color == "Zauberer" ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
   );
@@ -41,6 +51,20 @@ const { sendWS } = useWizardConnection();
 
 function onClick() {
   if (!clickable.value) return;
+  if (selectChangeCardState.value == "selectCard") {
+    sendWS("ChangeCard", { card: props.card });
+    selectChangeCardState.value = "waitForOthers";
+    delete playerCards[props.card];
+    return;
+  }
+  if (
+    isCard(props.card, "Spezial", 9.75) ||
+    isCard(props.card, "Spezial", 7.5)
+  ) {
+    const selectColorCard = useState<Card | null>("selectColorCard");
+    selectColorCard.value = props.card;
+    return;
+  }
   sendWS("LayCard", { card: props.card });
 }
 </script>
@@ -62,12 +86,15 @@ function onClick() {
             card.color != 'Nichts' &&
             firstCard?.color == card.color &&
             firstCard?.value == card.value
-          ? 'border-4 border-lime-400'
-          : type == 'hand'
+          ? 'outline-3 outline-dotted outline-offset-0 outline-fuchsia-800'
+          : type == 'hand' && selectChangeCardState == 'nothing'
             ? isLegal
               ? 'border-2 border-green-400'
               : 'border-2 border-red-400'
             : '',
+      type == 'layed' && (card.value == 7.5 || card.value == 9.75)
+        ? `border-4 border-${card.color == 'Grün' ? 'green' : card.color == 'Rot' ? 'red' : card.color == 'Blau' ? 'blue' : card.color == 'Gelb' ? 'yellow' : ''}-400`
+        : '',
     ]"
     style="max-width: 150px"
   />

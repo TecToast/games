@@ -1,3 +1,5 @@
+import Card from "~/components/wizard/Card.vue";
+
 export const Rules: { [rule: string]: string[] } = {
   Punkte: ["Normal", "Max. 30"],
   Zauberer: ["Normal", "Mittlerer Zauberer", "Letzter Zauberer"],
@@ -46,6 +48,8 @@ export type LayedCard = {
   card: Card;
   player: string;
 };
+export type SelectChangeCard = "selectCard" | "waitForOthers" | "nothing";
+
 export const AllCards: Card[] = (function () {
   let allCards: Card[] = [];
   for (let color of ["Rot", "Gelb", "Grün", "Blau"]) {
@@ -57,6 +61,11 @@ export const AllCards: Card[] = (function () {
     allCards.push({ color: "Zauberer", value: i });
     allCards.push({ color: "Narr", value: i });
   }
+  for (let i = 1; i <= 1; i++) {
+    allCards.push({ color: "Spezial", value: i });
+  }
+  allCards.push({ color: "Spezial", value: 7.5 });
+  allCards.push({ color: "Spezial", value: 9.75 });
   return allCards;
 })();
 
@@ -64,18 +73,20 @@ export function convertCardToHref(card: Card): string {
   const c = card.color;
   if (c == "Nichts") return "/api/wizard/cardimages/empty.webp";
   const color =
-    c == "Grün"
-      ? "Gruen"
-      : c == "Zauberer"
-        ? "Z"
-        : c == "Narr"
-          ? "N"
-          : c == "Spezial"
-            ? "S"
-            : c;
-  //TODO: für Spezialkarte Bombe, dh. Card(Color.Special, 1), muss richtige *.webp-Datei hinterlegt werden
+    card.value == 7.5 || card.value == 9.75
+      ? "S"
+      : c == "Grün"
+        ? "Gruen"
+        : c == "Zauberer"
+          ? "Z"
+          : c == "Narr"
+            ? "N"
+            : c == "Spezial"
+              ? "S"
+              : c;
   return `/api/wizard/cardimages/${color}_${card.value}.webp`;
 }
+
 export function isCard(card: Card, color: Color, value: number): boolean {
   return card.color == color && card.value == value;
 }
