@@ -29,4 +29,14 @@ export default defineNuxtConfig({
   ui: {
     disableGlobalStyles: true,
   },
+  tailwindcss: {
+    config: {
+      safelist: [
+        "border-red-400",
+        "border-yellow-400",
+        "border-green-400",
+        "border-blue-400",
+      ],
+    },
+  },
 });
