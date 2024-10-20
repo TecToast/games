@@ -87,6 +87,11 @@ export function convertCardToHref(card: Card): string {
   return `/api/wizard/cardimages/${color}_${card.value}.webp`;
 }
 
-export function isCard(card: Card, color: Color, value: number): boolean {
+export function isCard(
+  card: Card | undefined,
+  color: Color,
+  value: number,
+): boolean {
+  if (!card) return false;
   return card.color == color && card.value == value;
 }
