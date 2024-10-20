@@ -331,7 +331,6 @@ definePageMeta({colorMode: 'dark'})
         <WizardCard
           class="z-20"
           v-model:selectChangeCardState="selectChangeCardState"
-          v-model:playerCards="playerCards"
           v-for="c of playerCards"
           type="hand"
           :card="c"
@@ -340,6 +339,7 @@ definePageMeta({colorMode: 'dark'})
           :playersTurn
           :isPredict
           :firstCome
+          @removeCard="removeCardFromDeck"
         ></WizardCard>
       </div>
     </div>

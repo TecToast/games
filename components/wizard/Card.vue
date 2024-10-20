@@ -12,10 +12,6 @@ const selectChangeCardState = defineModel<SelectChangeCard>(
   "selectChangeCardState",
   { default: "nothing" },
 );
-const playerCards = defineModel<Card[]>("playerCards", {
-  default: [],
-});
-
 const props = defineProps<{
   card: Card;
   type: CardType;
@@ -25,6 +21,7 @@ const props = defineProps<{
   isPredict?: boolean;
   firstCome?: string;
 }>();
+const emit = defineEmits(["removeCard"]);
 const src = computed(() => {
   return convertCardToHref(props.card);
 });
@@ -55,7 +52,7 @@ function onClick() {
   if (selectChangeCardState.value == "selectCard") {
     sendWS("ChangeCard", { card: props.card });
     selectChangeCardState.value = "waitForOthers";
-    delete playerCards[props.card];
+    emit("removeCard", props.card);
     return;
   }
   if (
