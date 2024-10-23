@@ -18,21 +18,23 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
   "Der Schadenfrohe":
     "Du bekommst 5 Punkte jedes mal wenn ein anderer Spieler Minuspunkte bekommt",
   "Der Pessimist":
-    "Du bekommst 50 Punkte wenn du korrekt angesagt 0 Stiche machst, bekommts dafür aber für maximal 10/Spielerzahl Stiche Punkte",
+    "Du bekommst 50 Punkte wenn du korrekt angesagt 0 Stiche machst, bekommts dafür aber für maximal 12/Spielerzahl Stiche Punkte",
   "Der Optimist":
-    "Du bekommts 5 Punkte pro gemachtem Stich wenn du eins neben deiner Vorhersage liegst, dafür kein +20 bei max. 10/Spielerzahl Stichen",
+    "Du bekommts 5 Punkte pro gemachtem Stich wenn du eins neben deiner Vorhersage liegst, dafür kein +20 bei unter 12/Spielerzahl Stichen",
   "Der Gambler":
-    "Du bekommst 20 Punkte pro gemachtem Stich wenn du richtig liegst, dafür aber kein +20 und -20 Punkte pro Stich daneben",
+    "Du bekommst 20 Punkte pro gemachtem Stich wenn du richtig liegst, dafür aber kein +20 und -20 Punkte pro Stich daneben (Glücksspiel kann süchtig machen)",
   "Der Zaubermeister":
-    "Du hast jedes mal wenn ein anderer einen Zauberer ausgeteteilt bekommt eine 1/4 Chance ihn zu stehlen.",
+    "Du hast jedes mal wenn ein anderer einen Zauberer ausgeteteilt bekommt eine 25% Chance ihn zu stehlen.",
   "Das rote Schaf":
-    "Du hast jedes mal wenn ein anderer eine rote Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen.",
+    "Du hast eine 50% Chance rote Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
   "Das gelbe Schaf":
-    "Du hast jedes mal wenn ein anderer eine gelbe Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen.",
+    "Du hast eine 50% Chance gelbe Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
   "Das grüne Schaf":
-    "Du hast jedes mal wenn ein anderer eine grüne Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen.",
+    "Du hast eine 50% Chance grüne Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
   "Das blaue Schaf":
-    "Du hast jedes mal wenn ein anderer eine blaue Karte ausgeteteilt bekommt eine 1/2 Chance sie zu stehlen.",
+    "Du hast eine 50% Chance blaue Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
+  "???":
+    "Dieser Spieler hat eine Rolle, doch es wurde eingestellt, dass sie vor den anderen Spielern versteckt wird."
 };
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;

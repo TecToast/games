@@ -240,9 +240,16 @@ definePageMeta({ colorMode: "dark" });
                 {{ (results[c.player] >= 0 ? "+" : "") + results[c.player] }}
               </span>
               <br />
-              <span class="text-gray-400">
+              <UTooltip
+                :text="SpecialRolesDescriptions[playerRoles[c.player]]"
+                :popper="{ placement: 'right' }"
+                :ui="{ width: 'max-w-screen-xl' }"
+                class="w-full"
+              >
+              <span class="text-gray-400 justify-center w-full">
                 {{ playerRoles[c.player] }}
               </span>
+              </UTooltip>
             </p>
             <WizardCard
               :card="c.card"
