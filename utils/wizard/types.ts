@@ -33,8 +33,6 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
     "Du hast eine 50% Chance grüne Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
   "Das blaue Schaf":
     "Du hast eine 50% Chance blaue Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
-  "???":
-    "Dieser Spieler hat eine Rolle, doch es wurde eingestellt, dass sie vor den anderen Spielern versteckt wird."
 };
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;

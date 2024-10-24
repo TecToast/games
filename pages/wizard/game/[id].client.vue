@@ -241,7 +241,7 @@ definePageMeta({ colorMode: "dark" });
               </span>
               <br />
               <UTooltip
-                :text="SpecialRolesDescriptions[playerRoles[c.player]]"
+                :text="SpecialRolesDescriptions[playerRoles[c.player]] ?? 'Versteckte Rolle'"
                 :popper="{ placement: 'right' }"
                 :ui="{ width: 'max-w-screen-xl' }"
                 class="w-full"
