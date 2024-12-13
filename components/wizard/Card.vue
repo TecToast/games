@@ -79,7 +79,7 @@ function onClick() {
       type == 'hand' ? 'hover:scale-110 hover:cursor-pointer' : '',
       clickable ? 'hover:border-4 hover:border-blue-400' : '',
       type == 'trump'
-        ? 'border-4 border-yellow-400'
+        ? 'border-4 border-fuchsia-800'
         : type == 'layed' &&
             card.color != 'Nichts' &&
             firstCard?.color == card.color &&
