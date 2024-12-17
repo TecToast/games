@@ -44,7 +44,7 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
   function saveToDB() {
     const data = gdata.value;
     if (!data) return;
-    $fetch(`/api/jeopardy/update/${route.params.id}`, {
+    $fetch(`/api/${gameId}/update/${route.params.id}`, {
       method: "POST",
       body: JSON.stringify(data),
     })
