@@ -9,19 +9,19 @@ importers:
   .:
     dependencies:
       '@nuxt/ui':
-        specifier: ^2.18.4
+        specifier: ^2.20.0
         version: 2.20.0(change-case@5.4.4)(magicast@0.3.5)(rollup@4.28.1)(typescript@5.7.2)(vite@5.4.11(@types/node@22.10.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.2))
       '@nuxtus/nuxt-localtunnel':
         specifier: ^1.0.1
         version: 1.0.1(magicast@0.3.5)(rollup@4.28.1)
       '@pinia/nuxt':
-        specifier: ^0.5.2
+        specifier: ^0.5.5
         version: 0.5.5(magicast@0.3.5)(rollup@4.28.1)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
       '@vueuse/nuxt':
-        specifier: ^10.11.0
+        specifier: ^10.11.1
         version: 10.11.1(magicast@0.3.5)(nuxt@3.14.1592(@parcel/watcher@2.5.0)(@types/node@22.10.2)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.28.1)(terser@5.37.0)(typescript@5.7.2)(vite@5.4.11(@types/node@22.10.2)(terser@5.37.0)))(rollup@4.28.1)(vue@3.5.13(typescript@5.7.2))
       pinia:
-        specifier: ^2.2.0
+        specifier: ^2.3.0
         version: 2.3.0(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
       pinia-shared-state:
         specifier: ^0.5.1
@@ -31,19 +31,19 @@ importers:
         version: 3.5.13(typescript@5.7.2)
     devDependencies:
       '@nuxtjs/tailwindcss':
-        specifier: ^6.12.1
+        specifier: ^6.12.2
         version: 6.12.2(magicast@0.3.5)(rollup@4.28.1)
       '@vueuse/core':
-        specifier: ^10.11.0
+        specifier: ^10.11.1
         version: 10.11.1(vue@3.5.13(typescript@5.7.2))
       nuxt:
         specifier: ^3.14.1592
         version: 3.14.1592(@parcel/watcher@2.5.0)(@types/node@22.10.2)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.28.1)(terser@5.37.0)(typescript@5.7.2)(vite@5.4.11(@types/node@22.10.2)(terser@5.37.0))
       prettier:
-        specifier: ^3.3.3
+        specifier: ^3.4.2
         version: 3.4.2
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.6
+        specifier: ^0.6.9
         version: 0.6.9(prettier@3.4.2)
 
 packages:

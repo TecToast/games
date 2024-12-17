@@ -10,19 +10,19 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/ui": "^2.18.4",
+    "@nuxt/ui": "^2.20.0",
     "@nuxtus/nuxt-localtunnel": "^1.0.1",
-    "@pinia/nuxt": "^0.5.2",
-    "@vueuse/nuxt": "^10.11.0",
-    "pinia": "^2.2.0",
+    "@pinia/nuxt": "^0.5.5",
+    "@vueuse/nuxt": "^10.11.1",
+    "pinia": "^2.3.0",
     "pinia-shared-state": "^0.5.1",
     "vue": "latest"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.12.1",
-    "@vueuse/core": "^10.11.0",
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "@vueuse/core": "^10.11.1",
     "nuxt": "^3.14.1592",
-    "prettier": "^3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.6"
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9"
   }
 }
