@@ -14,7 +14,6 @@
     "@nuxtus/nuxt-localtunnel": "^1.0.1",
     "@pinia/nuxt": "^0.5.2",
     "@vueuse/nuxt": "^10.11.0",
-    "nuxt": "^3.12.4",
     "pinia": "^2.2.0",
     "pinia-shared-state": "^0.5.1",
     "vue": "latest"
@@ -22,6 +21,7 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@vueuse/core": "^10.11.0",
+    "nuxt": "^3.14.1592",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6"
   }
