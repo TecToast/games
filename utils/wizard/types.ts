@@ -36,7 +36,7 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
   "Der Gierige":
     "Du bekommst immernoch 10 Punkte pro angesagtem Stich und 5 Punkte pro zusätzlichem Stich wenn du über deiner Ansage liegst. Dafür kein +20.",
   "Der Dieb":
-    "Wenn du einen Dieb spielst hast du eine 50% Chanche den Stich zu klauen.",
+    "Wenn du einen Dieb spielst hast du eine 50% Chance den Stich zu klauen.",
 };
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
