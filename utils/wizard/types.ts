@@ -33,6 +33,10 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
     "Du hast eine 50% Chance grüne Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
   "Das blaue Schaf":
     "Du hast eine 50% Chance blaue Karten zu stehlen. Trumpf Karten von Farben ohne Schaf werden zu 50% Chance übersprungen.",
+  "Der Gierige":
+    "Du bekommst immernoch 10 Punkte pro angesagtem Stich und 5 Punkte pro zusätzlichem Stich wenn du über deiner Ansage liegst. Dafür kein +20.",
+  "Der Dieb":
+    "Wenn du einen Dieb spielst hast du eine 50% Chanche den Stich zu klauen.",
 };
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
