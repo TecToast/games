@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+import { toID } from "~/stores/jeopardy";
+
 const route = useRoute();
-const jeopardy = useJeopardyStore();
 const props = defineProps({
   name: {
     type: String,
@@ -14,6 +15,10 @@ const props = defineProps({
     type: Function,
     default: (thing: string) => thing,
   },
+  store: {
+    type: Object,
+    required: true,
+  },
 });
 
 function removeFromList(thing: string) {
@@ -21,13 +26,13 @@ function removeFromList(thing: string) {
   if (!confirm) return;
   if (!Array.isArray(props.list)) {
     delete props.list[thing];
-    jeopardy.markUnsaved();
+    props.store.markUnsaved();
     return;
   }
   const index = props.list.indexOf(thing);
   if (index > -1) {
     props.list.splice(index, 1);
-    jeopardy.markUnsaved();
+    props.store.markUnsaved();
   }
 }
 
@@ -50,11 +55,11 @@ function createNew() {
   }
   if (!isArray) {
     props.list[thing] = mappedResult == thing ? {} : mappedResult;
-    jeopardy.markUnsaved();
+    props.store.markUnsaved();
     return;
   }
   props.list.push(mappedResult);
-  jeopardy.markUnsaved();
+  props.store.markUnsaved();
 }
 const iterateString = computed(() => {
   if (Array.isArray(props.list)) return props.list;
@@ -72,7 +77,7 @@ const iterateString = computed(() => {
     </div>
     <div class="mt-4 flex w-[50vw] flex-col items-center gap-4">
       <div class="flex gap-2" v-for="thing of iterateString">
-        <NuxtLink :to="`${route.path}/${jeopardy.toID(thing)}`">
+        <NuxtLink :to="`${route.path}/${toID(thing)}`">
           <ControlButton class="h-full"> {{ thing }}</ControlButton>
         </NuxtLink>
         <ConfigTrashCan @click="removeFromList(thing)" />

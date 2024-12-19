@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      protectedUrls: ["/jeopardy", "/musicquiz", "/wizard"],
+      protectedUrls: ["/jeopardy", "/musicquiz", "/wizard", "/nobodyisperfect"],
     },
   },
   ui: {
