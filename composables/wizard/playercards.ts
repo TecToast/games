@@ -16,7 +16,10 @@ export function usePlayerCards(trump: Ref<Card>) {
       (c) =>
         (c.color == card.color && c.value == card.value) ||
         (card.value == 7.5 && c.value == 7.5) ||
-        (card.value == 9.75 && c.value == 9.75),
+        (card.value == 9.75 && c.value == 9.75) ||
+        (card.value == -1 && c.value == -1) ||
+        (card.value == 14 && c.value == 14) ||
+        (card.value == 69 && c.value == 69),
     );
     if (index != -1) playerCards.value.splice(index, 1);
   }

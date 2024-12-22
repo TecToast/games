@@ -6,6 +6,7 @@ export const Rules: { [rule: string]: string[] } = {
   Ansage: ["Nacheinander", "Blind"],
   Trumpf: ["Normal", "Nur Farben"],
   Spezialkarten: ["Aktiviert", "Deaktiviert"],
+  Memekarten: ["Aktiviert", "Deaktiviert"],
   Spezialrollen: ["Deaktiviert", "Freie Auswahl", "Vorgegeben", "Geheim"],
 };
 
@@ -74,6 +75,8 @@ export const AllCards: Card[] = (function () {
   }
   for (let i = 1; i <= 4; i++) {
     allCards.push({ color: "Zauberer", value: i });
+  }
+  for (let i = 1; i <= 6; i++) {
     allCards.push({ color: "Narr", value: i });
   }
   for (let i = 1; i <= 1; i++) {
@@ -81,6 +84,9 @@ export const AllCards: Card[] = (function () {
   }
   allCards.push({ color: "Spezial", value: 7.5 });
   allCards.push({ color: "Spezial", value: 9.75 });
+  allCards.push({ color: "Spezial", value: -1 });
+  allCards.push({ color: "Spezial", value: 14 });
+  allCards.push({ color: "Spezial", value: 69 });
   return allCards;
 })();
 
@@ -88,7 +94,7 @@ export function convertCardToHref(card: Card): string {
   const c = card.color;
   if (c == "Nichts") return "/api/wizard/cardimages/empty.webp";
   const color =
-    card.value == 7.5 || card.value == 9.75
+    card.value == 7.5 || card.value == 9.75 || card.value == -1 || card.value == 14 || card.value == 69
       ? "S"
       : c == "Grün"
         ? "Gruen"
