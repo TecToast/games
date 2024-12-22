@@ -57,7 +57,10 @@ function onClick() {
   }
   if (
     isCard(props.card, "Spezial", 9.75) ||
-    isCard(props.card, "Spezial", 7.5)
+    isCard(props.card, "Spezial", 7.5) ||
+    isCard(props.card, "Spezial", -1) ||
+    isCard(props.card, "Spezial", 14) ||
+    isCard(props.card, "Spezial", 69)
   ) {
     const selectColorCard = useState<Card | null>("selectColorCard");
     selectColorCard.value = props.card;
@@ -90,7 +93,7 @@ function onClick() {
               ? 'border-2 border-green-400'
               : 'border-2 border-red-400'
             : '',
-      type == 'layed' && (card.value == 7.5 || card.value == 9.75)
+      type == 'layed' && (card.value == 7.5 || card.value == 9.75 || card.value == -1 || card.value == 14 || card.value == 69)
         ? `border-4 border-${card.color == 'Grün' ? 'green' : card.color == 'Rot' ? 'red' : card.color == 'Blau' ? 'blue' : card.color == 'Gelb' ? 'yellow' : ''}-400`
         : '',
     ]"
