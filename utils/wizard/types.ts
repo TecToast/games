@@ -75,6 +75,8 @@ export const AllCards: Card[] = (function () {
   }
   for (let i = 1; i <= 4; i++) {
     allCards.push({ color: "Zauberer", value: i });
+  }
+  for (let i = 1; i <= 6; i++) {
     allCards.push({ color: "Narr", value: i });
   }
   for (let i = 1; i <= 1; i++) {
