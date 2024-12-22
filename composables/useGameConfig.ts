@@ -9,20 +9,22 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
     status,
     error,
     refresh: refreshData,
-  } = useAsyncData(
+  } = useAsyncData(gameId,
     // @ts-ignore
     () => {
-      if (route.params.id)
+      if (route.params.id && route.fullPath.includes(gameId)) {
         return $fetch<T>(`/api/${gameId}/data/${route.params.id}`, {
           credentials: "include",
           headers: {
             Cookie: `user_session=${cookies.value}`,
           },
         });
+      }
       return new Promise<null>((resolve) =>
         setTimeout(() => resolve(null), 500),
       );
     },
+    // @ts-ignore
     { deep: true, watch: () => route.params.id },
   );
   // const gdata = computed(() => ggdata.value as T | null);

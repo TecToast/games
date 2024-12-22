@@ -24,6 +24,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   }
 
   return {
+    gdata,
     status,
     error,
     users,

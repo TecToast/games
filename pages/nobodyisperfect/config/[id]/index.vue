@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 const route = useRoute();
-const game = useJeopardyStore();
-const gameId = "jeopardy";
-const { jdata, users, status } = storeToRefs(game);
+const game = useNobodyIsPerfectStore();
+const gameId = "nobodyisperfect";
+const { gdata, users, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
 function reload() {
   if (game.unsavedChanges) {
     if (
-      !confirm(
-        "You have unsaved changes. Are you sure you want to reload? This will override your local changes.",
-      )
+        !confirm(
+            "You have unsaved changes. Are you sure you want to reload? This will override your local changes.",
+        )
     )
       return;
   }
@@ -20,26 +20,15 @@ function reload() {
 </script>
 
 <template>
-  <div v-if="jdata" class="flex w-full justify-around">
+  <div v-if="gdata" class="flex w-full justify-around">
     <div class="flex flex-col">
-      <ConfigLeafGroup name="Joker" :list="jdata.jokers">
-        <HelpModal name="Joker">
-          Here you can set the jokers which will be available to the players.
-          You can add new jokers by clicking on the "+ New" button. You can
-          remove jokers by clicking on the trash can icon. Please note that the
-          names of the jokers should be at most 2 characters long so they can
-          fit into the UI.
-        </HelpModal>
-      </ConfigLeafGroup>
+      <ControlButton v-for="(q, index) of gdata.questions">
+        {{ "Frage" + index + ": " + q.question.title }}
+      </ControlButton>
       <ConfigSep />
-      <ConfigLinkGroup name="Categories" :list="jdata.categories" :store="game">
-        <HelpModal name="Categories">
-          Here you can set the categories for the quiz. You can add new
-          categories by clicking on the "+ New" button. To edit the questions in
-          a category, click on the category name. You can remove categories by
-          clicking on the trash can icon.
-        </HelpModal>
-      </ConfigLinkGroup>
+      <ControlButton>
+        + New
+      </ControlButton>
     </div>
     <div class="flex w-full flex-col items-center gap-2">
       <div class="flex items-center gap-2">

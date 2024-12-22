@@ -3,8 +3,8 @@ export type NobodyIsPerfectData = HasUser<UserData> & {
   host: string;
 };
 export type Question = {
-  question: { title: string; image?: string };
-  answer: string;
+  question: NIPQData;
+  answer: NIPQData;
 };
 export type UserData = {
   avatarUrl: string;
@@ -12,6 +12,13 @@ export type UserData = {
   points: number;
   currentAnswer?: string;
   selectedIndex?: number;
+};
+
+export type NIPQData = {
+  title: string;
+  image?: string;
+  video?: string;
+  audio?: string;
 };
 
 export type State = "overview" | "question" | "answer";
