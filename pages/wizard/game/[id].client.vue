@@ -123,6 +123,40 @@ watchMessage(data, "SevenPointFiveUsed", () => {
   selectChangeCardState.value = "selectCard";
 });
 definePageMeta({ colorMode: "dark" });
+
+const video = ref();
+const { onLoaded } = useScriptYouTubePlayer({
+  scriptOptions: { trigger: "onNuxtReady" },
+});
+
+const player = ref(null);
+onLoaded(async ({ YT }) => {
+  // wait for the internal YouTube APIs to be ready
+  const YouTube = await YT;
+  await new Promise<void>((resolve) => {
+    if (typeof YT.Player === "undefined") YouTube.ready(resolve);
+    else resolve();
+  });
+  // load the API
+  player.value = new YT.Player(video.value, {
+    videoId: "dQw4w9WgXcQ",
+    playerVars: {
+      playsinline: 1,
+      autoplay: 1,
+      playlist: "dQw4w9WgXcQ",
+    },
+    events: {
+      onReady: (event) => {
+        event.target.setVolume(12);
+      },
+      onStateChange: (event) => {
+        if (event.data === YT.PlayerState.ENDED) {
+          event.target.playVideo(); // restart video if it reached the end
+        }
+      },
+    },
+  });
+});
 </script>
 
 <template>
@@ -131,6 +165,7 @@ definePageMeta({ colorMode: "dark" });
       v-if="gamephase === 'lobby'"
       class="mt-20 flex flex-row justify-center"
     >
+      <div class="hidden" ref="video" />
       <div class="w-1/3">
         <p class="mb-3 text-center text-3xl text-gray-300">Spieler</p>
         <ul class="divide-y-2 divide-gray-100 rounded-lg bg-white shadow">
@@ -241,14 +276,17 @@ definePageMeta({ colorMode: "dark" });
               </span>
               <br />
               <UTooltip
-                :text="SpecialRolesDescriptions[playerRoles[c.player]] ?? 'Versteckte Rolle'"
+                :text="
+                  SpecialRolesDescriptions[playerRoles[c.player]] ??
+                  'Versteckte Rolle'
+                "
                 :popper="{ placement: 'right' }"
                 :ui="{ width: 'max-w-screen-xl' }"
                 class="w-full"
               >
-              <span class="text-gray-400 justify-center w-full">
-                {{ playerRoles[c.player] }}
-              </span>
+                <span class="w-full justify-center text-gray-400">
+                  {{ playerRoles[c.player] }}
+                </span>
               </UTooltip>
             </p>
             <WizardCard
