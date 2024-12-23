@@ -87,6 +87,11 @@ export const AllCards: Card[] = (function () {
   allCards.push({ color: "Spezial", value: -1 });
   allCards.push({ color: "Spezial", value: 14 });
   allCards.push({ color: "Spezial", value: 69 });
+  allCards.push({ color: "Spezial", value: 1 });
+  allCards.push({ color: "Spezial", value: 2 });
+  allCards.push({ color: "Spezial", value: 3 });
+  allCards.push({ color: "Spezial", value: 6 });
+  allCards.push({ color: "Spezial", value: 7 });
   return allCards;
 })();
 
