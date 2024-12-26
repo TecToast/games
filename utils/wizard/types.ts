@@ -37,7 +37,7 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
   "Der Gierige":
     "Du bekommst immernoch 10 Punkte pro angesagtem Stich und 5 Punkte pro zusätzlichem Stich wenn du über deiner Ansage liegst. Dafür kein +20.",
   "Der Dieb":
-    "Wenn du einen Dieb spielst hast du eine 50% Chance den Stich zu klauen.",
+    "Wenn du einen Dieb spielst hast du eine 50% Chance den Stich zu klauen, falls der Stich nicht schon durch Gambling/Democracy vergeben wird.",
 };
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
@@ -76,7 +76,7 @@ export const AllCards: Card[] = (function () {
   for (let i = 1; i <= 4; i++) {
     allCards.push({ color: "Zauberer", value: i });
   }
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     allCards.push({ color: "Narr", value: i });
   }
   for (let i = 1; i <= 1; i++) {
@@ -87,6 +87,11 @@ export const AllCards: Card[] = (function () {
   allCards.push({ color: "Spezial", value: -1 });
   allCards.push({ color: "Spezial", value: 14 });
   allCards.push({ color: "Spezial", value: 69 });
+  allCards.push({ color: "Spezial", value: 1 });
+  allCards.push({ color: "Spezial", value: 2 });
+  allCards.push({ color: "Spezial", value: 3 });
+  allCards.push({ color: "Spezial", value: 6 });
+  allCards.push({ color: "Spezial", value: 7 });
   return allCards;
 })();
 
