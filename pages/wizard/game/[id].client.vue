@@ -20,6 +20,7 @@ import { useGeneralData } from "~/composables/wizard/generaldata";
 import { useColorSelect } from "~/composables/wizard/colorSelect";
 import { useChangeStitchPrediction } from "~/composables/wizard/changeStitchPrediction";
 import { useSpecialRoles } from "~/composables/wizard/specialRoles";
+import { useStorage } from "@vueuse/core";
 
 const auth = useAuthStore();
 const playerName = computed(() => auth.data?.name ?? "");
@@ -67,6 +68,7 @@ const isWaitingForOtherPlayersRoleSelectionModalOpen = computed(
     currentRoleSelectingPlayer.value != "" &&
     currentRoleSelectingPlayer.value != playerName.value,
 );
+const volume = useStorage("volume", 20);
 
 watchMessage(data, "RedirectHome", () => {
   navigateTo("/wizard");
@@ -147,7 +149,8 @@ onLoaded(async ({ YT }) => {
     },
     events: {
       onReady: (event) => {
-        event.target.setVolume(12);
+        const defaultValue = useStorage("volume");
+        event.target.setVolume(defaultValue.value);
       },
       onStateChange: (event) => {
         if (event.data === YT.PlayerState.ENDED) {
@@ -157,15 +160,20 @@ onLoaded(async ({ YT }) => {
     },
   });
 });
+
+function updateVolume() {
+  useStorage("volume").value = volume.value;
+  player.value.setVolume(volume.value);
+}
 </script>
 
 <template>
   <DefaultBackground>
+    <div class="hidden" ref="video" />
     <div
       v-if="gamephase === 'lobby'"
       class="mt-20 flex flex-row justify-center"
     >
-      <div class="hidden" ref="video" />
       <div class="w-1/3">
         <p class="mb-3 text-center text-3xl text-gray-300">Spieler</p>
         <ul class="divide-y-2 divide-gray-100 rounded-lg bg-white shadow">
@@ -217,6 +225,30 @@ onLoaded(async ({ YT }) => {
         </div>
       </div>
     </div>
+    <div class="group fixed bottom-4 right-4">
+      <!-- Lautsprecher-Icon -->
+      <img
+        src="/public/speaker icon.png"
+        class="h-8 w-8 cursor-pointer"
+        alt="Speaker Icon"
+      />
+
+      <!-- Slider, der bei Hover sichtbar wird -->
+      <div
+        class="absolute bottom-12 right-0 w-32 rounded-lg bg-white p-2 opacity-0 shadow-lg transition-opacity duration-500 group-hover:opacity-100"
+      >
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          v-model="volume"
+          @input="updateVolume"
+          class="w-full"
+        />
+      </div>
+    </div>
+
     <div v-if="gamephase === 'game'">
       <div class="absolute right-2 top-2">
         <button
