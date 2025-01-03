@@ -20,6 +20,7 @@ import { useGeneralData } from "~/composables/wizard/generaldata";
 import { useColorSelect } from "~/composables/wizard/colorSelect";
 import { useChangeStitchPrediction } from "~/composables/wizard/changeStitchPrediction";
 import { useSpecialRoles } from "~/composables/wizard/specialRoles";
+import { useStorage } from "@vueuse/core";
 import { useWinnerPoll } from "~/composables/wizard/winnerPoll";
 
 const auth = useAuthStore();
@@ -70,6 +71,7 @@ const isWaitingForOtherPlayersRoleSelectionModalOpen = computed(
     currentRoleSelectingPlayer.value != "" &&
     currentRoleSelectingPlayer.value != playerName.value,
 );
+const volume = useStorage("volume", 20);
 
 watchMessage(data, "RedirectHome", () => {
   navigateTo("/wizard");
@@ -126,10 +128,51 @@ watchMessage(data, "SevenPointFiveUsed", () => {
   selectChangeCardState.value = "selectCard";
 });
 definePageMeta({ colorMode: "dark" });
+
+const video = ref();
+const { onLoaded } = useScriptYouTubePlayer({
+  scriptOptions: { trigger: "onNuxtReady" },
+});
+
+const player = ref(null);
+onLoaded(async ({ YT }) => {
+  // wait for the internal YouTube APIs to be ready
+  const YouTube = await YT;
+  await new Promise<void>((resolve) => {
+    if (typeof YT.Player === "undefined") YouTube.ready(resolve);
+    else resolve();
+  });
+  // load the API
+  player.value = new YT.Player(video.value, {
+    videoId: "dQw4w9WgXcQ",
+    playerVars: {
+      playsinline: 1,
+      autoplay: 1,
+      playlist: "dQw4w9WgXcQ",
+    },
+    events: {
+      onReady: (event) => {
+        const defaultValue = useStorage("volume");
+        event.target.setVolume(defaultValue.value);
+      },
+      onStateChange: (event) => {
+        if (event.data === YT.PlayerState.ENDED) {
+          event.target.playVideo(); // restart video if it reached the end
+        }
+      },
+    },
+  });
+});
+
+function updateVolume() {
+  useStorage("volume").value = volume.value;
+  player.value.setVolume(volume.value);
+}
 </script>
 
 <template>
   <DefaultBackground>
+    <div class="hidden" ref="video" />
     <div
       v-if="gamephase === 'lobby'"
       class="mt-20 flex flex-row justify-center"
@@ -185,6 +228,30 @@ definePageMeta({ colorMode: "dark" });
         </div>
       </div>
     </div>
+    <div class="group fixed bottom-4 right-4">
+      <!-- Lautsprecher-Icon -->
+      <img
+        src="/public/speaker icon.png"
+        class="h-8 w-8 cursor-pointer"
+        alt="Speaker Icon"
+      />
+
+      <!-- Slider, der bei Hover sichtbar wird -->
+      <div
+        class="absolute bottom-12 right-0 w-32 rounded-lg bg-white p-2 opacity-0 shadow-lg transition-opacity duration-500 group-hover:opacity-100"
+      >
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          v-model="volume"
+          @input="updateVolume"
+          class="w-full"
+        />
+      </div>
+    </div>
+
     <div v-if="gamephase === 'game'">
       <div class="absolute right-2 top-2">
         <button
@@ -244,14 +311,17 @@ definePageMeta({ colorMode: "dark" });
               </span>
               <br />
               <UTooltip
-                :text="SpecialRolesDescriptions[playerRoles[c.player]] ?? 'Versteckte Rolle'"
+                :text="
+                  SpecialRolesDescriptions[playerRoles[c.player]] ??
+                  'Versteckte Rolle'
+                "
                 :popper="{ placement: 'right' }"
                 :ui="{ width: 'max-w-screen-xl' }"
                 class="w-full"
               >
-              <span class="text-gray-400 justify-center w-full">
-                {{ playerRoles[c.player] }}
-              </span>
+                <span class="w-full justify-center text-gray-400">
+                  {{ playerRoles[c.player] }}
+                </span>
               </UTooltip>
             </p>
             <WizardCard

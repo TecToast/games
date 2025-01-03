@@ -19,6 +19,7 @@
     "vue": "latest"
   },
   "devDependencies": {
+    "@nuxt/scripts": "0.9.5",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@vueuse/core": "^10.11.1",
     "nuxt": "^3.14.1592",
