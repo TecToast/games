@@ -21,6 +21,7 @@ import { useColorSelect } from "~/composables/wizard/colorSelect";
 import { useChangeStitchPrediction } from "~/composables/wizard/changeStitchPrediction";
 import { useSpecialRoles } from "~/composables/wizard/specialRoles";
 import { useStorage } from "@vueuse/core";
+import { useWinnerPoll } from "~/composables/wizard/winnerPoll";
 
 const auth = useAuthStore();
 const playerName = computed(() => auth.data?.name ?? "");
@@ -57,6 +58,8 @@ const { selectColorCard, layCardWithColor } = useColorSelect();
 const isSelectColorModalActive = computed(() => selectColorCard.value != null);
 const { isChangeStitchModalActive, changeStitchPrediction } =
   useChangeStitchPrediction();
+const { isWinnerPollModalActive, voteForWinner } =
+  useWinnerPoll();
 
 const { playerRoles, requestSelectedRole, currentRoleSelectingPlayer } =
   useSpecialRoles();
@@ -399,6 +402,28 @@ function updateVolume() {
           </template>
           <div class="flex justify-center">
             <img alt="newCard" :src="newCardImageSource" class="w-48 rounded" />
+          </div>
+        </UCard>
+      </UModal>
+      <UModal v-model="isWinnerPollModalActive" prevent-close>
+        <UCard>
+          <template #header>
+            <div class="text-center text-2xl font-bold text-gray-300">
+              Wer soll den Stich bekommen?
+            </div>
+          </template>
+          <div class="flex justify-center gap-1">
+            <div
+              v-for="player of playersInLobby.filter((p) => p != playerName)"
+              class="px-2 py-0"
+            >
+            <button
+              @click="voteForWinner(player)"
+              class="rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
+            >
+              {{ player }}
+            </button>
+            </div>
           </div>
         </UCard>
       </UModal>
