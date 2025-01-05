@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 const route = useRoute();
 const jeopardy = useJeopardyStore();
+const props = defineProps<{ fixedText?: string }>();
 
 const displayText = computed(() => {
+  if (props.fixedText) return props.fixedText;
   const unwrap = jeopardy.nameUnwrapper;
   if (!unwrap) return "";
 

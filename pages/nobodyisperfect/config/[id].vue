@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-const game = useJeopardyStore();
+import { useNobodyIsPerfectStore } from "~/stores/nobodyisperfect";
+
+const game = useNobodyIsPerfectStore();
 const { status } = storeToRefs(game);
 await until(status).not.toBe("pending");
 function handleBeforeUnload(event: BeforeUnloadEvent) {
@@ -19,7 +21,7 @@ onBeforeUnmount(() => {
 
 <template>
   <DefaultBackground class="items-center">
-    <ConfigHeader />
+    <ConfigHeader fixed-text="Nobody is perfect" />
     <NuxtPage />
   </DefaultBackground>
   <div v-if="game.unsavedChanges" class="fixed bottom-0 right-0 p-4">

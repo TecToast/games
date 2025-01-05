@@ -35,7 +35,7 @@ function createNewQuiz() {
   <DefaultBackground class="items-center">
     <div class="mt-4 flex items-center justify-center gap-2">
       <TextBox class="px-4">{{ props.gameName }} Config</TextBox>
-      <HelpModal name="Jeopardy Overview">
+      <HelpModal name="Quiz Overview">
         Here you can create and manage your quizzes of type:
         {{ props.gameName }}. Click on a quiz to continue. Click on "+ Create a
         new quiz" to create a new quiz.

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 const route = useRoute();
-const game = useJeopardyStore();
-const gameId = "jeopardy";
-const { jdata, users, status } = storeToRefs(game);
+const game = useNobodyIsPerfectStore();
+const gameId = "nobodyisperfect";
+const { gdata, users, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
@@ -17,31 +17,27 @@ function reload() {
   }
   game.refreshData();
 }
+function addQuestion() {
+  gdata.value!.questions.push({
+    question: { title: "Hier Frage einfügen" },
+    answer: { title: ""},
+  });
+  game.markUnsaved();
+}
 </script>
 
 <template>
-  <div v-if="jdata" class="flex w-full justify-around">
-    <div class="flex flex-col">
-      <ConfigLeafGroup name="Joker" :list="jdata.jokers">
-        <HelpModal name="Joker">
-          Here you can set the jokers which will be available to the players.
-          You can add new jokers by clicking on the "+ New" button. You can
-          remove jokers by clicking on the trash can icon. Please note that the
-          names of the jokers should be at most 2 characters long so they can
-          fit into the UI.
-        </HelpModal>
-      </ConfigLeafGroup>
+  <div v-if="gdata" class="flex w-full justify-around mt-4">
+    <div class="flex flex-col gap-2">
+      <ControlButton v-for="(q, index) of gdata.questions">
+        <NuxtLink :to="`/nobodyisperfect/config/${id}/${index + 1}`">
+          {{ `Frage ${index + 1}: ${q.question.title.substring(0,100)}` }}
+        </NuxtLink>
+      </ControlButton>
       <ConfigSep />
-      <ConfigLinkGroup name="Categories" :list="jdata.categories" :store="game">
-        <HelpModal name="Categories">
-          Here you can set the categories for the quiz. You can add new
-          categories by clicking on the "+ New" button. To edit the questions in
-          a category, click on the category name. You can remove categories by
-          clicking on the trash can icon.
-        </HelpModal>
-      </ConfigLinkGroup>
+      <ControlButton @click="addQuestion()"> + New </ControlButton>
     </div>
-    <div class="flex w-full flex-col items-center gap-2">
+    <div class="flex flex-col items-center gap-2">
       <div class="flex items-center gap-2">
         <div class="my-4 text-center text-3xl font-bold text-gray-300">
           Participants:
@@ -56,8 +52,8 @@ function reload() {
           click on the reload button to see the new participants.
         </HelpModal>
       </div>
-      <ControlDiv class="px-2" v-for="user of users?.list">
-        {{ users?.data![user].displayName }}
+      <ControlDiv class="px-2" v-for="user of users!.list">
+        {{ users!.data![user].displayName }}
       </ControlDiv>
     </div>
   </div>
@@ -71,8 +67,8 @@ function reload() {
       <ControlButton>Back to overview</ControlButton>
     </NuxtLink>
     <HelpModal name="Finish">
-      With "Back to overview" you can go back to the overview of your
-      quizzes. <br /><br />
+      With "Back to overview" you can go back to the overview of your quizzes.
+      <br /><br />
       When you configured everything, you can switch to the game view by
       clicking on "Switch to game view".
     </HelpModal>
