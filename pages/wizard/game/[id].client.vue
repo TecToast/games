@@ -151,8 +151,7 @@ onLoaded(async ({ YT }) => {
     },
     events: {
       onReady: (event) => {
-        const defaultValue = useStorage("volume");
-        event.target.setVolume(defaultValue.value);
+        event.target.setVolume(volume.value);
       },
       onStateChange: (event) => {
         if (event.data === YT.PlayerState.ENDED) {
@@ -164,7 +163,6 @@ onLoaded(async ({ YT }) => {
 });
 
 function updateVolume() {
-  useStorage("volume").value = volume.value;
   player.value.setVolume(volume.value);
 }
 </script>
