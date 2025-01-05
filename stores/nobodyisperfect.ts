@@ -83,7 +83,9 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   function nextQuestion() {
     answerMediaState.value = "nothing";
     state.value = "overview";
-    currentQuestionIndex.value++;
+    if(currentQuestionIndex.value < gdata.value!.questions.length - 1) {
+      currentQuestionIndex.value++;
+    }
     revealedAnswers.value = [];
   }
 

@@ -165,8 +165,8 @@ function resetAnswers() {
           <ControlButton
             @click="sendWS('StopTrack', {})"
             v-if="qData"
-            :disabled="!qData.question.audio"
-            :class="{ 'bg-gray-800': !qData.question.audio }"
+            :disabled="!qData.question.audio && !qData.answer.audio"
+            :class="{ 'bg-gray-800': !qData.question.audio && !qData.answer.audio }"
             >Pause track
           </ControlButton>
         </div>

@@ -137,7 +137,7 @@ function nameToImageSrc(num: number): string {
           </video>
         </template>
         <div v-else class="flex flex-col gap-8">
-          <div v-for="num in game.totalAnswerCount" class="flex gap-4">
+          <div v-for="num in game.totalAnswerCount" class="flex gap-4 items-center">
             <img
               class="h-16 w-16 rounded-full"
               v-if="!!game.revealedAnswers[num - 1]?.showUser"
@@ -151,7 +151,7 @@ function nameToImageSrc(num: number): string {
               ?
             </div>
             <TextBox
-              class="flex h-16 min-w-[75vw] max-w-[75vw] items-center justify-start px-2"
+              class="flex h-24 min-w-[75vw] max-w-[75vw] items-center justify-start px-2"
             >
               <div class="flex w-full items-center justify-between">
                 <div>
