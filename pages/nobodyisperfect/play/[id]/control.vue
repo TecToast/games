@@ -204,16 +204,17 @@ function resetAnswers() {
           <ControlButton @click="pause()">Stop timer</ControlButton>
           <ControlButton @click="resume()">Resume timer</ControlButton>
           <ControlButton @click="resetTimer()">Reset timer</ControlButton>
-          <ControlButton @click="game.switchToAnswerScreen()">Jump directly to answer screen</ControlButton>
+          <ControlButton @click="game.switchToAnswerScreen()"
+            >Jump directly to answer screen</ControlButton
+          >
         </div>
         <div class="flex items-center gap-2">
-          <UInput
-            size="md"
-            label="hey"
+          <UInput size="md" label="hey" color="blue" v-model="ytLink" />
+          <UButton
+            @click="sendWS('PlayYT', { yt: ytLink })"
+            label="YT-Link abspielen"
             color="blue"
-            v-model="ytLink"
           />
-          <UButton @click="sendWS('PlayYT', {yt: ytLink})" label="YT-Link abspielen" color="blue" />
         </div>
       </div>
     </div>

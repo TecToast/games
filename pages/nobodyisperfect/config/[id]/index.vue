@@ -20,18 +20,18 @@ function reload() {
 function addQuestion() {
   gdata.value!.questions.push({
     question: { title: "Hier Frage einfügen" },
-    answer: { title: ""},
+    answer: { title: "" },
   });
   game.markUnsaved();
 }
 </script>
 
 <template>
-  <div v-if="gdata" class="flex w-full justify-around mt-4">
+  <div v-if="gdata" class="mt-4 flex w-full justify-around">
     <div class="flex flex-col gap-2">
       <ControlButton v-for="(q, index) of gdata.questions">
         <NuxtLink :to="`/nobodyisperfect/config/${id}/${index + 1}`">
-          {{ `Frage ${index + 1}: ${q.question.title.substring(0,100)}` }}
+          {{ `Frage ${index + 1}: ${q.question.title.substring(0, 100)}` }}
         </NuxtLink>
       </ControlButton>
       <ConfigSep />

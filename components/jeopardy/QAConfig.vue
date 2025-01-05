@@ -47,7 +47,12 @@ function prepareUpload() {
     <div class="mt-4 flex items-center gap-2 bg-gray-700 p-2 text-gray-400">
       <div>Upload image:</div>
       <input type="file" ref="fileInput" @change="prepareUpload" />
-      <img v-if="fileName" class="w-16" :src="`/api/jeopardy/media/${jeopardy.jdata?.host}/${id}/${toID(category.toString())}/${points.toString()}/${props.name}/${fileName}`" :alt="fileName">
+      <img
+        v-if="fileName"
+        class="w-16"
+        :src="`/api/jeopardy/media/${jeopardy.jdata?.host}/${id}/${toID(category.toString())}/${points.toString()}/${props.name}/${fileName}`"
+        :alt="fileName"
+      />
     </div>
   </div>
 </template>

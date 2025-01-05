@@ -71,8 +71,8 @@ function reload() {
       <ControlButton>Back to overview</ControlButton>
     </NuxtLink>
     <HelpModal name="Finish">
-      With "Back to overview" you can go back to the overview of your
-      quizzes. <br /><br />
+      With "Back to overview" you can go back to the overview of your quizzes.
+      <br /><br />
       When you configured everything, you can switch to the game view by
       clicking on "Switch to game view".
     </HelpModal>

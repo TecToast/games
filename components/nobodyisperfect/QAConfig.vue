@@ -25,7 +25,7 @@ function prepareUpload() {
     body: formData,
   })
     .then((res) => {
-      console.log("Setting filename to ", res)
+      console.log("Setting filename to ", res);
       fileName.value = res;
     })
     .catch((err) => {

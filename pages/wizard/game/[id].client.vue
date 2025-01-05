@@ -58,8 +58,7 @@ const { selectColorCard, layCardWithColor } = useColorSelect();
 const isSelectColorModalActive = computed(() => selectColorCard.value != null);
 const { isChangeStitchModalActive, changeStitchPrediction } =
   useChangeStitchPrediction();
-const { isWinnerPollModalActive, voteForWinner } =
-  useWinnerPoll();
+const { isWinnerPollModalActive, voteForWinner } = useWinnerPoll();
 
 const { playerRoles, requestSelectedRole, currentRoleSelectingPlayer } =
   useSpecialRoles();
@@ -417,12 +416,12 @@ function updateVolume() {
               v-for="player of playersInLobby.filter((p) => p != playerName)"
               class="px-2 py-0"
             >
-            <button
-              @click="voteForWinner(player)"
-              class="rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
-            >
-              {{ player }}
-            </button>
+              <button
+                @click="voteForWinner(player)"
+                class="rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
+              >
+                {{ player }}
+              </button>
             </div>
           </div>
         </UCard>

@@ -9,7 +9,8 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
     status,
     error,
     refresh: refreshData,
-  } = useAsyncData(gameId,
+  } = useAsyncData(
+    gameId,
     // @ts-ignore
     () => {
       if (route.params.id && route.fullPath.includes(gameId)) {

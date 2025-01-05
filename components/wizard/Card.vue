@@ -93,7 +93,12 @@ function onClick() {
               ? 'border-2 border-green-400'
               : 'border-2 border-red-400'
             : '',
-      type == 'layed' && (card.value == 7.5 || card.value == 9.75 || card.value == -1 || card.value == 14 || card.value == 69)
+      type == 'layed' &&
+      (card.value == 7.5 ||
+        card.value == 9.75 ||
+        card.value == -1 ||
+        card.value == 14 ||
+        card.value == 69)
         ? `border-4 border-${card.color == 'Grün' ? 'green' : card.color == 'Rot' ? 'red' : card.color == 'Blau' ? 'blue' : card.color == 'Gelb' ? 'yellow' : ''}-400`
         : '',
     ]"

@@ -99,7 +99,11 @@ export function convertCardToHref(card: Card): string {
   const c = card.color;
   if (c == "Nichts") return "/api/wizard/cardimages/empty.webp";
   const color =
-    card.value == 7.5 || card.value == 9.75 || card.value == -1 || card.value == 14 || card.value == 69
+    card.value == 7.5 ||
+    card.value == 9.75 ||
+    card.value == -1 ||
+    card.value == 14 ||
+    card.value == 69
       ? "S"
       : c == "Grün"
         ? "Gruen"

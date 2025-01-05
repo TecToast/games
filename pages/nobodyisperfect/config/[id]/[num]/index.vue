@@ -7,7 +7,7 @@ const { gdata } = storeToRefs(game);
 const qData = computed(() => {
   const data = gdata.value;
   if (!data) return null;
-  return data.questions[Number.parseInt(num.toString()) - 1]
+  return data.questions[Number.parseInt(num.toString()) - 1];
 });
 watch(
   [
@@ -36,10 +36,7 @@ watch(
       v-model:file="qData.answer.file"
       v-model:audio="qData.answer.audio"
     />
-    <NuxtLink
-      :to="`/nobodyisperfect/config/${id}`"
-      class="flex justify-center"
-    >
+    <NuxtLink :to="`/nobodyisperfect/config/${id}`" class="flex justify-center">
       <ControlButton class="mt-4">Back</ControlButton>
     </NuxtLink>
   </div>

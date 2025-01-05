@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-
-
 const game = useNobodyIsPerfectStore();
 const { gdata, users, state, currentQuestionIndex, timer } = storeToRefs(game);
 const qData = computed(
@@ -10,8 +8,9 @@ const id = useRoute().params.id;
 
 function nameToImageSrc(num: number): string {
   const user = game.revealedAnswers[num - 1].user;
-  if(user === 'RICHTIG') return 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/1200px-Eo_circle_green_checkmark.svg.png'
-  return users.value!.data[user].avatarUrl
+  if (user === "RICHTIG")
+    return "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/1200px-Eo_circle_green_checkmark.svg.png";
+  return users.value!.data[user].avatarUrl;
 }
 </script>
 
@@ -97,7 +96,9 @@ function nameToImageSrc(num: number): string {
           {{ qData.question.title }}
         </TextBox>
 
-        <template v-if="qData.question.file && game.answerMediaState == 'question'">
+        <template
+          v-if="qData.question.file && game.answerMediaState == 'question'"
+        >
           <img
             v-if="qData.question.file && !qData.question.file.endsWith('mp4')"
             class="h-[50vh]"
@@ -115,7 +116,9 @@ function nameToImageSrc(num: number): string {
             />
           </video>
         </template>
-        <template v-else-if="qData.answer.file && game.answerMediaState == 'answer'">
+        <template
+          v-else-if="qData.answer.file && game.answerMediaState == 'answer'"
+        >
           <img
             v-if="qData.answer.file && !qData.answer.file.endsWith('mp4')"
             class="h-[50vh]"
@@ -135,15 +138,34 @@ function nameToImageSrc(num: number): string {
         </template>
         <div v-else class="flex flex-col gap-8">
           <div v-for="num in game.totalAnswerCount" class="flex gap-4">
-            <img class="w-16 h-16 rounded-full" v-if="!!game.revealedAnswers[num - 1]?.showUser" :src="nameToImageSrc(num)" :alt="num.toString()">
-            <div v-else class="w-16 h-16 bg-gray-500 rounded-full flex justify-center items-center text-4xl">?</div>
+            <img
+              class="h-16 w-16 rounded-full"
+              v-if="!!game.revealedAnswers[num - 1]?.showUser"
+              :src="nameToImageSrc(num)"
+              :alt="num.toString()"
+            />
+            <div
+              v-else
+              class="flex h-16 w-16 items-center justify-center rounded-full bg-gray-500 text-4xl"
+            >
+              ?
+            </div>
             <TextBox
               class="flex h-16 min-w-[75vw] max-w-[75vw] items-center justify-start px-2"
             >
-              <div class="flex justify-between w-full items-center">
-                <div>{{String.fromCharCode(num + 96)}}) {{game.revealedAnswers[num - 1]?.answer ?? ''}}</div>
+              <div class="flex w-full items-center justify-between">
+                <div>
+                  {{ String.fromCharCode(num + 96) }})
+                  {{ game.revealedAnswers[num - 1]?.answer ?? "" }}
+                </div>
                 <div class="flex gap-2">
-                <img class="w-12 h-12 rounded-full" v-for="url of game.revealedAnswers[num - 1]?.guessedThis ?? []" :src="url" alt="...">
+                  <img
+                    class="h-12 w-12 rounded-full"
+                    v-for="url of game.revealedAnswers[num - 1]?.guessedThis ??
+                    []"
+                    :src="url"
+                    alt="..."
+                  />
                 </div>
               </div>
             </TextBox>
