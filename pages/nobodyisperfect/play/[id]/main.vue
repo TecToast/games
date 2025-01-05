@@ -54,7 +54,7 @@ function nameToImageSrc(num: number): string {
         <TextBox
           class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center"
         >
-          {{ qData.question.title + "MMMMMMMMMMMMMMMMMMMMMMM MMMMMMMMMMM" }}
+          {{ qData.question.title }}
         </TextBox>
         <template v-if="qData.question.file">
           <img

@@ -25,7 +25,6 @@ function prepareUpload() {
     body: formData,
   })
     .then((res) => {
-      console.log("Setting filename to ", res);
       fileName.value = res;
     })
     .catch((err) => {
@@ -68,6 +67,7 @@ function prepareUpload() {
           type="video/mp4"
         />
       </video>
+      <UButton v-if="fileName" @click="fileName = undefined" color="red">Delete media</UButton>
     </div>
   </div>
 </template>
