@@ -41,7 +41,7 @@ watch(
       v-model:file="qData.answer.image"
     />
     <NuxtLink
-      :to="`/jeopardy/config/${id}/${jeopardy.toID(category.toString())}`"
+      :to="`/jeopardy/config/${id}/${toID(category.toString())}`"
       class="flex justify-center"
     >
       <ControlButton class="mt-4">Back to {{ catNameResolved }}</ControlButton>

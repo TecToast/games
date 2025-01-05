@@ -33,7 +33,7 @@ function defaultPoints() {
 
 <template>
   <template v-if="jdata">
-    <ConfigLinkGroup name="Points" :mapper :list="cat!" class="mt-4">
+    <ConfigLinkGroup name="Points" :mapper :list="cat!" class="mt-4" :store="jeopardy">
       <HelpModal name="Points">
         <p>Click on the points to add/edit questions and answers.</p>
         <br />

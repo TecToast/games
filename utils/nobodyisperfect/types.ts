@@ -16,8 +16,7 @@ export type UserData = {
 
 export type NIPQData = {
   title: string;
-  image?: string;
-  video?: string;
+  file?: string;
   audio?: string;
 };
 

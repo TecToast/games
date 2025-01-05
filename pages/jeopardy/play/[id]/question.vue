@@ -17,7 +17,7 @@ const questionSrc = computed(() => {
     !jdata.value
   )
     return "";
-  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.value!.category)}/${jeopardy.toID(currentQuestion.value!.points)}/Question/${questionData.value!.question.image}`;
+  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${toID(currentQuestion.value!.category)}/${toID(currentQuestion.value!.points)}/Question/${questionData.value!.question.image}`;
 });
 const answerSrc = computed(() => {
   if (
@@ -26,7 +26,7 @@ const answerSrc = computed(() => {
     !jdata.value
   )
     return "";
-  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${jeopardy.toID(currentQuestion.value!.category)}/${jeopardy.toID(currentQuestion.value!.points)}/Answer/${questionData.value!.answer.image}`;
+  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${toID(currentQuestion.value!.category)}/${toID(currentQuestion.value!.points)}/Answer/${questionData.value!.answer.image}`;
 });
 const link = computed(() => [
   ...(questionSrc.value

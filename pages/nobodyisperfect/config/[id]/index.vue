@@ -9,28 +9,35 @@ await until(status).not.toBe("pending");
 function reload() {
   if (game.unsavedChanges) {
     if (
-        !confirm(
-            "You have unsaved changes. Are you sure you want to reload? This will override your local changes.",
-        )
+      !confirm(
+        "You have unsaved changes. Are you sure you want to reload? This will override your local changes.",
+      )
     )
       return;
   }
   game.refreshData();
 }
+function addQuestion() {
+  gdata.value!.questions.push({
+    question: { title: "Hier Frage einfügen" },
+    answer: { title: ""},
+  });
+  game.markUnsaved();
+}
 </script>
 
 <template>
-  <div v-if="gdata" class="flex w-full justify-around">
-    <div class="flex flex-col">
+  <div v-if="gdata" class="flex w-full justify-around mt-4">
+    <div class="flex flex-col gap-2">
       <ControlButton v-for="(q, index) of gdata.questions">
-        {{ "Frage" + index + ": " + q.question.title }}
+        <NuxtLink :to="`/nobodyisperfect/config/${id}/${index + 1}`">
+          {{ `Frage ${index + 1}: ${q.question.title.substring(0,100)}` }}
+        </NuxtLink>
       </ControlButton>
       <ConfigSep />
-      <ControlButton>
-        + New
-      </ControlButton>
+      <ControlButton @click="addQuestion()"> + New </ControlButton>
     </div>
-    <div class="flex w-full flex-col items-center gap-2">
+    <div class="flex flex-col items-center gap-2">
       <div class="flex items-center gap-2">
         <div class="my-4 text-center text-3xl font-bold text-gray-300">
           Participants:
@@ -45,8 +52,8 @@ function reload() {
           click on the reload button to see the new participants.
         </HelpModal>
       </div>
-      <ControlDiv class="px-2" v-for="user of users?.list">
-        {{ users?.data![user].displayName }}
+      <ControlDiv class="px-2" v-for="user of users!.list">
+        {{ users!.data![user].displayName }}
       </ControlDiv>
     </div>
   </div>
@@ -60,8 +67,8 @@ function reload() {
       <ControlButton>Back to overview</ControlButton>
     </NuxtLink>
     <HelpModal name="Finish">
-      With "Back to overview" you can go back to the overview of your
-      quizzes. <br /><br />
+      With "Back to overview" you can go back to the overview of your quizzes.
+      <br /><br />
       When you configured everything, you can switch to the game view by
       clicking on "Switch to game view".
     </HelpModal>
