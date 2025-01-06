@@ -38,7 +38,6 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   }
 
   function switchToAnswerScreen() {
-    if (!users.value) return;
     state.value = "answer";
     timer.value = 0;
   }
@@ -48,10 +47,12 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
     const url = users.value!.data[user].avatarUrl;
     for (let data of revealedAnswers.value) {
       const guessed = data.guessedThis;
+      const i = guessed.indexOf(url);
       if (index == answerIndex) {
-        guessed.push(url);
+        if (i == -1) {
+          guessed.push(url);
+        }
       } else {
-        const i = guessed.indexOf(url);
         if (i != -1) {
           guessed.splice(i, 1);
         }
@@ -83,7 +84,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   function nextQuestion() {
     answerMediaState.value = "nothing";
     state.value = "overview";
-    if(currentQuestionIndex.value < gdata.value!.questions.length - 1) {
+    if (currentQuestionIndex.value < gdata.value!.questions.length - 1) {
       currentQuestionIndex.value++;
     }
     revealedAnswers.value = [];

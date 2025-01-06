@@ -16,7 +16,8 @@
     "@vueuse/nuxt": "^10.11.1",
     "pinia": "^2.3.0",
     "pinia-shared-state": "^0.5.1",
-    "vue": "latest"
+    "vue": "latest",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@nuxt/scripts": "0.9.5",

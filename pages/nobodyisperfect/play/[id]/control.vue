@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { AnswerState } from "~/utils/jeopardy/types";
 
 const game = useNobodyIsPerfectStore();
 const {
@@ -132,6 +131,7 @@ function resetAnswers() {
       </div>
       <ConfigSep />
       <div class="ml-8 flex flex-col gap-4">
+        <div class="text-gray-300">Aktuelle Frage: {{gdata.questions[game.currentQuestionIndex].question.title}}</div>
         <div class="flex gap-2">
           <ControlButton
             @click="
@@ -204,7 +204,7 @@ function resetAnswers() {
           <ControlButton @click="pause()">Stop timer</ControlButton>
           <ControlButton @click="resume()">Resume timer</ControlButton>
           <ControlButton @click="resetTimer()">Reset timer</ControlButton>
-          <ControlButton @click="game.switchToAnswerScreen()"
+          <ControlButton @click="pause(); game.switchToAnswerScreen()"
             >Jump directly to answer screen</ControlButton
           >
         </div>

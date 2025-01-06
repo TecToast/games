@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import draggable from "vuedraggable";
+
 const route = useRoute();
 const game = useNobodyIsPerfectStore();
 const gameId = "nobodyisperfect";
@@ -17,6 +19,7 @@ function reload() {
   }
   game.refreshData();
 }
+
 function addQuestion() {
   gdata.value!.questions.push({
     question: { title: "Hier Frage einfügen" },
@@ -24,18 +27,37 @@ function addQuestion() {
   });
   game.markUnsaved();
 }
+
+function getKeyFromQData(q: any) {
+  return q.question.title;
+}
 </script>
 
 <template>
   <div v-if="gdata" class="mt-4 flex w-full justify-around">
     <div class="flex flex-col gap-2">
-      <ControlButton v-for="(q, index) of gdata.questions">
-        <NuxtLink :to="`/nobodyisperfect/config/${id}/${index + 1}`">
-          {{ `Frage ${index + 1}: ${q.question.title.substring(0, 100)}` }}
-        </NuxtLink>
-      </ControlButton>
+      <draggable
+        :list="gdata.questions"
+        item-key="getKeyFromQData"
+        class="mt-2 flex min-h-5 flex-col gap-2 text-center"
+        ghost-class="ghost"
+        @change="game.markUnsaved()"
+      >
+        <template #item="{ element, index }">
+          <div class="flex">
+            <img class="h-12 w-12" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/OOjs_UI_icon_draggable.svg/1024px-OOjs_UI_icon_draggable.svg.png" alt="">
+            <ControlButton>
+              <NuxtLink :to="`/nobodyisperfect/config/${id}/${index + 1}`">
+                {{
+                  `Frage ${index + 1}: ${element.question.title.substring(0, 100)}`
+                }}
+              </NuxtLink>
+            </ControlButton>
+          </div>
+        </template>
+      </draggable>
       <ConfigSep />
-      <ControlButton @click="addQuestion()"> + New </ControlButton>
+      <ControlButton @click="addQuestion()"> + New</ControlButton>
     </div>
     <div class="flex flex-col items-center gap-2">
       <div class="flex items-center gap-2">
