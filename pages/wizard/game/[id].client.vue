@@ -71,6 +71,7 @@ const isWaitingForOtherPlayersRoleSelectionModalOpen = computed(
     currentRoleSelectingPlayer.value != playerName.value,
 );
 const volume = useStorage("volume", 20);
+const oldVolume = ref(volume.value);
 
 watchMessage(data, "RedirectHome", () => {
   navigateTo("/wizard");
@@ -164,16 +165,32 @@ onLoaded(async ({ YT }) => {
 
 function updateVolume() {
   player.value.setVolume(volume.value);
+  if (volume.value == 0) {
+    speakerImgID.src = "/speaker_level_0_icon.png";
+  } else if (volume.value < 50) {
+    speakerImgID.src = "/speaker_level_1_icon.png";
+  } else {
+    speakerImgID.src = "/speaker_level_2_icon.png";
+  }
+}
+function muteSpeaker() {
+  if(volume.value == 0) {
+    volume.value = oldVolume.value;
+  } else {
+    oldVolume.value = volume.value;
+    volume.value = 0;
+  }
+  updateVolume();
 }
 </script>
 
 <template>
   <DefaultBackground>
-    <div class="hidden" ref="video" />
     <div
       v-if="gamephase === 'lobby'"
       class="mt-20 flex flex-row justify-center"
     >
+      <div class="hidden" ref="video" />
       <div class="w-1/3">
         <p class="mb-3 text-center text-3xl text-gray-300">Spieler</p>
         <ul class="divide-y-2 divide-gray-100 rounded-lg bg-white shadow">
@@ -224,28 +241,30 @@ function updateVolume() {
           </div>
         </div>
       </div>
-    </div>
-    <div class="group fixed bottom-4 right-4">
-      <!-- Lautsprecher-Icon -->
-      <img
-        src="/public/speaker icon.png"
-        class="h-8 w-8 cursor-pointer"
-        alt="Speaker Icon"
-      />
-
-      <!-- Slider, der bei Hover sichtbar wird -->
-      <div
-        class="absolute bottom-12 right-0 w-32 rounded-lg bg-white p-2 opacity-0 shadow-lg transition-opacity duration-500 group-hover:opacity-100"
-      >
-        <input
-          type="range"
-          min="0"
-          max="100"
-          step="1"
-          v-model="volume"
-          @input="updateVolume"
-          class="w-full"
+      <div class="group fixed bottom-4 right-4">
+        <!-- Lautsprecher-Icon -->
+        <img
+          src="/speaker_level_2_icon.png"
+          id="speakerImgID"
+          class="h-8 w-8 cursor-pointer"
+          alt="Speaker Icon"
+          @click="muteSpeaker"
         />
+
+        <!-- Slider, der bei Hover sichtbar wird -->
+        <div
+          class="absolute bottom-12 right-0 w-32 rounded-lg bg-white p-2 opacity-0 shadow-lg transition-opacity duration-500 group-hover:opacity-100"
+        >
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            v-model="volume"
+            @input="updateVolume"
+            class="w-full"
+          />
+        </div>
       </div>
     </div>
 
