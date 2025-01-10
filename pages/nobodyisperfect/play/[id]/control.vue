@@ -4,9 +4,7 @@ const game = useNobodyIsPerfectStore();
 const {
   gdata,
   users,
-  answers,
   totalAnswerCount,
-  userCount,
   currentQuestionIndex,
 } = storeToRefs(game);
 const qData = computed(
@@ -56,14 +54,14 @@ function resetTimer() {
   game.timer = game.timerStart;
 }
 
-function acceptAnswers(state: boolean, deleteAnswers = false) {
-  sendWS("AcceptAnswers", { state, deleteAnswers });
+function acceptAnswers(state: boolean, deleteAnswers = false, saveIndex = -1) {
+  sendWS("AcceptAnswers", { state, deleteAnswers, saveIndex });
 }
 
 function resetAnswers() {
   game.answers = {};
   game.revealedAnswers = [];
-  acceptAnswers(true, true);
+  acceptAnswers(true, true, currentQuestionIndex.value);
 }
 </script>
 
@@ -98,7 +96,7 @@ function resetAnswers() {
             </div>
           </div>
           <div class="flex">
-            <ControlButton @click="acceptAnswers(false)">FREEZE</ControlButton>
+            <ControlButton @click="acceptAnswers(false, false, currentQuestionIndex)">FREEZE</ControlButton>
             <ControlButton @click="acceptAnswers(true)">UNFREEZE</ControlButton>
           </div>
         </div>
