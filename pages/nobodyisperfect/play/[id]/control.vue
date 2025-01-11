@@ -1,12 +1,7 @@
 <script lang="ts" setup>
-
 const game = useNobodyIsPerfectStore();
-const {
-  gdata,
-  users,
-  totalAnswerCount,
-  currentQuestionIndex,
-} = storeToRefs(game);
+const { gdata, users, totalAnswerCount, currentQuestionIndex } =
+  storeToRefs(game);
 const qData = computed(
   () => gdata.value?.questions[currentQuestionIndex.value],
 );
@@ -63,6 +58,12 @@ function resetAnswers() {
   game.revealedAnswers = [];
   acceptAnswers(true, true, currentQuestionIndex.value);
 }
+
+function previousQuestion() {
+  if (currentQuestionIndex.value > 0) {
+    currentQuestionIndex.value--;
+  }
+}
 </script>
 
 <template>
@@ -96,7 +97,10 @@ function resetAnswers() {
             </div>
           </div>
           <div class="flex">
-            <ControlButton @click="acceptAnswers(false, false, currentQuestionIndex)">FREEZE</ControlButton>
+            <ControlButton
+              @click="acceptAnswers(false, false, currentQuestionIndex)"
+              >FREEZE</ControlButton
+            >
             <ControlButton @click="acceptAnswers(true)">UNFREEZE</ControlButton>
           </div>
         </div>
@@ -129,7 +133,10 @@ function resetAnswers() {
       </div>
       <ConfigSep />
       <div class="ml-8 flex flex-col gap-4">
-        <div class="text-gray-300">Aktuelle Frage: {{gdata.questions[game.currentQuestionIndex].question.title}}</div>
+        <div class="text-gray-300">
+          Aktuelle Frage:
+          {{ gdata.questions[game.currentQuestionIndex].question.title }}
+        </div>
         <div class="flex gap-2">
           <ControlButton
             @click="
@@ -164,7 +171,9 @@ function resetAnswers() {
             @click="sendWS('StopTrack', {})"
             v-if="qData"
             :disabled="!qData.question.audio && !qData.answer.audio"
-            :class="{ 'bg-gray-800': !qData.question.audio && !qData.answer.audio }"
+            :class="{
+              'bg-gray-800': !qData.question.audio && !qData.answer.audio,
+            }"
             >Pause track
           </ControlButton>
         </div>
@@ -183,6 +192,9 @@ function resetAnswers() {
             >Next question</ControlButton
           >
           <ControlButton @click="resetAnswers()">Reset answers</ControlButton>
+          <ControlButton @click="previousQuestion()"
+            >Previous question</ControlButton
+          >
         </div>
         <div class="flex items-center gap-2">
           <ControlButton
@@ -202,7 +214,11 @@ function resetAnswers() {
           <ControlButton @click="pause()">Stop timer</ControlButton>
           <ControlButton @click="resume()">Resume timer</ControlButton>
           <ControlButton @click="resetTimer()">Reset timer</ControlButton>
-          <ControlButton @click="pause(); game.switchToAnswerScreen()"
+          <ControlButton
+            @click="
+              pause();
+              game.switchToAnswerScreen();
+            "
             >Jump directly to answer screen</ControlButton
           >
         </div>

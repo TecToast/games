@@ -137,7 +137,10 @@ function nameToImageSrc(num: number): string {
           </video>
         </template>
         <div v-else class="flex flex-col gap-8">
-          <div v-for="num in game.totalAnswerCount" class="flex gap-4 items-center">
+          <div
+            v-for="num in game.totalAnswerCount"
+            class="flex items-center gap-4"
+          >
             <img
               class="h-16 w-16 rounded-full"
               v-if="!!game.revealedAnswers[num - 1]?.showUser"

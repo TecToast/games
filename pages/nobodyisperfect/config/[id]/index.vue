@@ -45,7 +45,11 @@ function getKeyFromQData(q: any) {
       >
         <template #item="{ element, index }">
           <div class="flex">
-            <img class="h-12 w-12" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/OOjs_UI_icon_draggable.svg/1024px-OOjs_UI_icon_draggable.svg.png" alt="">
+            <img
+              class="h-12 w-12"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/OOjs_UI_icon_draggable.svg/1024px-OOjs_UI_icon_draggable.svg.png"
+              alt=""
+            />
             <ControlButton>
               <NuxtLink :to="`/nobodyisperfect/config/${id}/${index + 1}`">
                 {{
