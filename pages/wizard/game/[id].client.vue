@@ -70,7 +70,7 @@ const isWaitingForOtherPlayersRoleSelectionModalOpen = computed(
     currentRoleSelectingPlayer.value != "" &&
     currentRoleSelectingPlayer.value != playerName.value,
 );
-const volume = useStorage("volume", 20);
+const volume = useStorage("volume", 10);
 const oldVolume = ref(volume.value);
 
 watchMessage(data, "RedirectHome", () => {
@@ -135,14 +135,17 @@ const { onLoaded } = useScriptYouTubePlayer({
 });
 
 const player = ref(null);
+// @ts-ignore
 onLoaded(async ({ YT }) => {
   // wait for the internal YouTube APIs to be ready
   const YouTube = await YT;
   await new Promise<void>((resolve) => {
+    // @ts-ignore
     if (typeof YT.Player === "undefined") YouTube.ready(resolve);
     else resolve();
   });
   // load the API
+  // @ts-ignore
   player.value = new YT.Player(video.value, {
     videoId: "dQw4w9WgXcQ",
     playerVars: {
@@ -151,10 +154,11 @@ onLoaded(async ({ YT }) => {
       playlist: "dQw4w9WgXcQ",
     },
     events: {
-      onReady: (event) => {
+      onReady: (event: any) => {
         event.target.setVolume(volume.value);
       },
-      onStateChange: (event) => {
+      onStateChange: (event: any) => {
+        // @ts-ignore
         if (event.data === YT.PlayerState.ENDED) {
           event.target.playVideo(); // restart video if it reached the end
         }
@@ -163,24 +167,27 @@ onLoaded(async ({ YT }) => {
   });
 });
 
-function updateVolume() {
-  player.value.setVolume(volume.value);
-  if (volume.value == 0) {
-    speakerImgID.src = "/speaker_level_0_icon.png";
-  } else if (volume.value < 50) {
-    speakerImgID.src = "/speaker_level_1_icon.png";
-  } else {
-    speakerImgID.src = "/speaker_level_2_icon.png";
-  }
-}
+
+watch(volume, (v) => {
+  // @ts-ignore
+  player.value?.setVolume(v);
+}, { immediate: true });
+const speakerImgSrc = computed(() => {
+  const v = volume.value;
+  if (v == 0) return "/speaker_level_0_icon.png";
+  if (v < 50) return "/speaker_level_1_icon.png";
+  return "/speaker_level_2_icon.png";
+})
+
+
 function muteSpeaker() {
   if(volume.value == 0) {
-    volume.value = oldVolume.value;
+    const old = oldVolume.value
+    volume.value = old == 0 ? 10 : old;
   } else {
     oldVolume.value = volume.value;
     volume.value = 0;
   }
-  updateVolume();
 }
 </script>
 
@@ -244,7 +251,7 @@ function muteSpeaker() {
       <div class="group fixed bottom-4 right-4">
         <!-- Lautsprecher-Icon -->
         <img
-          src="/speaker_level_2_icon.png"
+          :src="speakerImgSrc"
           id="speakerImgID"
           class="h-8 w-8 cursor-pointer"
           alt="Speaker Icon"
@@ -261,7 +268,6 @@ function muteSpeaker() {
             max="100"
             step="1"
             v-model="volume"
-            @input="updateVolume"
             class="w-full"
           />
         </div>
