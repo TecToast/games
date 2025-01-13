@@ -472,7 +472,7 @@ function muteSpeaker() {
               type="number"
               placeholder="0"
               min="0"
-              :max="round"
+              :max="round+3"
             />
           </div>
           <button
