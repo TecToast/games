@@ -169,6 +169,14 @@ onLoaded(async ({ YT }) => {
 
 
 watch(volume, (v) => {
+  if(v==0){
+    // @ts-ignore
+    player.value?.pauseVideo()
+  }
+  else{
+    // @ts-ignore
+    player.value?.playVideo()
+  }
   // @ts-ignore
   player.value?.setVolume(v);
 }, { immediate: true });
@@ -472,7 +480,7 @@ function muteSpeaker() {
               type="number"
               placeholder="0"
               min="0"
-              :max="round"
+              :max="round + 3"
             />
           </div>
           <button

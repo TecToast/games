@@ -3,8 +3,8 @@ import Card from "~/components/wizard/Card.vue";
 export const Rules: { [rule: string]: string[] } = {
   Punkte: ["Normal", "Max. 30"],
   Zauberer: ["Normal", "Mittlerer Zauberer", "Letzter Zauberer"],
-  Ansage: ["Nacheinander", "Blind"],
-  Trumpf: ["Normal", "Nur Farben"],
+  Ansage: ["Blind", "Nacheinander"],
+  Trumpf: ["Nur Farben", "Normal"],
   Spezialkarten: ["Aktiviert", "Deaktiviert"],
   Memekarten: ["Aktiviert", "Deaktiviert"],
   Spezialrollen: ["Deaktiviert", "Freie Auswahl", "Vorgegeben", "Geheim"],
