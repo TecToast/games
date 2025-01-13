@@ -167,30 +167,31 @@ onLoaded(async ({ YT }) => {
   });
 });
 
-
-watch(volume, (v) => {
-  if(v==0){
+watch(
+  volume,
+  (v) => {
+    if (v == 0) {
+      // @ts-ignore
+      player.value?.pauseVideo();
+    } else {
+      // @ts-ignore
+      player.value?.playVideo();
+    }
     // @ts-ignore
-    player.value?.pauseVideo()
-  }
-  else{
-    // @ts-ignore
-    player.value?.playVideo()
-  }
-  // @ts-ignore
-  player.value?.setVolume(v);
-}, { immediate: true });
+    player.value?.setVolume(v);
+  },
+  { immediate: true },
+);
 const speakerImgSrc = computed(() => {
   const v = volume.value;
   if (v == 0) return "/speaker_level_0_icon.png";
   if (v < 50) return "/speaker_level_1_icon.png";
   return "/speaker_level_2_icon.png";
-})
-
+});
 
 function muteSpeaker() {
-  if(volume.value == 0) {
-    const old = oldVolume.value
+  if (volume.value == 0) {
+    const old = oldVolume.value;
     volume.value = old == 0 ? 10 : old;
   } else {
     oldVolume.value = volume.value;
