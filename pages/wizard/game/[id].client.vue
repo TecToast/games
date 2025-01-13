@@ -169,6 +169,14 @@ onLoaded(async ({ YT }) => {
 
 
 watch(volume, (v) => {
+  if(v==0){
+    player.value?.pauseVideo()
+  }
+  else{
+    player.value?.playVideo()
+  }
+  console.log("watcher")
+  // console.log(player.value?.volume)
   // @ts-ignore
   player.value?.setVolume(v);
 }, { immediate: true });
