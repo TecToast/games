@@ -56,7 +56,7 @@ export const CardsDescriptions: {[cardName: string]:string} = {
   "Spezial7.5" : "Nach dem Stich muss jeder eine Karte weitergeben, falls noch Karten da sind.",
   "Spezial9.75" : "Der Gewinner des Stiches muss die Ansage im 1 verändern.",
   "Spezial2" : "Verliert gegen alles, gewinnt aber gegen den Drachen.",
-  "Spezial3" : "Gewinnt gegen alles, verliert aber gegen die Fee",
+  "Spezial3" : "Gewinnt gegen alles, verliert aber gegen die Fee.",
 }
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
