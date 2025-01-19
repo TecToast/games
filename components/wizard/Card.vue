@@ -78,7 +78,7 @@ function onClick() {
         (card.color == 'Narr' || card.color == 'Zauberer' ?
           card.color
         : card.color + ' ' + card.value)
-        : "Keine Beschreibung verfügbar")
+        : undefined)
     "
     :popper="{ placement: 'bottom' }"
     :open-delay="800"
