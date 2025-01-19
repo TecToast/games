@@ -42,7 +42,7 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
 
 export const CardsDescriptions: {[cardName: string]:string} = {
   "Narr5" : "Dreht die Legerichtung nach dieser Runde um.",
-  "Narr6" : "Die Karte des nächsten Spielers in Legerichtugn wird bei der Wertung ignoriert.",
+  "Narr6" : "Die Karte des nächsten Spielers in Legerichtung wird bei der Wertung ignoriert.",
   "Narr7" : "Der Gewinner des Stiches bleibt gliech, aber die Punkte werden nur allen anderen angerechnet.",
   "Narr8" : "Die Karte des vorherigen Spielers in Legerichtung wird bei der Wertung ignoriert.",
 
