@@ -302,7 +302,9 @@ function muteSpeaker() {
       >
         <div>
           <strong class="text-center">Trumpf{{ trumpShift }}</strong>
-          <WizardCard :card="trump" type="trump"></WizardCard>
+          <p>
+            <WizardCard :card="trump" type="trump"></WizardCard>
+          </p>
         </div>
         <p
           v-if="selectChangeCardState == 'selectCard'"
