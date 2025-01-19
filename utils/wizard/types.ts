@@ -37,8 +37,27 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
   "Der Gierige":
     "Du bekommst immernoch 10 Punkte pro angesagtem Stich und 5 Punkte pro zusätzlichem Stich wenn du über deiner Ansage liegst. Dafür kein +20.",
   "Der Dieb":
-    "Wenn du einen Dieb spielst hast du eine 50% Chance den Stich zu klauen, falls der Stich nicht schon durch Gambling/Democracy vergeben wird.",
+    "Wenn du einen Dieb (Kartenwert 1) spielst hast du eine 50% Chance den Stich zu klauen, falls der Stich nicht schon durch Gambling/Democracy vergeben wird.",
 };
+
+export const CardsDescriptions: {[cardName: string]:string} = {
+  "Narr5" : "Dreht die Legerichtung nach dieser Runde um.",
+  "Narr6" : "Die Karte des nächsten Spielers in Legerichtung wird bei der Wertung ignoriert.",
+  "Narr7" : "Der Gewinner des Stiches bleibt gleich, aber die Punkte werden nur allen anderen angerechnet.",
+  "Narr8" : "Die Karte des vorherigen Spielers in Legerichtung wird bei der Wertung ignoriert.",
+
+  "Spezial14" : "Der Wert dieses Stiches wird auf 3 gesetzt.",
+  "Spezial-1" : "Der Wert dieses Stiches wird auf -1 gesetzt.",
+  "Spezial69" : "Der Wert dieses Stiches wird auf -3 gesetzt, falls ein Drache enthalten ist.",
+  "Spezial7" : "Die Auswahlmethode des Gewinners des Stiches wird auf eine Abstimmung gesetzt.",
+  "Spezial6" : "Die Auswahlmethode des Gewinners des Stiches wird gleichverteilt zufällig gesetzt.",
+
+  "Spezial1" : "Der Stich geht an niemanden (auch nicht Christian) und niemand bekommt Punkte.",
+  "Spezial7.5" : "Nach dem Stich muss jeder eine Karte weitergeben, falls noch Karten da sind.",
+  "Spezial9.75" : "Der Gewinner des Stiches muss die Ansage im 1 verändern.",
+  "Spezial2" : "Verliert gegen alles, gewinnt aber gegen den Drachen.",
+  "Spezial3" : "Gewinnt gegen alles, verliert aber gegen die Fee.",
+}
 
 export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
 
