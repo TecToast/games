@@ -54,7 +54,7 @@ export const CardsDescriptions: {[cardName: string]:string} = {
 
   "Spezial1" : "Der Stich geht an niemanden (auch nicht Christian) und niemand bekommt Punkte.",
   "Spezial7.5" : "Nach dem Stich muss jeder eine Karte weitergeben, falls noch Karten da sind.",
-  "Spezial9.75" : "Der Gewinner des Stiches muss die Ansage im 1 verändern.",
+  "Spezial9.75" : "Der Gewinner des Stiches muss die Ansage um 1 verändern.",
   "Spezial2" : "Verliert gegen alles, gewinnt aber gegen den Drachen.",
   "Spezial3" : "Gewinnt gegen alles, verliert aber gegen die Fee.",
 }
