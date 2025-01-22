@@ -344,6 +344,7 @@ function muteSpeaker() {
               </span>
               <br />
               <UTooltip
+                v-if="playerRoles[c.player]"
                 :text="
                   SpecialRolesDescriptions[playerRoles[c.player]] ??
                   'Versteckte Rolle'
