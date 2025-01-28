@@ -5,7 +5,7 @@ import {
   convertCardToHref,
   isCard,
   type SelectChangeCard,
-  CardsDescriptions
+  CardsDescriptions,
 } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 
@@ -74,10 +74,10 @@ function onClick() {
   <UTooltip
     :text="
       CardsDescriptions[card.color + card.value] ??
-      (card.color != 'Nichts' ?
-        (card.color == 'Narr' || card.color == 'Zauberer' ?
-          card.color
-        : card.color + ' ' + card.value)
+      (card.color != 'Nichts'
+        ? card.color == 'Narr' || card.color == 'Zauberer'
+          ? card.color
+          : card.color + ' ' + card.value
         : undefined)
     "
     :popper="{ placement: 'bottom' }"
@@ -113,13 +113,8 @@ function onClick() {
     ]"
     style="max-width: 150px"
   >
-  <img
-    :src
-    :alt="`${card.color} ${card.value}`"
-    @click="onClick"
-  />
+    <img :src :alt="`${card.color} ${card.value}`" @click="onClick" />
   </UTooltip>
-  
 </template>
 
 <style scoped></style>
