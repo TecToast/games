@@ -49,4 +49,7 @@ export default defineNuxtConfig({
   colorMode: {
     preference: "dark",
   },
+  imports: {
+    dirs: ["./stores", "./composables/wizard"],
+  },
 });

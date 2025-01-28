@@ -8,20 +8,8 @@ import {
   type SelectChangeCard,
   SpecialRolesDescriptions,
 } from "~/utils/wizard/types";
-import { useTrumpShift } from "~/composables/wizard/trumpshifts";
-import { useFirstCard } from "~/composables/wizard/firstcard";
-import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 import { watchMessage } from "~/utils/wsutils";
-import { useWizardNumbers } from "~/composables/wizard/wizardNumbers";
-import { usePlayerCards } from "~/composables/wizard/playercards";
-import { useRules } from "~/composables/wizard/rules";
-import { useGamePhase } from "~/composables/wizard/gamephase";
-import { useGeneralData } from "~/composables/wizard/generaldata";
-import { useColorSelect } from "~/composables/wizard/colorSelect";
-import { useChangeStitchPrediction } from "~/composables/wizard/changeStitchPrediction";
-import { useSpecialRoles } from "~/composables/wizard/specialRoles";
 import { useStorage } from "@vueuse/core";
-import { useWinnerPoll } from "~/composables/wizard/winnerPoll";
 
 const auth = useAuthStore();
 const playerName = computed(() => auth.data?.name ?? "");
