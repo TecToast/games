@@ -17,17 +17,6 @@ export default defineNuxtConfig({
       },
     },
   },
-  /*routeRules: {
-    "/api/**": {
-      proxy: {
-        to: "http://localhost:9934/api/**",
-        fetchOptions: {
-          redirect: "manual",
-          credentials: "include",
-        },
-      },
-    },
-  },*/
   runtimeConfig: {
     public: {
       protectedUrls: ["/jeopardy", "/musicquiz", "/wizard", "/nobodyisperfect"],
