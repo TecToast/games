@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
-  ssr: false,
   devtools: { enabled: true },
   modules: [
     "@nuxt/ui",
@@ -9,6 +8,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "@nuxt/scripts",
+    "nuxt-auth-utils",
   ],
   app: {
     head: {
@@ -17,7 +17,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  routeRules: {
+  /*routeRules: {
     "/api/**": {
       proxy: {
         to: "http://localhost:9934/api/**",
@@ -27,11 +27,18 @@ export default defineNuxtConfig({
         },
       },
     },
-  },
+  },*/
   runtimeConfig: {
     public: {
       protectedUrls: ["/jeopardy", "/musicquiz", "/wizard", "/nobodyisperfect"],
     },
+    oauth: {
+      discord: {
+        clientId: "",
+        clientSecret: "",
+      },
+    },
+    mongodb: "",
   },
   ui: {
     disableGlobalStyles: true,
@@ -51,5 +58,12 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ["./stores", "./composables/wizard"],
+  },
+  nitro: {
+    storage: {
+      redis: {
+        driver: "redis",
+      },
+    },
   },
 });
