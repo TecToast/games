@@ -52,4 +52,9 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["./stores", "./composables/wizard"],
   },
+  nitro: {
+    experimental: {
+      websocket: true
+    }
+  }
 });
