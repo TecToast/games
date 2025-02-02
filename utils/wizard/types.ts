@@ -1,6 +1,4 @@
-import Card from "~/components/wizard/Card.vue";
-
-export const Rules: { [rule: string]: string[] } = {
+export const Rules = {
   Punkte: ["Normal", "Max. 30"],
   Zauberer: ["Normal", "Mittlerer Zauberer", "Letzter Zauberer"],
   Ansage: ["Blind", "Nacheinander"],
@@ -9,6 +7,7 @@ export const Rules: { [rule: string]: string[] } = {
   Memekarten: ["Aktiviert", "Deaktiviert"],
   Spezialrollen: ["Deaktiviert", "Freie Auswahl", "Vorgegeben", "Geheim"],
 };
+export type Rule = keyof typeof Rules;
 
 export const SpecialRolesDescriptions: { [role: string]: string } = {
   "Der Sprengmeister": "Du bekommst immer die Bombe, falls sie im Spiel ist",
@@ -68,30 +67,49 @@ export const CardsDescriptions: { [cardName: string]: string } = {
   Spezial3: "Gewinnt gegen alles, verliert aber gegen die Fee.",
 };
 
-export const NOTHINGCARD = { color: "Nichts", value: 0 } as Card;
-
 export type WizardState = "lobby" | "game" | "finished";
 
 export type OpenGamesData = { owner: string; id: number }[];
 
-export type Color =
-  | "Rot"
-  | "Gelb"
-  | "Grün"
-  | "Blau"
-  | "Zauberer"
-  | "Narr"
-  | "Spezial"
-  | "Nichts";
 export type Card = {
   color: Color;
   value: number;
 };
+
+export enum Color {
+  Red = "Rot",
+  Green = "Grün",
+  Blue = "Blau",
+  Yellow = "Gelb",
+  Wizard = "Zauberer",
+  Fool = "Narr",
+  Special = "Spezial",
+  Nothing = "Nichts",
+}
+export function isRegularColor(color?: Color) {
+  return (
+    color == Color.Red ||
+    color == Color.Yellow ||
+    color == Color.Green ||
+    color == Color.Blue
+  );
+}
 export type CardType = "trump" | "layed" | "hand";
 export type LayedCard = {
   card: Card;
   player: string;
 };
+export enum GamePhase {
+  LOBBY,
+  ROLE_SELECTION,
+  RUNNING,
+  FINISHED,
+}
+export enum StitchEvaluationMethod {
+  NORMAL,
+  RANDOM,
+  POLL,
+}
 export type SelectChangeCard = "selectCard" | "waitForOthers" | "nothing";
 
 export const AllCards: Card[] = (function () {
@@ -102,24 +120,15 @@ export const AllCards: Card[] = (function () {
     }
   }
   for (let i = 1; i <= 4; i++) {
-    allCards.push({ color: "Zauberer", value: i });
+    allCards.push({ color: Color.Wizard, value: i });
   }
   for (let i = 1; i <= 8; i++) {
-    allCards.push({ color: "Narr", value: i });
+    allCards.push({ color: Color.Fool, value: i });
   }
-  for (let i = 1; i <= 1; i++) {
-    allCards.push({ color: "Spezial", value: i });
+  const specialCards = [1, 7.5, 9.75, -1, 14, 69, 1, 2, 3, 6, 7];
+  for (let i of specialCards) {
+    allCards.push({ color: Color.Special, value: i });
   }
-  allCards.push({ color: "Spezial", value: 7.5 });
-  allCards.push({ color: "Spezial", value: 9.75 });
-  allCards.push({ color: "Spezial", value: -1 });
-  allCards.push({ color: "Spezial", value: 14 });
-  allCards.push({ color: "Spezial", value: 69 });
-  allCards.push({ color: "Spezial", value: 1 });
-  allCards.push({ color: "Spezial", value: 2 });
-  allCards.push({ color: "Spezial", value: 3 });
-  allCards.push({ color: "Spezial", value: 6 });
-  allCards.push({ color: "Spezial", value: 7 });
   return allCards;
 })();
 
@@ -153,3 +162,38 @@ export function isCard(
   if (!card) return false;
   return card.color == color && card.value == value;
 }
+
+export interface SpecialRole {
+  inGameName: string;
+}
+export interface ColorPreferenceSpecialRole extends SpecialRole {
+  color: Color;
+  chance: number;
+}
+
+export const FunctionalSpecialRoles = {
+  BLASTER: { inGameName: "Der Sprengmeister" },
+  HEADFOOL: { inGameName: "Der Obernarr" },
+  SERVANT: { inGameName: "Der Knecht" },
+  GLEEFUL: { inGameName: "Der Schadenfrohe" },
+  PESSIMIST: { inGameName: "Der Pessimist" },
+  OPTIMIST: { inGameName: "Der Optimist" },
+  GAMBLER: { inGameName: "Der Gambler" },
+  THIEF: { inGameName: "Der Dieb" },
+  GREEDY: { inGameName: "Der Gierige" },
+};
+export const ColorPreferenceSpecialRoles = {
+  WIZARDMASTER: {
+    inGameName: "Der Zaubermeister",
+    color: Color.Wizard,
+    chance: 4,
+  },
+  REDSHEEP: { inGameName: "Das rote Schaf", color: Color.Red, chance: 2 },
+  YELLOWSHEEP: {
+    inGameName: "Das gelbe Schaf",
+    color: Color.Yellow,
+    chance: 2,
+  },
+  GREENSHEEP: { inGameName: "Das grüne Schaf", color: Color.Green, chance: 2 },
+  BLUESHEEP: { inGameName: "Das blaue Schaf", color: Color.Blue, chance: 2 },
+};
