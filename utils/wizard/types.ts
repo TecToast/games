@@ -14,7 +14,7 @@ export const SpecialRolesDescriptions: { [role: string]: string } = {
   "Der Obernarr":
     "Du bekommst immer den ersten Narren im Stapel, bevor normal ausgeteilt wird",
   "Der Knecht":
-    "Du bekommts immer so viele Knechte/Mägde wie möglich, bevor normal ausgeteilt wird",
+    "Du bekommst immer so viele Knechte/Mägde wie möglich, bevor normal ausgeteilt wird",
   "Der Schadenfrohe":
     "Du bekommst 5 Punkte jedes mal wenn ein anderer Spieler Minuspunkte bekommt",
   "Der Pessimist":
