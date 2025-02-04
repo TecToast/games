@@ -72,7 +72,7 @@ interface StitchGoal extends BaseMessage {
   goal: number;
 }
 
-interface LayCard extends BaseMessage {
+export interface LayCard extends BaseMessage {
   type: "LayCard";
   card: Card;
   selectedColor?: Color;
@@ -118,12 +118,12 @@ interface GameCreated extends BaseMessage {
 
 interface GameInfo extends BaseMessage {
   type: "GameInfo";
-  players: Set<string>;
+  players: string[];
 }
 
 interface RuleChange extends BaseMessage {
   type: "RuleChange";
-  rules: Map<Rule, string>;
+  rules: { [k: string]: string };
 }
 
 interface EndGame extends BaseMessage {
@@ -139,7 +139,7 @@ interface Round extends BaseMessage {
 
 interface Results extends BaseMessage {
   type: "Results";
-  results: Map<string, number>;
+  results: { [k: string]: number };
 }
 
 interface Cards extends BaseMessage {
@@ -161,7 +161,7 @@ interface CurrentPlayer extends BaseMessage {
 interface Trump extends BaseMessage {
   type: "Trump";
   trump: Card;
-  shifted: Map<string, number>;
+  shifted: { [k: string]: number };
 }
 
 interface Winner extends BaseMessage {
@@ -186,12 +186,12 @@ interface UpdateDoneStitches extends BaseMessage {
 
 interface GameStarted extends BaseMessage {
   type: "GameStarted";
-  players: Set<string>;
+  players: string[];
 }
 
-interface OpenGames extends BaseMessage {
+export interface OpenGames extends BaseMessage {
   type: "OpenGames";
-  games: OpenGamesData[];
+  games: OpenGamesData;
 }
 
 interface RedirectHome extends BaseMessage {
@@ -223,7 +223,7 @@ interface ShowWinnerPollModal extends BaseMessage {
 
 interface SelectedRoles extends BaseMessage {
   type: "SelectedRoles";
-  roles: Map<string, string>;
+  roles: { [k: string]: string };
 }
 
 interface CurrentRoleSelectingPlayer extends BaseMessage {
