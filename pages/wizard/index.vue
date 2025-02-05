@@ -6,8 +6,9 @@ import type { OpenGamesData } from "~/utils/wizard/types";
 definePageMeta({
   keepalive: true,
 });
-const auth = useAuthStore();
-const { data: authData } = storeToRefs(auth);
+
+const { user } = useUserSession();
+
 const { data: wsData, sendWS } = useWizardConnection();
 const openGames = useState<OpenGamesData>("openGames");
 preloadRouteComponents("/wizard/game/:id");
@@ -18,33 +19,22 @@ function createGame() {
 watchMessage(wsData, "GameCreated", (d) => {
   navigateTo(`/wizard/game/${d.gameID}`);
 });
-watchMessage(wsData, "ChangeUsernameResponse", (d) => {
-  authData.value!.name = d.username;
-});
 </script>
 <template>
   <DefaultBackground>
     <DevOnly>
       <div class="absolute left-2 top-2 flex gap-3">
-        <ControlButton
-          v-for="name of ['TestUser1', 'TestUser2', 'TestUser3']"
-          @click="sendWS('ChangeUsername', { username: name })"
-          >{{ name }}</ControlButton
-        >
+        <ControlButton v-for="name of ['TestUser1', 'TestUser2', 'TestUser3']"
+          @click="sendWS('ChangeUsername', { username: name })">{{ name }}</ControlButton>
       </div>
     </DevOnly>
     <p class="absolute right-2 top-2 text-xl font-bold text-gray-300">
-      Angemeldet als {{ authData.name }}
+      Angemeldet als {{ user?.name }}
     </p>
-    <div
-      class="absolute top-1/3 flex min-w-full flex-row justify-evenly align-middle text-gray-100"
-    >
+    <div class="absolute top-1/3 flex min-w-full flex-row justify-evenly align-middle text-gray-100">
       <div class="w-full p-4 md:w-1/2 lg:w-1/3">
         <p class="text-center text-4xl">Einem Spiel beitreten</p>
-        <div
-          v-if="!openGames"
-          class="mt-5 flex flex-col items-center justify-center gap-2"
-        >
+        <div v-if="openGames === undefined" class="mt-5 flex flex-col items-center justify-center gap-2">
           <UProgress class="h-8 w-32 text-center" color="cyan" />
         </div>
         <template v-else>
@@ -56,8 +46,7 @@ watchMessage(wsData, "ChangeUsernameResponse", (d) => {
               <div class="flex flex-row justify-center gap-4 align-middle">
                 <NuxtLink :to="`/wizard/game/${game.id}`">
                   <button
-                    class="mt-auto max-h-10 rounded-xl border border-blue-500 p-2 text-white transition duration-100 hover:cursor-pointer hover:bg-blue-500"
-                  >
+                    class="mt-auto max-h-10 rounded-xl border border-blue-500 p-2 text-white transition duration-100 hover:cursor-pointer hover:bg-blue-500">
                     Spiel von {{ game.owner }}
                   </button>
                 </NuxtLink>
@@ -66,10 +55,8 @@ watchMessage(wsData, "ChangeUsernameResponse", (d) => {
           </ul>
         </template>
         <hr />
-        <button
-          @click="createGame()"
-          class="my-4 block w-full rounded bg-blue-500 px-4 py-2 text-white transition-all duration-500 hover:bg-blue-700"
-        >
+        <button @click="createGame()"
+          class="my-4 block w-full rounded bg-blue-500 px-4 py-2 text-white transition-all duration-500 hover:bg-blue-700">
           Neues Spiel erstellen
         </button>
       </div>

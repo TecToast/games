@@ -1,18 +1,11 @@
 <script lang="ts" setup>
-const auth = useAuthStore();
-const { status, data } = storeToRefs(auth);
-await until(status).not.toBe("pending");
+const { data: games } = await useFetch("/api/mygames")
 </script>
 
 <template>
   <DefaultBackground class="flex flex-col items-center">
-    <TextBox v-if="status === 'error'" class="mt-4 p-4"
-      >Unknown error occured.</TextBox
-    >
-    <div v-else class="mt-4 flex flex-col items-center">
-      <TextBox v-if="!data?.games?.length" class="p-4"
-        >You don't have permission to access a game.</TextBox
-      >
+    <div class="mt-4 flex flex-col items-center">
+      <TextBox v-if="!games || games.length === 0" class="p-4">You don't have permission to access a game.</TextBox>
       <div v-else class="flex flex-col items-center gap-4">
         <div class="flex items-center gap-2">
           <TextBox class="p-4 text-2xl">Your games:</TextBox>
@@ -22,11 +15,7 @@ await until(status).not.toBe("pending");
           </HelpModal>
         </div>
         <div class="flex flex-col items-center gap-4">
-          <NuxtLink
-            v-for="game of data.games"
-            :key="game.displayName"
-            :to="game.url"
-          >
+          <NuxtLink v-for="game of games" :key="game.displayName" :to="game.url">
             <ControlButton>
               {{ game.displayName }}
             </ControlButton>

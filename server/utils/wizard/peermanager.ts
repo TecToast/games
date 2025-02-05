@@ -1,26 +1,26 @@
 import { Peer } from "crossws";
 import { WSMessage } from "~/utils/wizard/messages";
-const peers = new Map<string, Peer>();
+export default {
+  peers: new Map<string, Peer>(),
 
-function register(user: string, peer: Peer) {
-  peers.set(user, peer);
-}
+  register(user: string, peer: Peer) {
+    this.peers.set(user, peer);
+  },
 
-function send(user: string, message: WSMessage) {
-  const peer = peers.get(user);
-  if (peer) {
-    peer.send(message);
-  }
-}
+  send(user: string, message: WSMessage) {
+    const peer = this.peers.get(user);
+    if (peer) {
+      peer.send(message);
+    }
+  },
 
-function get(user: string) {
-  return peers.get(user)!;
-}
+  get(user: string) {
+    return this.peers.get(user)!;
+  },
 
-function broadcast(message: WSMessage) {
-  for (const peer of peers.values()) {
-    peer.send(message);
-  }
-}
-
-export { register, send, get, broadcast };
+  broadcast(message: WSMessage) {
+    for (const peer of this.peers.values()) {
+      peer.send(message);
+    }
+  },
+};

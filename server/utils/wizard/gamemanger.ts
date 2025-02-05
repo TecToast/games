@@ -2,16 +2,23 @@ import { GamePhase, OpenGamesData } from "~/utils/wizard/types";
 import { Game } from "./game";
 import { Peer } from "crossws";
 import { OpenGames } from "~/utils/wizard/messages";
-import * as pm from "./peermanager";
+import pm from "./peermanager";
 
 export const GameManager = {
   games: new Map<number, Game>(),
+  gameCache: new Map<string, Game>(),
   updateOpenGames(peer?: Peer) {
-    const openGames: OpenGamesData = this.games
+    const openGames: OpenGamesData = [];
+    this.games.forEach((game, id) => {
+      if (game.phase === GamePhase.LOBBY) {
+        openGames.push({ owner: game.owner, id });
+      }
+    });
+    /*const openGames: OpenGamesData = this.games
       .entries()
       .filter(([_, game]) => game.phase === GamePhase.LOBBY)
       .map(([id, game]) => ({ owner: game.owner, id }))
-      .toArray();
+      .toArray();*/
     const msg = { type: "OpenGames", games: openGames } as OpenGames;
     if (peer) {
       peer.send(msg);

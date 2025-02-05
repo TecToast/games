@@ -11,7 +11,7 @@ import {
   StitchEvaluationMethod,
   ColorPreferenceSpecialRoles,
 } from "~/utils/wizard/types";
-import * as pm from "./peermanager";
+import pm from "./peermanager";
 import { LayCard, WSMessage } from "~/utils/wizard/messages";
 import {
   NOTHINGCARD,
@@ -32,7 +32,7 @@ import {
   rainbowCards,
 } from "~/utils/wizard/specialcards";
 import { randomInt } from "crypto";
-import { Peer } from "crossws";
+import { GameManager } from "./gamemanger";
 
 export class Game {
   constructor(
@@ -804,7 +804,7 @@ export class Game {
     });
   }
 
-  handleMessage(peer: Peer, msg: WSMessage, username: string) {
+  async handleMessage(msg: WSMessage, username: string) {
     switch (msg.type) {
       case "StartButtonClicked":
         if (this.phase === GamePhase.LOBBY && username === this.owner) {
@@ -852,9 +852,136 @@ export class Game {
         switch (this.phase) {
           case GamePhase.LOBBY:
             if (username == this.owner) {
-              // TODO: lol
+              GameManager.removeGame(this.id);
             }
+            this.removePlayer(username);
+            pm.send(username, { type: "RedirectHome" });
+            break;
+          case (GamePhase.RUNNING, GamePhase.ROLE_SELECTION):
+            this.endGame();
+            this.phase = GamePhase.FINISHED;
+            break;
+          case GamePhase.FINISHED:
+            GameManager.removeGame(this.id);
+            pm.send(username, { type: "RedirectHome" });
+            break;
         }
+        break;
+      case "StitchGoal":
+        if (!this.isPredict) return;
+        const defaultPrediction = this.checkRule("Ansage") === "Nacheinander";
+        if (defaultPrediction && username !== this.currentPlayer) return;
+        if (msg.goal < 0 || msg.goal > this.round + 3) return;
+        this.stitchGoals[username] = msg.goal;
+        this.stitchDone[username] = 0;
+        if (defaultPrediction) {
+          this.updateStitches(username);
+          this.nextPlayer();
+        } else {
+          this.checkIfAllPredicted(username);
+        }
+        break;
+
+      case "RuleChangeRequest":
+        if (username === this.owner && this.phase === GamePhase.LOBBY) {
+          this.changeRule(msg.rule, msg.value);
+        }
+        break;
+
+      case "LayCard":
+        this.layCard(username, msg);
+        break;
+
+      case "VoteForWinner":
+        if (!this.playersRemainingForWinnerVoting.includes(username)) return;
+        if (!this.players.includes(msg.value)) return;
+        if (msg.value === username) return;
+
+        pm.send(username, { type: "ShowWinnerPollModal", show: false });
+
+        this.winnerVotingTally[msg.value] =
+          (this.winnerVotingTally[msg.value] || 0) + 1;
+        removeFromArray(this.playersRemainingForWinnerVoting, username);
+
+        if (this.playersRemainingForWinnerVoting.length === 0) {
+          this.winner = this.originalOrderForSubround.reduce(
+            (maxPlayer, player) =>
+              this.winnerVotingTally[player] >
+              (this.winnerVotingTally[maxPlayer] || 0)
+                ? player
+                : maxPlayer,
+          );
+          const layedCardsValues = Object.values(this.layedCards);
+          this.afterSubRound(
+            containsCard(layedCardsValues, BOMB),
+            containsCard(layedCardsValues, EVERYBODYPOINTS),
+            this.stitchValue,
+          );
+        }
+        break;
+
+      case "ChangeStitchPrediction":
+        if (username !== this.userToChangeStitchPrediction) return;
+        if (Math.abs(msg.value) !== 1) return;
+        const resultingStitchGoal = this.stitchGoals[username] + msg.value;
+        if (resultingStitchGoal < 0 || resultingStitchGoal > this.round + 2)
+          return; //TODO: reconsider upper bound for predictions
+        pm.send(username, { type: "ShowChangeStitchModal", show: false });
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        this.stitchGoals[username] += msg.value;
+        this.userToChangeStitchPrediction = null;
+        this.broadcast({
+          type: "StitchGoal",
+          name: username,
+          goal: this.stitchGoals[username],
+        });
+        if (this.isSevenPointFiveUsed && this.cards[username].length > 0) {
+          this.broadcast({ type: "SevenPointFiveUsed" });
+        }
+        this.newSubround();
+        break;
+
+      case "ChangeCard":
+        //TODO: rein theoretisch kann Zuschauer game crashen? Wenn Zuschauer eine Nachricht schickt, was ist dann cards[ZuschauerName]?
+        if (
+          !this.isSevenPointFiveUsed ||
+          !this.cards[username]?.includes(msg.card) ||
+          this.cardsToChange[username]
+        ) {
+          return;
+        }
+        removeCard(this.cards[username], msg.card);
+        this.cardsToChange[username] = msg.card;
+        if (Object.keys(this.cardsToChange).length === this.players.length) {
+          const playersIterator = this.players.values();
+          const firstPlayer = playersIterator.next().value!;
+          let player = firstPlayer;
+          let nextPlayer: string;
+          const newCards: { [key: string]: Card } = {};
+          while (true) {
+            const result = playersIterator.next();
+            if (result.done) break;
+            nextPlayer = result.value;
+            this.cards[nextPlayer].push(this.cardsToChange[player]);
+            newCards[nextPlayer] = this.cardsToChange[player];
+            player = nextPlayer;
+          }
+          this.cards[firstPlayer].push(this.cardsToChange[player]);
+          newCards[firstPlayer] = this.cardsToChange[player];
+          for (const user of this.players) {
+            pm.send(user, {
+              type: "Cards",
+              cards: this.cards[user],
+              newCard: newCards[user],
+            });
+          }
+          this.isSevenPointFiveUsed = false;
+          this.newSubround();
+        }
+        break;
+
+      default:
+        console.warn(`Unknown message: ${msg}`);
     }
   }
 }

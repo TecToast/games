@@ -4,7 +4,7 @@ import type { OpenGamesData } from "~/utils/wizard/types";
 const useWizardConnectionTemplate = () => {
   const ws = useTypedWebsocket(
     process.env.NODE_ENV === "development"
-      ? `ws://localhost:9934/api/wizard/ws`
+      ? `ws://localhost:3000/api/wizard/ws`
       : `wss://games.tectoast.de/api/wizard/ws`,
   );
   const openGames = useState<OpenGamesData>(

@@ -26,6 +26,7 @@
     "@nuxt/scripts": "0.9.5",
     "@nuxtjs/tailwindcss": "^6.13.1",
     "@vueuse/core": "^10.11.1",
+    "nuxi": "^3.21.1",
     "nuxt": "^3.15.4",
     "nuxt-auth-utils": "0.5.10",
     "prettier": "^3.4.2",

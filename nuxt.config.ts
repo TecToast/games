@@ -49,6 +49,9 @@ export default defineNuxtConfig({
     dirs: ["./stores", "./composables/wizard"],
   },
   nitro: {
+    experimental: {
+      websocket: true,
+    },
     storage: {
       redis: {
         driver: "redis",
