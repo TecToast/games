@@ -1,17 +1,15 @@
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
+import { useWizardRef } from "~/utils/wsutils";
 
 export function useWinnerPoll() {
   const { data, sendWS } = useWizardConnection();
 
   function voteForWinner(value: string) {
-    sendWS("VoteForWinner", {
-      value,
-    });
+    sendWS({ type: "VoteForWinner", value });
   }
-  const { result: isWinnerPollModalActive } = useWebsocketRef(
+  const { result: isWinnerPollModalActive } = useWizardRef(
     data,
     "ShowWinnerPollModal",
-    "show",
     false,
   );
 

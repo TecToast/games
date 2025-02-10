@@ -1,7 +1,7 @@
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
-import { useWebsocketRef, watchMessage } from "~/utils/wsutils";
+import { useWizardRef, watchWizard } from "~/utils/wsutils";
 import type { LayedCard, WizardState } from "~/utils/wizard/types";
-import { NOTHINGCARD } from "~/utils/wizard/types";
+import { NOTHINGCARD } from "~/utils/wizard/specialcards";
 
 export function useGamePhase(
   playersInLobby: Ref<string[]>,
@@ -26,10 +26,12 @@ export function useGamePhase(
       return;
     }
     alreadyStarted.value = true;
-    sendWS("StartButtonClicked", {});
+    sendWS({ type: "StartButtonClicked" });
   }
   function leaveGame() {
-    sendWS("LeaveGame", { gameID: id });
+    const gameID = Number(id.toString());
+    if (isNaN(gameID)) return;
+    sendWS({ type: "LeaveGame", gameID });
   }
 
   function stopGame() {
@@ -41,17 +43,17 @@ export function useGamePhase(
   until(status)
     .toBe("OPEN")
     .then(() => {
-      sendWS("JoinGame", { gameID: id });
+      const gameID = Number(id.toString());
+      if (isNaN(gameID)) return;
+      sendWS({ type: "JoinGame", gameID });
     });
 
-  const { result: ranks } = useWebsocketRef<
-    { player: string; points: number }[]
-  >(data, "EndGame", "players", []);
+  const { result: ranks } = useWizardRef(data, "EndGame", []);
   const gamephase = ref<WizardState>("lobby");
   watch(ranks, (newVal) => {
     if (newVal.length > 0) gamephase.value = "finished";
   });
-  watchMessage(data, "GameStarted", (d) => {
+  watchWizard(data, "GameStarted", (d) => {
     gamephase.value = "game";
     const players: string[] = d.players;
     layedCards.value = players.map(

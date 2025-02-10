@@ -2,6 +2,9 @@ export type GameMeta = {
   displayName: string;
   url: string;
 };
+export interface BaseMessage {
+  type: string;
+}
 export const allGames: Record<string, GameMeta> = {
   jeopardy: {
     displayName: "Jeopardy",

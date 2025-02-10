@@ -1,10 +1,10 @@
-export default function (url: MaybeRefOrGetter<string>) {
+export default function <T>(url: MaybeRefOrGetter<string>) {
   const { status, data, send, open } = useWebSocket(url, {
     autoReconnect: true,
   });
 
-  function sendWS(type: string, data: any) {
-    send(JSON.stringify({ type, ...data }));
+  function sendWS(data: T) {
+    send(JSON.stringify(data));
   }
   return { status, data, sendWS };
 }

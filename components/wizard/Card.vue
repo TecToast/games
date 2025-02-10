@@ -6,6 +6,7 @@ import {
   isCard,
   type SelectChangeCard,
   CardsDescriptions,
+  Color,
 } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 
@@ -41,7 +42,7 @@ const isLegal = computed(() => {
     props.card.color == "Narr" ||
     props.card.color == "Spezial" ||
     props.firstCard?.color == "Zauberer" ||
-    isCard(props.firstCard, "Spezial", 3) ||
+    isCard(props.firstCard, Color.Special, 3) ||
     props.playerCards?.every((c) => c.color != props.firstCard?.color) ||
     props.card.color == props.firstCard?.color
   );
@@ -51,40 +52,34 @@ const { sendWS } = useWizardConnection();
 function onClick() {
   if (!clickable.value) return;
   if (selectChangeCardState.value == "selectCard") {
-    sendWS("ChangeCard", { card: props.card });
+    sendWS({ type: "ChangeCard", card: props.card });
     selectChangeCardState.value = "waitForOthers";
     emit("removeCard", props.card);
     return;
   }
   if (
-    isCard(props.card, "Spezial", 9.75) ||
-    isCard(props.card, "Spezial", 7.5) ||
-    isCard(props.card, "Spezial", -1) ||
-    isCard(props.card, "Spezial", 14) ||
-    isCard(props.card, "Spezial", 69)
+    isCard(props.card, Color.Special, 9.75) ||
+    isCard(props.card, Color.Special, 7.5) ||
+    isCard(props.card, Color.Special, -1) ||
+    isCard(props.card, Color.Special, 14) ||
+    isCard(props.card, Color.Special, 69)
   ) {
     const selectColorCard = useState<Card | null>("selectColorCard");
     selectColorCard.value = props.card;
     return;
   }
-  sendWS("LayCard", { card: props.card });
+  sendWS({ type: "LayCard", card: props.card });
 }
 </script>
 <template>
-  <UTooltip
-    :text="
-      CardsDescriptions[card.color + card.value] ??
-      (card.color != 'Nichts'
-        ? card.color == 'Narr' || card.color == 'Zauberer'
-          ? card.color
-          : card.color + ' ' + card.value
-        : undefined)
-    "
-    :popper="{ placement: 'bottom' }"
-    :open-delay="800"
-    :ui="{ width: 'max-w-screen-xl' }"
-    class="m-0 scale-100 transform rounded transition-transform duration-300"
-    :class="[
+  <UTooltip :text="CardsDescriptions[card.color + card.value] ??
+    (card.color != 'Nichts'
+      ? card.color == 'Narr' || card.color == 'Zauberer'
+        ? card.color
+        : card.color + ' ' + card.value
+      : undefined)
+    " :popper="{ placement: 'bottom' }" :open-delay="800" :ui="{ width: 'max-w-screen-xl' }"
+    class="m-0 scale-100 transform rounded transition-transform duration-300" :class="[
       type != 'hand' || clickable || (isPredict && firstCome != '')
         ? 'brightness-100'
         : 'brightness-50',
@@ -93,9 +88,9 @@ function onClick() {
       type == 'trump'
         ? 'border-4 border-fuchsia-800'
         : type == 'layed' &&
-            card.color != 'Nichts' &&
-            firstCard?.color == card.color &&
-            firstCard?.value == card.value
+          card.color != 'Nichts' &&
+          firstCard?.color == card.color &&
+          firstCard?.value == card.value
           ? 'outline-3 outline-dotted outline-offset-0 outline-fuchsia-800'
           : type == 'hand' && selectChangeCardState == 'nothing'
             ? isLegal
@@ -103,16 +98,14 @@ function onClick() {
               : 'border-2 border-red-400'
             : '',
       type == 'layed' &&
-      (card.value == 7.5 ||
-        card.value == 9.75 ||
-        card.value == -1 ||
-        card.value == 14 ||
-        card.value == 69)
+        (card.value == 7.5 ||
+          card.value == 9.75 ||
+          card.value == -1 ||
+          card.value == 14 ||
+          card.value == 69)
         ? `border-4 border-${card.color == 'Grün' ? 'green' : card.color == 'Rot' ? 'red' : card.color == 'Blau' ? 'blue' : card.color == 'Gelb' ? 'yellow' : ''}-400`
         : '',
-    ]"
-    style="max-width: 150px"
-  >
+    ]" style="max-width: 150px">
     <img :src :alt="`${card.color} ${card.value}`" @click="onClick" />
   </UTooltip>
 </template>

@@ -1,15 +1,10 @@
-import { useWebsocketRef } from "~/utils/wsutils";
+import { useWizardRef } from "~/utils/wsutils";
 import type { Card } from "~/utils/wizard/types";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 
 export function usePlayerCards(trump: Ref<Card>) {
   const { data } = useWizardConnection();
-  const { result: playerCards } = useWebsocketRef<Card[]>(
-    data,
-    "Cards",
-    "cards",
-    [],
-  );
+  const { result: playerCards } = useWizardRef(data, "Cards", []);
 
   function removeCardFromDeck(card: Card) {
     const index = playerCards.value.findIndex(

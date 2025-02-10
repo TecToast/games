@@ -1,13 +1,13 @@
 import type { Card, LayedCard } from "~/utils/wizard/types";
-import { watchMessage } from "~/utils/wsutils";
-import { NOTHINGCARD } from "~/utils/wizard/types";
+import { watchWizard } from "~/utils/wsutils";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
+import { NOTHINGCARD } from "~/utils/wizard/specialcards";
 
 export function useFirstCard(layedCards: Ref<LayedCard[]>) {
   const { data } = useWizardConnection();
   const firstCard = ref<Card>(NOTHINGCARD);
-  watchMessage(data, "PlayerCard", (msg) => {
-    const layCard = msg.card as LayedCard;
+  watchWizard(data, "PlayerCard", (msg) => {
+    const layCard = msg.card;
     if (firstCard.value.color != "Nichts") {
       return;
     }

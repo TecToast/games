@@ -25,3 +25,4 @@ logs
 
 # lockfiles
 package-lock.json
+cards/

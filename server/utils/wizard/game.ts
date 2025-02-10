@@ -134,7 +134,7 @@ export class Game {
 
   updateStitches(name: string) {
     this.broadcast({
-      type: "StitchGoal",
+      type: "StitchGoalOf",
       name,
       goal: this.stitchGoals[name],
     });
@@ -207,7 +207,10 @@ export class Game {
     this.broadcast({
       type: "Round",
       round: this.round,
-      firstCome: this.roundPlayers[1],
+    });
+    this.broadcast({
+      type: "FirstCome",
+      player: this.roundPlayers[1],
     });
     this.broadcast({ type: "IsPredict", isPredict: true });
     this.originalOrderForSubround = Array.from(this.roundPlayers);
@@ -324,13 +327,13 @@ export class Game {
       this.trump = stack.shift() || NOTHINGCARD;
     }
 
-    this.broadcast({ type: "Trump", trump: this.trump, shifted });
+    this.broadcast({ type: "Trump", trump: this.trump });
+    this.broadcast({ type: "TrumpShifted", shifted });
 
     for (const player of this.players) {
       pm.send(player, {
         type: "Cards",
         cards: this.cards[player],
-        newCard: NOTHINGCARD,
       });
     }
   }
@@ -794,14 +797,18 @@ export class Game {
     pm.send(u, {
       type: "Cards",
       cards: this.cards[u],
-      newCard: NOTHINGCARD,
     });
-    pm.send(u, { type: "Trump", trump: this.trump, shifted: {} });
+    pm.send(u, { type: "Trump", trump: this.trump });
     pm.send(u, {
       type: "Round",
       round: this.round,
-      firstCome: this.stitchGoals[u] ? "" : this.originalOrderForSubround[1],
     });
+    if (this.stitchGoals[u]) {
+      pm.send(u, {
+        type: "FirstCome",
+        player: this.originalOrderForSubround[1],
+      });
+    }
   }
 
   async handleMessage(msg: WSMessage, username: string) {
@@ -931,7 +938,7 @@ export class Game {
         this.stitchGoals[username] += msg.value;
         this.userToChangeStitchPrediction = null;
         this.broadcast({
-          type: "StitchGoal",
+          type: "StitchGoalOf",
           name: username,
           goal: this.stitchGoals[username],
         });
@@ -972,7 +979,10 @@ export class Game {
             pm.send(user, {
               type: "Cards",
               cards: this.cards[user],
-              newCard: newCards[user],
+            });
+            pm.send(user, {
+              type: "NewCardReceived",
+              card: newCards[user],
             });
           }
           this.isSevenPointFiveUsed = false;

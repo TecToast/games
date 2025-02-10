@@ -1,17 +1,14 @@
-import type { UnwrapRef } from "vue";
+import type { WSMessage } from "./wizard/messages";
 
-export function watchMessage(
+export function watchMessage<B extends { type: string }, M extends B["type"]>(
   ref: Ref<unknown>,
-  type: string,
-  callback: (data: any) => void,
+  type: M,
+  callback: (data: Extract<B, { type: M }>) => void,
 ) {
   watch(ref, (data) => {
-    console.log("watching", data);
-    console.log("watching type", typeof type);
     if (typeof data === "string") {
       try {
         const message = JSON.parse(data);
-        console.log("watching message", message);
         if (message.type === type) {
           callback(message);
         }
@@ -22,17 +19,42 @@ export function watchMessage(
   });
 }
 
-export function useWebsocketRef<T>(
-  reference: Ref<unknown>,
-  type: string,
-  key: string,
-  start: T,
+export function watchWizard<M extends WSMessage["type"]>(
+  ref: Ref<unknown>,
+  type: M,
+  callback: (data: Extract<WSMessage, { type: M }>) => void,
 ) {
-  const result = ref<T>(start);
+  return watchMessage<WSMessage, M>(ref, type, callback);
+}
+
+type ExtractOtherKey<
+  T extends { type: string },
+  K extends T["type"],
+> = T extends {
+  type: K;
+}
+  ? {
+      [P in keyof T]: P extends "type" ? never : T[P];
+    }[keyof T]
+  : never;
+export function useWebsocketRef<
+  B extends { type: string },
+  M extends B["type"],
+>(reference: Ref<unknown>, type: M, start: ExtractOtherKey<B, M>) {
+  const result = ref(start);
   const notSet = ref(true);
   watchMessage(reference, type, (data) => {
-    result.value = data[key];
+    // @ts-ignore
+    result.value =
+      data[Object.keys(data).find((k) => k !== "type") as keyof typeof data];
     notSet.value = false;
   });
   return { result, notSet };
+}
+export function useWizardRef<M extends WSMessage["type"]>(
+  reference: Ref<unknown>,
+  type: M,
+  start: ExtractOtherKey<WSMessage, M>,
+) {
+  return useWebsocketRef<WSMessage, M>(reference, type, start);
 }

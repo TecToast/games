@@ -1,42 +1,16 @@
-import { useWebsocketRef } from "~/utils/wsutils";
-import type { Card } from "~/utils/wizard/types";
-import { NOTHINGCARD } from "~/utils/wizard/types";
+import { useWizardRef } from "~/utils/wsutils";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
+import { NOTHINGCARD } from "~/utils/wizard/specialcards";
 
 export function useGeneralData() {
   const { data } = useWizardConnection();
-  const { result: currentPlayer } = useWebsocketRef(
-    data,
-    "CurrentPlayer",
-    "player",
-    "",
-  );
-  const { result: round } = useWebsocketRef(data, "Round", "round", 1);
-  const { result: firstCome } = useWebsocketRef(data, "Round", "firstCome", "");
-  const { result: trump } = useWebsocketRef<Card>(
-    data,
-    "Trump",
-    "trump",
-    NOTHINGCARD,
-  );
-  const { result: isPredict } = useWebsocketRef(
-    data,
-    "IsPredict",
-    "isPredict",
-    true,
-  );
-  const { result: playersInLobby } = useWebsocketRef<string[]>(
-    data,
-    "GameInfo",
-    "players",
-    [],
-  );
-  const { result: currentStitchWinner } = useWebsocketRef<string | null>(
-    data,
-    "Winner",
-    "winner",
-    "",
-  );
+  const { result: currentPlayer } = useWizardRef(data, "CurrentPlayer", "");
+  const { result: round } = useWizardRef(data, "Round", 1);
+  const { result: firstCome } = useWizardRef(data, "FirstCome", "");
+  const { result: trump } = useWizardRef(data, "Trump", NOTHINGCARD);
+  const { result: isPredict } = useWizardRef(data, "IsPredict", true);
+  const { result: playersInLobby } = useWizardRef(data, "GameInfo", []);
+  const { result: currentStitchWinner } = useWizardRef(data, "Winner", "");
   watch(currentStitchWinner, (newWinner) => {
     if (newWinner != "") {
       currentPlayer.value = "";

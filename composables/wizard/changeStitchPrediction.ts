@@ -4,14 +4,11 @@ export function useChangeStitchPrediction() {
   const { data, sendWS } = useWizardConnection();
 
   function changeStitchPrediction(value: number) {
-    sendWS("ChangeStitchPrediction", {
-      value,
-    });
+    sendWS({ type: "ChangeStitchPrediction", value });
   }
-  const { result: isChangeStitchModalActive } = useWebsocketRef(
+  const { result: isChangeStitchModalActive } = useWizardRef(
     data,
     "ShowChangeStitchModal",
-    "show",
     false,
   );
 

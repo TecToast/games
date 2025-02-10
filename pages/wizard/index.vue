@@ -1,31 +1,35 @@
 <script setup lang="ts">
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
-import { watchMessage } from "~/utils/wsutils";
+import { watchWizard } from "~/utils/wsutils";
 import type { OpenGamesData } from "~/utils/wizard/types";
 
 definePageMeta({
   keepalive: true,
 });
 
-const { user } = useUserSession();
+const { user, fetch: fetchSession } = useUserSession();
 
 const { data: wsData, sendWS } = useWizardConnection();
 const openGames = useState<OpenGamesData>("openGames");
 preloadRouteComponents("/wizard/game/:id");
 
 function createGame() {
-  sendWS("CreateGame", {});
+  sendWS({ type: "CreateGame" });
 }
-watchMessage(wsData, "GameCreated", (d) => {
+watchWizard(wsData, "GameCreated", (d) => {
   navigateTo(`/wizard/game/${d.gameID}`);
 });
+async function devSwitchUser(name: string) {
+  await $fetch("/api/auth/userswitch", { method: "POST", body: { name } });
+  await fetchSession();
+}
 </script>
 <template>
   <DefaultBackground>
     <DevOnly>
       <div class="absolute left-2 top-2 flex gap-3">
-        <ControlButton v-for="name of ['TestUser1', 'TestUser2', 'TestUser3']"
-          @click="sendWS('ChangeUsername', { username: name })">{{ name }}</ControlButton>
+        <ControlButton v-for="name of ['TestUser1', 'TestUser2', 'TestUser3']" @click="devSwitchUser(name)">{{ name }}
+        </ControlButton>
       </div>
     </DevOnly>
     <p class="absolute right-2 top-2 text-xl font-bold text-gray-300">

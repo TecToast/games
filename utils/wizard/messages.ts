@@ -5,10 +5,7 @@ import {
   type OpenGamesData,
   type Rule,
 } from "./types";
-
-interface BaseMessage {
-  type: string;
-}
+import { type BaseMessage } from "~/utils/types";
 
 export type WSMessage =
   | CreateGame
@@ -26,13 +23,17 @@ export type WSMessage =
   | GameCreated
   | GameInfo
   | RuleChange
+  | StitchGoalOf
   | EndGame
   | Round
+  | FirstCome
   | Results
   | Cards
+  | NewCardReceived
   | PlayerCard
   | CurrentPlayer
   | Trump
+  | TrumpShifted
   | Winner
   | ClearForNewSubRound
   | IsPredict
@@ -68,7 +69,6 @@ interface LeaveGame extends BaseMessage {
 
 interface StitchGoal extends BaseMessage {
   type: "StitchGoal";
-  name?: string;
   goal: number;
 }
 
@@ -126,6 +126,12 @@ interface RuleChange extends BaseMessage {
   rules: { [k: string]: string };
 }
 
+interface StitchGoalOf extends BaseMessage {
+  type: "StitchGoalOf";
+  name: string;
+  goal: number;
+}
+
 interface EndGame extends BaseMessage {
   type: "EndGame";
   players: { player: string; points: number }[];
@@ -134,7 +140,11 @@ interface EndGame extends BaseMessage {
 interface Round extends BaseMessage {
   type: "Round";
   round: number;
-  firstCome: string;
+}
+
+interface FirstCome extends BaseMessage {
+  type: "FirstCome";
+  player: string;
 }
 
 interface Results extends BaseMessage {
@@ -145,7 +155,11 @@ interface Results extends BaseMessage {
 interface Cards extends BaseMessage {
   type: "Cards";
   cards: Card[];
-  newCard: Card;
+}
+
+interface NewCardReceived extends BaseMessage {
+  type: "NewCardReceived";
+  card: Card;
 }
 
 interface PlayerCard extends BaseMessage {
@@ -161,6 +175,10 @@ interface CurrentPlayer extends BaseMessage {
 interface Trump extends BaseMessage {
   type: "Trump";
   trump: Card;
+}
+
+interface TrumpShifted extends BaseMessage {
+  type: "TrumpShifted";
   shifted: { [k: string]: number };
 }
 

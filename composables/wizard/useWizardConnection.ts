@@ -1,8 +1,9 @@
-import { watchMessage } from "~/utils/wsutils";
+import { watchWizard } from "~/utils/wsutils";
 import type { OpenGamesData } from "~/utils/wizard/types";
+import type { WSMessage } from "~/utils/wizard/messages";
 
 const useWizardConnectionTemplate = () => {
-  const ws = useTypedWebsocket(
+  const ws = useTypedWebsocket<WSMessage>(
     process.env.NODE_ENV === "development"
       ? `ws://localhost:3000/api/wizard/ws`
       : `wss://games.tectoast.de/api/wizard/ws`,
@@ -12,7 +13,7 @@ const useWizardConnectionTemplate = () => {
     return { notSet: true, games: [] };
   }*/,
   );
-  watchMessage(ws.data, "OpenGames", (d) => {
+  watchWizard(ws.data, "OpenGames", (d) => {
     openGames.value = d.games;
   });
   return ws;

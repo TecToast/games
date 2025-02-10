@@ -2,9 +2,7 @@ import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 
 export function useTrumpShift() {
   const { data } = useWizardConnection();
-  const { result: shiftData } = useWebsocketRef<{
-    [color: string]: number;
-  }>(data, "Trump", "shifted", {});
+  const { result: shiftData } = useWizardRef(data, "TrumpShifted", {});
   return computed(() => {
     let x = "";
     for (const [color, amount] of Object.entries(shiftData.value)) {

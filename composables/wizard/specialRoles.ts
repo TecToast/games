@@ -1,20 +1,17 @@
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
-import { useWebsocketRef } from "~/utils/wsutils";
+import { useWizardRef } from "~/utils/wsutils";
 
 export function useSpecialRoles() {
   const { data, sendWS } = useWizardConnection();
-  const { result: playerRoles } = useWebsocketRef<{
-    [player: string]: string;
-  }>(data, "SelectedRoles", "roles", {});
+  const { result: playerRoles } = useWizardRef(data, "SelectedRoles", {});
 
   function requestSelectedRole(roleName: string) {
-    sendWS("RequestSelectedRole", { roleName });
+    sendWS({ type: "RequestSelectedRole", roleName });
   }
 
-  const { result: currentRoleSelectingPlayer } = useWebsocketRef(
+  const { result: currentRoleSelectingPlayer } = useWizardRef(
     data,
     "CurrentRoleSelectingPlayer",
-    "currentPlayer",
     "",
   );
 
