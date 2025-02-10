@@ -1,14 +1,15 @@
-export type NobodyIsPerfectData = HasUser<UserData> & {
+import type { GameConfigBase } from "../types";
+
+export type NobodyIsPerfectData = GameConfigBase<GameUserData> & QuizData;
+
+export type QuizData = {
   questions: Question[];
-  host: string;
 };
 export type Question = {
   question: NIPQData;
   answer: NIPQData;
 };
-export type UserData = {
-  avatarUrl: string;
-  displayName: string;
+export type GameUserData = {
   points: number;
   currentAnswer?: string;
   selectedIndex?: number;

@@ -1,9 +1,11 @@
 import { type RouteLocationNormalizedGeneric, useRoute } from "vue-router";
 import type { AsyncDataRequestStatus, NuxtError } from "#app";
+import type { GameConfigBase, UserData } from "~/utils/types";
 
-export default function <T extends HasUser<V>, V>(gameId: string) {
+export default function <T extends GameConfigBase<GUserData>, GUserData>(
+  gameId: string,
+) {
   const route = useRoute();
-  const cookies = useCookie("user_session");
   const {
     data: gdata,
     status,
@@ -14,12 +16,7 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
     // @ts-ignore
     () => {
       if (route.params.id && route.fullPath.includes(gameId)) {
-        return $fetch<T>(`/api/${gameId}/data/${route.params.id}`, {
-          credentials: "include",
-          headers: {
-            Cookie: `user_session=${cookies.value}`,
-          },
-        });
+        return $fetch<T>(`/api/${gameId}/data/${route.params.id}`);
       }
       return new Promise<null>((resolve) =>
         setTimeout(() => resolve(null), 500),
@@ -35,7 +32,7 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
     // @ts-ignore
     return { list: data.participantsList, data: data.participants } as {
       list: string[];
-      data: { [key: string]: V };
+      data: { [key: string]: UserData<GUserData> };
     };
   });
   const unsavedChanges = ref(false);
@@ -75,16 +72,12 @@ export default function <T extends HasUser<V>, V>(gameId: string) {
     status: Ref<AsyncDataRequestStatus>;
     error: Ref<NuxtError | null>;
     refreshData: () => void;
-    users: Ref<{ list: string[]; data: { [key: string]: V } } | null>;
+    users: Ref<{
+      list: string[];
+      data: { [key: string]: UserData<GUserData> };
+    } | null>;
     unsavedChanges: Ref<boolean>;
     markUnsaved: () => void;
     saveToDB: () => void;
   };
 }
-
-export type HasUser<UserData> = {
-  participants: {
-    [key: string]: UserData;
-  };
-  participantsList: string[];
-};

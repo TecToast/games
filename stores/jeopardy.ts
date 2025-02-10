@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { watch } from "vue";
 import { AnswerState, type JeopardyData } from "~/utils/jeopardy/types";
-import type { UserData } from "~/utils/jeopardy/types";
+import type { GameUserData } from "~/utils/jeopardy/types";
 import { useRoute } from "vue-router";
 import useGameConfig from "~/composables/useGameConfig";
 
@@ -16,7 +16,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
     unsavedChanges,
     markUnsaved,
     saveToDB,
-  } = useGameConfig<JeopardyData, UserData>("jeopardy");
+  } = useGameConfig<JeopardyData, GameUserData>("jeopardy");
   const currentUser = ref("");
   const currentQuestion: Ref<{ category: string; points: number } | undefined> =
     ref(undefined);
@@ -47,19 +47,19 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
   function toggleJokerFromUser(user: string, joker: string) {
     const userdata = users.value;
     if (!userdata) return;
-    const jokers = userdata.data[user].jokers;
-    const jokerIndex = jokers.indexOf(joker);
+    const usedJokers = userdata.data[user].data.usedJokers;
+    const jokerIndex = usedJokers.indexOf(joker);
     if (jokerIndex === -1) {
-      jokers.push(joker);
+      usedJokers.push(joker);
       return;
     }
-    jokers.splice(jokerIndex, 1);
+    usedJokers.splice(jokerIndex, 1);
   }
 
   function addPointsToUser(user: string, points: number) {
     const userdata = users.value;
     if (!userdata) return;
-    userdata.data[user].points += points;
+    userdata.data[user].data.points += points;
   }
 
   function nextPlayerAndMainPage() {

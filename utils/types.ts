@@ -5,6 +5,22 @@ export type GameMeta = {
 export interface BaseMessage {
   type: string;
 }
+export type GameConfigBackendBase = {
+  participantsList: string[];
+  host: string;
+  id: string;
+};
+export type GameConfigBase<GameUserData> = GameConfigBackendBase & {
+  participants: {
+    [key: string]: UserData<GameUserData>;
+  };
+};
+export type UserData<GameData> = {
+  avatarUrl: string;
+  displayName: string;
+  data: GameData;
+};
+
 export const allGames: Record<string, GameMeta> = {
   jeopardy: {
     displayName: "Jeopardy",

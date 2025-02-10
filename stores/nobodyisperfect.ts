@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import useGameConfig from "~/composables/useGameConfig";
 import type {
+  GameUserData,
   NobodyIsPerfectData,
   State,
-  UserData,
 } from "~/utils/nobodyisperfect/types";
 
 export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
@@ -16,7 +16,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
     unsavedChanges,
     markUnsaved,
     saveToDB,
-  } = useGameConfig<NobodyIsPerfectData, UserData>("nobodyisperfect");
+  } = useGameConfig<NobodyIsPerfectData, GameUserData>("nobodyisperfect");
   const state = ref<State>("overview");
   const timerStart = ref(60);
   const timer = ref(0);
@@ -34,7 +34,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   function addPointsToUser(user: string, points: number) {
     const userdata = users.value;
     if (!userdata) return;
-    userdata.data[user].points += points;
+    userdata.data[user].data.points += points;
   }
 
   function switchToAnswerScreen() {

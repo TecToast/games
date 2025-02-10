@@ -19,7 +19,7 @@ function createNewQuiz() {
   }
   $fetch(`/api/${props.gameId}/create`, {
     method: "POST",
-    body: quizName,
+    body: { id: quizName },
   })
     .then(() => refresh())
     .catch((error) => {

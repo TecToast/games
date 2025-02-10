@@ -1,9 +1,12 @@
-export type JeopardyData = HasUser<UserData> & {
+import type { GameConfigBase } from "../types";
+
+export type JeopardyData = GameConfigBase<GameUserData> & QuizData;
+
+export type QuizData = {
   categories: {
     [key: string]: Category;
   };
   jokers: string[];
-  host: string;
 };
 export type Category = {
   [key: string]: Question;
@@ -18,11 +21,9 @@ export type QAData = {
   image?: string;
 };
 
-export type UserData = {
-  avatarUrl: string;
-  displayName: string;
+export type GameUserData = {
   points: number;
-  jokers: string[];
+  usedJokers: string[];
 };
 
 export enum AnswerState {

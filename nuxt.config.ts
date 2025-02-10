@@ -29,6 +29,9 @@ export default defineNuxtConfig({
       },
     },
     mongodb: "",
+    discord: {
+      token: "",
+    },
     session: {
       maxAge: 60 * 60 * 24 * 7,
       password: process.env.NUXT_SESSION_PASSWORD || "",

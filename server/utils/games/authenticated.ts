@@ -1,0 +1,22 @@
+import type { EventHandler, EventHandlerRequest, H3Event } from "h3";
+import { Collection } from "mongodb";
+import { GameConfigBackendBase } from "~/utils/types";
+import { collections } from "./constants";
+
+type EventHandlerWithGame<T extends EventHandlerRequest, D> = (
+  event: H3Event<T>,
+  uid: string,
+  game: string,
+  coll: Collection<GameConfigBackendBase>,
+) => Promise<D>;
+
+export const defineGameHandler = <T extends EventHandlerRequest, D>(
+  handler: EventHandlerWithGame<T, D>,
+): EventHandler<T, D> =>
+  defineEventHandler<T>(async (event) => {
+    const { user } = await requireUserSession(event);
+    const game = getRouterParam(event, "game")!;
+    const coll = collections[game];
+    if (!coll) throw createError({ status: 404, message: "Game not found" });
+    return handler(event, user.id, game, coll);
+  });
