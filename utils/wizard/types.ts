@@ -154,6 +154,10 @@ export function convertCardToHref(card: Card): string {
   return `/api/wizard/cardimages/${color}_${card.value}.webp`;
 }
 
+export function isSameCard(a: Card | undefined, b: Card) {
+  return isCard(a, b.color, b.value);
+}
+
 export function isCard(
   card: Card | undefined,
   color: Color,

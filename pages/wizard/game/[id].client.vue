@@ -120,58 +120,61 @@ watchWizard(data, "SevenPointFiveUsed", () => {
 definePageMeta({ colorMode: "dark" });
 
 const video = ref();
-const { onLoaded } = useScriptYouTubePlayer({
-  scriptOptions: { trigger: "onNuxtReady" },
-});
-
 const player = ref(null);
-// @ts-ignore
-onLoaded(async ({ YT }) => {
-  // wait for the internal YouTube APIs to be ready
-  const YouTube = await YT;
-  await new Promise<void>((resolve) => {
-    // @ts-ignore
-    if (typeof YT.Player === "undefined") YouTube.ready(resolve);
-    else resolve();
+const config = useRuntimeConfig()
+if (config.public.wizardYT) {
+  const { onLoaded } = useScriptYouTubePlayer({
+    scriptOptions: { trigger: "onNuxtReady" },
   });
-  // load the API
-  // @ts-ignore
-  player.value = new YT.Player(video.value, {
-    videoId: "dQw4w9WgXcQ",
-    playerVars: {
-      playsinline: 1,
-      autoplay: 1,
-      playlist: "dQw4w9WgXcQ",
-    },
-    events: {
-      onReady: (event: any) => {
-        event.target.setVolume(volume.value);
-      },
-      onStateChange: (event: any) => {
-        // @ts-ignore
-        if (event.data === YT.PlayerState.ENDED) {
-          event.target.playVideo(); // restart video if it reached the end
-        }
-      },
-    },
-  });
-});
 
-watch(
-  volume,
-  (v) => {
-    if (v == 0) {
+  // @ts-ignore
+  onLoaded(async ({ YT }) => {
+    // wait for the internal YouTube APIs to be ready
+    const YouTube = await YT;
+    await new Promise<void>((resolve) => {
       // @ts-ignore
-      player.value?.pauseVideo();
-    } else {
-      // @ts-ignore
-      player.value?.playVideo();
-    }
+      if (typeof YT.Player === "undefined") YouTube.ready(resolve);
+      else resolve();
+    });
+    // load the API
     // @ts-ignore
-    player.value?.setVolume(v);
-  },
-  { immediate: true },
-);
+    player.value = new YT.Player(video.value, {
+      videoId: "dQw4w9WgXcQ",
+      playerVars: {
+        playsinline: 1,
+        autoplay: 1,
+        playlist: "dQw4w9WgXcQ",
+      },
+      events: {
+        onReady: (event: any) => {
+          event.target.setVolume(volume.value);
+        },
+        onStateChange: (event: any) => {
+          // @ts-ignore
+          if (event.data === YT.PlayerState.ENDED) {
+            event.target.playVideo(); // restart video if it reached the end
+          }
+        },
+      },
+    });
+  });
+
+  watch(
+    volume,
+    (v) => {
+      if (v == 0) {
+        // @ts-ignore
+        player.value?.pauseVideo();
+      } else {
+        // @ts-ignore
+        player.value?.playVideo();
+      }
+      // @ts-ignore
+      player.value?.setVolume(v);
+    },
+    { immediate: true },
+  );
+}
 const speakerImgSrc = computed(() => {
   const v = volume.value;
   if (v == 0) return "/speaker_level_0_icon.png";
@@ -229,7 +232,7 @@ function muteSpeaker() {
           </div>
         </div>
       </div>
-      <div class="group fixed bottom-4 right-4">
+      <div class="group fixed bottom-4 right-4" v-if="config.public.wizardYT">
         <!-- Lautsprecher-Icon -->
         <img :src="speakerImgSrc" id="speakerImgID" class="h-8 w-8 cursor-pointer" alt="Speaker Icon"
           @click="muteSpeaker" />

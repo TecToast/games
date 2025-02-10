@@ -10,6 +10,7 @@ import {
   isRegularColor,
   StitchEvaluationMethod,
   ColorPreferenceSpecialRoles,
+  isSameCard,
 } from "~/utils/wizard/types";
 import pm from "./peermanager";
 import { type LayCard, type WSMessage } from "~/utils/wizard/messages";
@@ -123,7 +124,9 @@ export class Game {
   }
 
   addPlayer(name: string) {
-    this.players.push(name);
+    if (!this.players.includes(name)) {
+      this.players.push(name);
+    }
     this.updateLobby();
     pm.send(name, { type: "RuleChange", rules: this.rules });
   }
@@ -230,11 +233,7 @@ export class Game {
     const mutableForced = this.forcedCards.slice();
     const headfool = this.specialRoles["Der Obernarr"];
     if (headfool) {
-      const firstFoolIndex = stack.findIndex(
-        (card) => card.color === Color.Fool,
-      );
-      const firstFool = stack[firstFoolIndex];
-      stack.splice(firstFoolIndex, 1);
+      const firstFool = removeCard(stack, (c) => c.color === Color.Fool)!;
       this.cards[headfool].push(firstFool);
     }
     const servant = this.specialRoles["Der Knecht"];
@@ -292,7 +291,7 @@ export class Game {
             stolenBy = rolePlayer;
           }
 
-          if (nextCard === BOMB) {
+          if (isSameCard(nextCard, BOMB)) {
             const blaster = this.specialRoles["Der Sprengmeister"];
             if (blaster) {
               const blasterCards = this.cards[blaster];
@@ -339,7 +338,7 @@ export class Game {
   }
 
   skipTrump(forbidden: Color[]) {
-    if (this.trump === NOTHINGCARD) return false;
+    if (isSameCard(this.trump, NOTHINGCARD)) return false;
     if (forbidden.includes(this.trump.color)) return true;
     const presentColorPreferences: Color[] = [];
     Object.keys(this.specialRoles).forEach((role) => {
@@ -514,12 +513,12 @@ export class Game {
 
   filterBlockedPlayers(): void {
     this.originalOrderForSubround.forEach((playerToCheck, index) => {
-      if (this.layedCards[playerToCheck] === BLOCKED) {
+      if (isSameCard(this.layedCards[playerToCheck], BLOCKED)) {
         const nextPlayer =
           this.originalOrderForSubround[(index + 1) % this.players.length];
         delete this.layedCards[nextPlayer];
       }
-      if (this.layedCards[playerToCheck] === FLEXTAPE) {
+      if (isSameCard(this.layedCards[playerToCheck], FLEXTAPE)) {
         const previousPlayer =
           this.originalOrderForSubround[
             (index - 1 + this.players.length) % this.players.length
@@ -533,11 +532,15 @@ export class Game {
     const thiefPlayer = this.specialRoles["Der Dieb"];
     const layedCardsEntries = Object.entries(this.layedCards);
     const layedCardsValues = Object.values(this.layedCards);
-    const dragonIngame = layedCardsValues.includes(DRAGON);
+    const dragonIngame = containsCard(layedCardsValues, DRAGON);
     const firstPlayerOfRound = this.originalOrderForSubround.find(
       (player) => player in this.layedCards,
     )!;
-    const owner = (fn: (card: Card) => boolean) => {
+    const owner = (param: Card | ((card: Card) => boolean)) => {
+      const fn =
+        typeof param === "function"
+          ? param
+          : (card: Card) => isSameCard(card, param);
       return layedCardsEntries.find(([_, card]) => fn(card))![0];
     };
 
@@ -551,20 +554,20 @@ export class Game {
         return thiefPlayer;
       }
 
-      if (layedCardsValues.includes(FAIRY) && dragonIngame) {
-        return owner((card) => card === FAIRY);
+      if (containsCard(layedCardsValues, FAIRY) && dragonIngame) {
+        return owner(FAIRY);
       }
 
       if (dragonIngame) {
-        return owner((card) => card === DRAGON);
+        return owner(DRAGON);
       }
 
       if (
         layedCardsEntries.every(
-          ([_, card]) => card.color === Color.Fool || card === FAIRY,
+          ([_, card]) => card.color === Color.Fool || isSameCard(card, FAIRY),
         )
       ) {
-        return owner((card) => card === FAIRY);
+        return owner((c) => c.color === Color.Fool);
       }
 
       if (layedCardsValues.some((card) => card.color === Color.Wizard)) {
@@ -601,11 +604,11 @@ export class Game {
   }
 
   isHigherThan(newCard: Card, highestCard: Card) {
-    if (newCard === FAIRY) return false;
-    if (newCard === DRAGON) return true;
-    if (highestCard == FAIRY) return true;
+    if (isSameCard(newCard, FAIRY)) return false;
+    if (isSameCard(newCard, DRAGON)) return true;
+    if (isSameCard(highestCard, FAIRY)) return true;
     if (newCard.color === Color.Fool) return false;
-    if (highestCard === BOMB) return true;
+    if (isSameCard(highestCard, BOMB)) return true;
     if (highestCard.color == Color.Fool) return true;
     if (
       newCard.color !== highestCard.color &&
@@ -618,7 +621,7 @@ export class Game {
   }
 
   checkForReverseCard(): void {
-    if (Object.values(this.layedCards).includes(REVERSE)) {
+    if (containsCard(Object.values(this.layedCards), REVERSE)) {
       this.reversedPlayOrder = !this.reversedPlayOrder;
     }
   }
@@ -673,8 +676,11 @@ export class Game {
         }
         const pollNecessary = this.evaluateStitch();
         const layedCardsValues = Object.values(this.layedCards);
-        const bombUsed = layedCardsValues.includes(BOMB);
-        const everybodyPointsUsed = layedCardsValues.includes(EVERYBODYPOINTS);
+        const bombUsed = containsCard(layedCardsValues, BOMB);
+        const everybodyPointsUsed = containsCard(
+          layedCardsValues,
+          EVERYBODYPOINTS,
+        );
 
         if (pollNecessary && !bombUsed) {
           // Wait for poll results
@@ -708,7 +714,7 @@ export class Game {
     const card =
       selectedColor &&
       isRegularColor(selectedColor) &&
-      rainbowCards.includes(realCard)
+      containsCard(rainbowCards, realCard)
         ? { ...realCard, color: selectedColor }
         : realCard;
 
@@ -718,7 +724,7 @@ export class Game {
         ![Color.Fool, Color.Wizard, Color.Special].includes(realCard.color) &&
         fc.color !== card.color &&
         fc.color !== Color.Wizard &&
-        fc !== DRAGON &&
+        !isSameCard(fc, DRAGON) &&
         playerCards.some((c) => c.color === fc.color)
       ) {
         return;
@@ -727,11 +733,13 @@ export class Game {
 
     if (
       Object.values(this.layedCards).every(
-        (c) => c !== DRAGON && [Color.Fool, Color.Special].includes(c.color),
+        (c) =>
+          !isSameCard(c, DRAGON) &&
+          [Color.Fool, Color.Special].includes(c.color),
       )
     ) {
       if (
-        card === DRAGON ||
+        isSameCard(card, DRAGON) ||
         ![Color.Special, Color.Fool].includes(card.color)
       ) {
         this.firstCard = card;
@@ -803,11 +811,55 @@ export class Game {
       type: "Round",
       round: this.round,
     });
-    if (this.stitchGoals[u]) {
+    if (!this.stitchGoals[u]) {
       pm.send(u, {
         type: "FirstCome",
         player: this.originalOrderForSubround[1],
       });
+    }
+    pm.send(u, { type: "IsPredict", isPredict: this.isPredict });
+    Object.entries(this.stitchDone).forEach(([player, amount]) => {
+      pm.send(u, {
+        type: "UpdateDoneStitches",
+        player,
+        amount,
+      });
+    });
+    pm.send(u, { type: "GameStarted", players: this.players });
+    Object.entries(this.layedCards).forEach(([player, card]) => {
+      pm.send(u, {
+        type: "PlayerCard",
+        card: { card, player },
+      });
+    });
+    const isBlind = this.checkRule("Ansage") === "Blind";
+    const isSecretRole = this.checkRule("Spezialrollen") === "Geheim";
+    pm.send(u, {
+      type: "SelectedRoles",
+      roles: Object.fromEntries(
+        Object.entries(this.specialRoles).map(([role, p]) => [
+          p,
+          !isSecretRole || p === u ? role : "???",
+        ]),
+      ),
+    });
+    if (isBlind && this.isPredict) {
+      Object.keys(this.stitchGoals).forEach((player) => {
+        pm.send(u, {
+          type: "HasPredicted",
+          name: player,
+        });
+      });
+      pm.send(u, { type: "CurrentPlayer", player: u });
+    } else {
+      Object.entries(this.stitchGoals).forEach(([player, goal]) => {
+        pm.send(u, {
+          type: "StitchGoalOf",
+          name: player,
+          goal,
+        });
+      });
+      pm.send(u, { type: "CurrentPlayer", player: this.currentPlayer });
     }
   }
 
@@ -949,10 +1001,9 @@ export class Game {
         break;
 
       case "ChangeCard":
-        //TODO: rein theoretisch kann Zuschauer game crashen? Wenn Zuschauer eine Nachricht schickt, was ist dann cards[ZuschauerName]?
         if (
           !this.isSevenPointFiveUsed ||
-          !this.cards[username]?.includes(msg.card) ||
+          !containsCard(this.cards[username] || [], msg.card) ||
           this.cardsToChange[username]
         ) {
           return;
@@ -997,18 +1048,25 @@ export class Game {
 }
 
 function containsCard(cards: Card[], card: Card): boolean {
-  return cards.some((c) => c.color === card.color && c.value === card.value);
+  return cards.some((c) => isSameCard(c, card));
 }
 
-function removeCard(cards: Card[], card: Card) {
+function removeCard(cards: Card[], card: Card | ((card: Card) => boolean)) {
   const index = indexOfCard(cards, card);
-  if (index !== -1) cards.splice(index, 1);
+  if (index !== -1) {
+    const cardRemoved = cards[index];
+    cards.splice(index, 1);
+    return cardRemoved;
+  }
 }
 
-function indexOfCard(cards: Card[], card: Card): number {
-  return cards.findIndex(
-    (c) => c.color === card.color && c.value === card.value,
-  );
+function indexOfCard(
+  cards: Card[],
+  card: Card | ((card: Card) => boolean),
+): number {
+  const fn =
+    typeof card === "function" ? card : (c: Card) => isSameCard(c, card);
+  return cards.findIndex(fn);
 }
 
 function getShuffled<T>(original: T[]): T[] {

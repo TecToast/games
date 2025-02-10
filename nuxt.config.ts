@@ -20,6 +20,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       protectedUrls: ["/jeopardy", "/musicquiz", "/wizard", "/nobodyisperfect"],
+      wizardYT: false,
     },
     oauth: {
       discord: {
@@ -28,6 +29,10 @@ export default defineNuxtConfig({
       },
     },
     mongodb: "",
+    session: {
+      maxAge: 60 * 60 * 24 * 7,
+      password: process.env.NUXT_SESSION_PASSWORD || "",
+    },
   },
   ui: {
     disableGlobalStyles: true,

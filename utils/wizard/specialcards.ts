@@ -1,6 +1,6 @@
 import { Color, type Card } from "./types";
 
-export const NOTHINGCARD: Card = { color: Color.Special, value: 0 };
+export const NOTHINGCARD: Card = { color: Color.Nothing, value: 0 };
 export const BOMB: Card = { color: Color.Special, value: 1 };
 export const SEVENPOINTFIVE: Card = { color: Color.Special, value: 7.5 };
 export const NINEPOINTSEVENFIVE: Card = { color: Color.Special, value: 9.75 };

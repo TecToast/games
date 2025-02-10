@@ -17,7 +17,8 @@ export default defineEventHandler(async (event) => {
     const image = await fs.readFile(imagePath);
 
     // Send the image as a response
-    event.node.res.setHeader("Content-Type", "image/webp"); // Adjust the MIME type as needed
+    appendHeader(event, "Content-Type", "image/webp");
+    appendHeader(event, "Cache-Control", "max-age=31536000");
     return send(event, image);
   } catch (error) {
     // Handle the error if the file is not found or any other error occurs
