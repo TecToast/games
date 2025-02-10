@@ -1,6 +1,6 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import { JeopardyData } from "~/utils/jeopardy/types";
-import { NobodyIsPerfectData } from "~/utils/nobodyisperfect/types";
+import { type JeopardyData } from "~/utils/jeopardy/types";
+import { type NobodyIsPerfectData } from "~/utils/nobodyisperfect/types";
 
 type UserPermission = {
   user: string;

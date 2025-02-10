@@ -1,7 +1,7 @@
 import { Game } from "~/server/utils/wizard/game";
 import { GameManager } from "~/server/utils/wizard/gamemanger";
 import pm from "~/server/utils/wizard/peermanager";
-import { WSMessage } from "~/utils/wizard/messages";
+import { type WSMessage } from "~/utils/wizard/messages";
 import { GamePhase } from "~/utils/wizard/types";
 
 export default defineWebSocketHandler({
@@ -13,7 +13,7 @@ export default defineWebSocketHandler({
     const { name } = user;
     console.log("User connected:", name);
     pm.register(name, peer);
-    GameManager.updateOpenGames(peer);
+    GameManager.updateOpenGames(name);
   },
   message: async (peer, message) => {
     const msg = message.json() as WSMessage;

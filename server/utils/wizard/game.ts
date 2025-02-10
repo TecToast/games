@@ -1,18 +1,18 @@
 import {
-  Card,
+  type Card,
   GamePhase,
-  SpecialRole,
+  type SpecialRole,
   Rules,
-  Rule,
+  type Rule,
   Color,
   FunctionalSpecialRoles,
-  ColorPreferenceSpecialRole,
+  type ColorPreferenceSpecialRole,
   isRegularColor,
   StitchEvaluationMethod,
   ColorPreferenceSpecialRoles,
 } from "~/utils/wizard/types";
 import pm from "./peermanager";
-import { LayCard, WSMessage } from "~/utils/wizard/messages";
+import { type LayCard, type WSMessage } from "~/utils/wizard/messages";
 import {
   NOTHINGCARD,
   BOMB,

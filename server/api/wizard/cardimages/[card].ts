@@ -8,8 +8,8 @@ export default defineEventHandler(async (event) => {
 
   // Define the path to the image file
   const imagePath = path.join(
-    process.env.GAMES_CARDS ?? "cards/wizard",
-    `${card}.jpg`,
+    process.env.GAMES_CARDS ?? process.cwd() + "/cards/wizard",
+    `${card}`,
   ); // Adjust the path and extension as needed
 
   try {
