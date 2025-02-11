@@ -1,5 +1,5 @@
 {
-  "tailwindCSS.experimental.configFile": ".nuxt/tailwind.config.cjs",
+  "tailwindCSS.experimental.configFile": ".nuxt/tailwind/postcss.mjs",
   "files.associations": {
     "*.css": "tailwindcss"
   },
