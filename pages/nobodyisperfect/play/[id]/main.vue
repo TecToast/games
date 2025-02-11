@@ -27,7 +27,7 @@ function nameToImageSrc(num: number): string {
         <TextBox
           class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center overflow-auto text-wrap border border-gray-800"
         >
-          {{ `Frage ${currentQuestionIndex + 1}` }}
+          {{ currentQuestionIndex == 0 ? "Testfrage" : `Frage ${currentQuestionIndex}` }}
         </TextBox>
         <div
           v-if="users"
@@ -52,7 +52,7 @@ function nameToImageSrc(num: number): string {
         class="flex min-h-screen flex-col items-center justify-around"
       >
         <TextBox
-          class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center"
+          class="flex h-52 !w-[50vw] items-center justify-center overflow-scroll"
         >
           {{ qData.question.title }}
         </TextBox>
