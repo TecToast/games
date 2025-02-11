@@ -20,7 +20,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      protectedUrls: ["/jeopardy", "/musicquiz", "/wizard", "/nobodyisperfect"],
+      protectedUrls: ["/jeopardy", "/wizard", "/nobodyisperfect"],
+      userdataRequired: ["/jeopardy", "/nobodyisperfect"],
       wizardYT: false,
     },
     oauth: {
@@ -32,6 +33,7 @@ export default defineNuxtConfig({
     mongodb: "",
     discord: {
       token: "",
+      guild: "",
     },
     redis: {
       host: "localhost",

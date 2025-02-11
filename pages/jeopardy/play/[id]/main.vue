@@ -48,13 +48,13 @@ const jdata = computed(() => jAllData.value?.categories);
           <div class="flex w-48 justify-evenly">
             <template v-if="jAllData" v-for="joker of jAllData.jokers">
               <div
-                v-if="users.data[user].data.usedJokers != undefined"
+                v-if="users.data[user].usedJokers != undefined"
                 class="flex h-12 w-12 items-center justify-center rounded-full text-3xl text-white"
                 :class="{
                   'bg-[#888888]':
-                    users.data[user].data.usedJokers.includes(joker),
+                    users.data[user].usedJokers.includes(joker),
                   'bg-[#007800]':
-                    !users.data[user].data.usedJokers.includes(joker),
+                    !users.data[user].usedJokers.includes(joker),
                 }"
               >
                 {{ joker }}
@@ -66,10 +66,10 @@ const jdata = computed(() => jAllData.value?.categories);
             :class="{
               'border-4 border-yellow-400': user == jeopardy.currentUser,
             }"
-            :src="users.data[user].avatarUrl"
+            :src="getAvatarUrl(user)"
             :alt="user"
           />
-          <TextBox class="px-2">{{ users.data[user].data.points }}</TextBox>
+          <TextBox class="px-2">{{ users.data[user].points }}</TextBox>
         </div>
       </div>
     </div>

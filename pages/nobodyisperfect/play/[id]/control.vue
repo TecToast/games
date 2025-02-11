@@ -78,7 +78,7 @@ function previousQuestion() {
             v-for="u of users!.list"
           >
             <ControlButton @click="game.revealFromWhichUser(u)"
-              >{{ users!.data[u].displayName }}
+              >{{ getDisplayName(u) }}
             </ControlButton>
             <div
               @click="game.revealAnswerFromUser(u)"
@@ -109,7 +109,7 @@ function previousQuestion() {
         <div class="flex flex-col">
           <template v-for="u of users!.list" class="flex gap-4">
             <div class="mt-8 text-lg text-white">
-              {{ users!.data[u].displayName }}
+              {{ getDisplayName(u) }}
             </div>
             <div class="flex gap-2">
               <ControlButton @click="game.addPointsToUser(u, 1)"

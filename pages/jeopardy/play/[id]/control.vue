@@ -55,7 +55,7 @@ const { id } = useRoute().params;
           :class="jeopardy.currentUser == user ? '!bg-gray-500' : ''"
           :disabled="jeopardy.currentUser == user"
           @click="jeopardy.currentUser = user"
-          >{{ users.data[user].displayName }}
+          >{{ getDisplayName(user) }}
         </ControlButton>
         <div class="flex">
           <ControlButton
@@ -63,7 +63,7 @@ const { id } = useRoute().params;
             v-for="joker of jAllData.jokers"
             @click="jeopardy.toggleJokerFromUser(user, joker)"
             :class="
-              users.data[user].data.usedJokers.includes(joker)
+              users.data[user].usedJokers.includes(joker)
                 ? '!bg-gray-500'
                 : ''
             "

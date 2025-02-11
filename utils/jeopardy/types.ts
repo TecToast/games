@@ -1,6 +1,6 @@
 import type { GameConfigBase } from "../types";
 
-export type JeopardyData = GameConfigBase<GameUserData> & QuizData;
+export type JeopardyData = GameConfigBase & QuizData;
 
 export type QuizData = {
   categories: {

@@ -1,4 +1,5 @@
-import { collections, defaultGameUserData } from "./constants";
+import { GuildMember, User } from "discord.js";
+import { collections } from "./constants";
 import { client } from "~/server/plugins/discord";
 
 export async function getQuizData(game: string, id: string, host: string) {
@@ -8,12 +9,12 @@ export async function getQuizData(game: string, id: string, host: string) {
   if (!queryResult)
     throw createError({ status: 404, message: "GameID not found" });
   const { _id, ...result } = queryResult;
-  const defaultUserData = defaultGameUserData[game]!;
-  const userCache = useStorage("redis");
+  // const defaultUserData = defaultGameUserData[game]!;
+  // const userCache = useStorage("redis");
   console.log(result);
   return {
     ...result,
-    participants: Object.fromEntries(
+    /*participants: Object.fromEntries(
       await Promise.all(
         result.participantsList.map(async (uid) => {
           let userDisplayData = await userCache.getItem<{
@@ -36,20 +37,20 @@ export async function getQuizData(game: string, id: string, host: string) {
           ];
         }),
       ),
-    ),
+    ),*/
   };
 }
 
 async function getDiscordUserData(uid: string) {
   const user = await client.users.fetch(uid);
-  let avatar = user.avatarURL();
-  if (avatar) {
-    avatar = avatar.substring(0, avatar.lastIndexOf(".")) + ".png?size=512";
-  } else {
-    avatar = user.defaultAvatarURL;
-  }
   return {
     n: user.displayName,
-    a: avatar,
+    a: getAvatarUrl(user),
   };
+}
+
+export function getAvatarUrl(user: User | GuildMember) {
+  let avatar = user.displayAvatarURL();
+  avatar = avatar.substring(0, avatar.lastIndexOf(".")) + ".png?size=512";
+  return avatar;
 }

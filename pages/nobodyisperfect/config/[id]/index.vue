@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import draggable from "vuedraggable";
+import type { ParticipantDataWithId } from "~/utils/types";
 
 const route = useRoute();
 const game = useNobodyIsPerfectStore();
@@ -8,17 +9,13 @@ const { gdata, users, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
-function reload() {
-  if (game.unsavedChanges) {
-    if (
-      !confirm(
-        "You have unsaved changes. Are you sure you want to reload? This will override your local changes.",
-      )
-    )
-      return;
-  }
-  game.refreshData();
-}
+const allUsers: ParticipantDataWithId[] = Object.entries(getUsersOnServer()).map(([id, data]) => {
+  return {id, ...data};
+});
+
+watch(() => gdata.value?.participantsList, () => {
+  game.markUnsaved();
+});
 
 function addQuestion() {
   gdata.value!.questions.push({
@@ -26,10 +23,6 @@ function addQuestion() {
     answer: { title: "" },
   });
   game.markUnsaved();
-}
-
-function getKeyFromQData(q: any) {
-  return q.question.title;
 }
 </script>
 
@@ -68,7 +61,6 @@ function getKeyFromQData(q: any) {
         <div class="my-4 text-center text-3xl font-bold text-gray-300">
           Participants:
         </div>
-        <ConfigReloadButton @click="reload()" />
         <HelpModal name="Participants">
           Here you can see the participants of the quiz. To actually set the
           participants, go on discord and use the
@@ -78,8 +70,14 @@ function getKeyFromQData(q: any) {
           click on the reload button to see the new participants.
         </HelpModal>
       </div>
+      <USelectMenu v-model="gdata.participantsList" :options="allUsers" placeholder="Select participants..." multiple value-attribute="id" class="w-64" >
+        <template #option="{ option }">
+          <UAvatar :src="option.avatarUrl"/>
+          {{ option.displayName }}
+        </template>  
+      </USelectMenu>
       <ControlDiv class="px-2" v-for="user of users!.list">
-        {{ users!.data![user].displayName }}
+        {{ getDisplayName(user) }}
       </ControlDiv>
     </div>
   </div>

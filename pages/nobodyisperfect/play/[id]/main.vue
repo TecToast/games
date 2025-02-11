@@ -10,7 +10,7 @@ function nameToImageSrc(num: number): string {
   const user = game.revealedAnswers[num - 1].user;
   if (user === "RICHTIG")
     return "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/1200px-Eo_circle_green_checkmark.svg.png";
-  return users.value!.data[user].avatarUrl;
+  return getAvatarUrl(user);
 }
 </script>
 
@@ -39,10 +39,10 @@ function nameToImageSrc(num: number): string {
           >
             <img
               class="w-52 rounded-full"
-              :src="users.data[user].avatarUrl"
+              :src="getAvatarUrl(user)"
               :alt="user"
             />
-            <TextBox class="px-2">{{ users.data[user].data.points }}</TextBox>
+            <TextBox class="px-2">{{ users.data[user].points }}</TextBox>
           </div>
         </div>
       </div>

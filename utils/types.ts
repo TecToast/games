@@ -1,3 +1,6 @@
+import { type GameUserData as JeopardyGameUserData } from "~/utils/jeopardy/types";
+import { type GameUserData as NIPGameUserData } from "~/utils/nobodyisperfect/types";
+
 export type GameMeta = {
   displayName: string;
   url: string;
@@ -5,20 +8,23 @@ export type GameMeta = {
 export interface BaseMessage {
   type: string;
 }
-export type GameConfigBackendBase = {
+export type GameConfigBase = {
   participantsList: string[];
   host: string;
   id: string;
 };
-export type GameConfigBase<GameUserData> = GameConfigBackendBase & {
-  participants: {
-    [key: string]: UserData<GameUserData>;
-  };
-};
-export type UserData<GameData> = {
+
+export type ParticipantData = {
   avatarUrl: string;
   displayName: string;
-  data: GameData;
+};
+export type ParticipantDataWithId = {
+  id: string;
+} & ParticipantData;
+
+export const defaultGameUserData: { [k: string]: any } = {
+  jeopardy: { points: 0, usedJokers: [] } satisfies JeopardyGameUserData,
+  nobodyisperfect: { points: 0 } satisfies NIPGameUserData,
 };
 
 export const allGames: Record<string, GameMeta> = {

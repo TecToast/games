@@ -1,6 +1,6 @@
 import type { GameConfigBase } from "../types";
 
-export type NobodyIsPerfectData = GameConfigBase<GameUserData> & QuizData;
+export type NobodyIsPerfectData = GameConfigBase & QuizData;
 
 export type QuizData = {
   questions: Question[];

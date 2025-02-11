@@ -34,7 +34,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   function addPointsToUser(user: string, points: number) {
     const userdata = users.value;
     if (!userdata) return;
-    userdata.data[user].data.points += points;
+    userdata.data[user].points += points;
   }
 
   function switchToAnswerScreen() {
@@ -44,7 +44,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
 
   function selectAnswerForUser(user: string, answerIndex: number) {
     let index = 0;
-    const url = users.value!.data[user].avatarUrl;
+    const url = getAvatarUrl(user);
     for (let data of revealedAnswers.value) {
       const guessed = data.guessedThis;
       const i = guessed.indexOf(url);

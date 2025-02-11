@@ -5,6 +5,6 @@ export let client: Client;
 export default defineNitroPlugin(() => {
   const config = useRuntimeConfig();
   const { token } = config.discord;
-  client = new Client({ intents: [] });
+  client = new Client({ intents: ["GuildMembers"] });
   client.login(token);
 });

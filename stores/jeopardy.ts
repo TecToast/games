@@ -47,7 +47,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
   function toggleJokerFromUser(user: string, joker: string) {
     const userdata = users.value;
     if (!userdata) return;
-    const usedJokers = userdata.data[user].data.usedJokers;
+    const usedJokers = userdata.data[user].usedJokers;
     const jokerIndex = usedJokers.indexOf(joker);
     if (jokerIndex === -1) {
       usedJokers.push(joker);
@@ -59,7 +59,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
   function addPointsToUser(user: string, points: number) {
     const userdata = users.value;
     if (!userdata) return;
-    userdata.data[user].data.points += points;
+    userdata.data[user].points += points;
   }
 
   function nextPlayerAndMainPage() {

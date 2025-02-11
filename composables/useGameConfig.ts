@@ -1,10 +1,8 @@
 import { type RouteLocationNormalizedGeneric, useRoute } from "vue-router";
 import type { AsyncDataRequestStatus, NuxtError } from "#app";
-import type { GameConfigBase, UserData } from "~/utils/types";
+import type { GameConfigBase } from "~/utils/types";
 
-export default function <T extends GameConfigBase<GUserData>, GUserData>(
-  gameId: string,
-) {
+export default function <T extends GameConfigBase, GUserData>(gameId: string) {
   const route = useRoute();
   const {
     data: gdata,
@@ -14,9 +12,11 @@ export default function <T extends GameConfigBase<GUserData>, GUserData>(
   } = useAsyncData(
     gameId,
     // @ts-ignore
-    () => {
+    async () => {
       if (route.params.id && route.fullPath.includes(gameId)) {
-        return useRequestFetch()<T>(`/api/${gameId}/data/${route.params.id}`);
+        return useRequestFetch()<T>(
+          `/api/${gameId}/data/${route.params.id}`,
+        ) as Promise<T>;
       }
       return new Promise<null>((resolve) =>
         setTimeout(() => resolve(null), 500),
@@ -29,10 +29,16 @@ export default function <T extends GameConfigBase<GUserData>, GUserData>(
   const users = computed(() => {
     const data = gdata.value;
     if (!data) return null;
-    // @ts-ignore
-    return { list: data.participantsList, data: data.participants } as {
+    return {
+      // @ts-ignore
+      list: data.participantsList,
+      data: Object.fromEntries(
+        // @ts-ignore
+        data.participantsList.map((p) => [p, defaultGameUserData[gameId]]),
+      ),
+    } as {
       list: string[];
-      data: { [key: string]: UserData<GUserData> };
+      data: { [key: string]: GUserData };
     };
   });
   const unsavedChanges = ref(false);
@@ -74,7 +80,7 @@ export default function <T extends GameConfigBase<GUserData>, GUserData>(
     refreshData: () => void;
     users: Ref<{
       list: string[];
-      data: { [key: string]: UserData<GUserData> };
+      data: { [key: string]: GUserData };
     } | null>;
     unsavedChanges: Ref<boolean>;
     markUnsaved: () => void;

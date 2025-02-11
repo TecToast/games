@@ -57,7 +57,7 @@ function reload() {
         </HelpModal>
       </div>
       <ControlDiv class="px-2" v-for="user of users?.list">
-        {{ users?.data![user].displayName }}
+        {{ getDisplayName(user) }}
       </ControlDiv>
     </div>
   </div>

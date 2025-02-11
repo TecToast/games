@@ -1,7 +1,7 @@
 import { Collection, Db, MongoClient } from "mongodb";
 import { type JeopardyData } from "~/utils/jeopardy/types";
 import { type NobodyIsPerfectData } from "~/utils/nobodyisperfect/types";
-import { type GameConfigBackendBase } from "~/utils/types";
+import { type GameConfigBase } from "~/utils/types";
 
 type UserPermission = {
   user: string;
@@ -19,8 +19,8 @@ type PerfectAnswers = {
 export let client: MongoClient;
 export let db: Db;
 export let usersDb: Collection<UserPermission>;
-export let jeopardyDb: Collection<GameConfigBackendBase>;
-export let nobodyIsPerfectDb: Collection<GameConfigBackendBase>;
+export let jeopardyDb: Collection<GameConfigBase>;
+export let nobodyIsPerfectDb: Collection<GameConfigBase>;
 export let perfectAnswersDb: Collection<PerfectAnswers>;
 
 export default defineNitroPlugin((nitroApp) => {

@@ -1,13 +1,13 @@
 import type { EventHandler, EventHandlerRequest, H3Event } from "h3";
 import { Collection } from "mongodb";
-import { type GameConfigBackendBase } from "~/utils/types";
+import { type GameConfigBase } from "~/utils/types";
 import { collections } from "./constants";
 
 type EventHandlerWithGame<T extends EventHandlerRequest, D> = (
   event: H3Event<T>,
   uid: string,
   game: string,
-  coll: Collection<GameConfigBackendBase>,
+  coll: Collection<GameConfigBase>,
 ) => Promise<D>;
 
 export const defineGameHandler = <T extends EventHandlerRequest, D>(
