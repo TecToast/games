@@ -7,6 +7,7 @@ FROM node:${NODE_VERSION}-slim AS build
 # Enable pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g corepack@latest
 RUN corepack enable
 
 # Set the working directory inside the container
@@ -42,4 +43,4 @@ ENV NODE_ENV=production
 EXPOSE 3000
 
 # Start the application
-CMD ["node","/app/server/index.mjs"]
+ENTRYPOINT ["node","/app/server/index.mjs"]

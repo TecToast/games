@@ -916,13 +916,13 @@ export class Game {
             this.removePlayer(username);
             pm.send(username, { type: "RedirectHome" });
             break;
-          case (GamePhase.RUNNING, GamePhase.ROLE_SELECTION):
+          case GamePhase.RUNNING:
+          case GamePhase.ROLE_SELECTION:
             this.endGame();
             this.phase = GamePhase.FINISHED;
             break;
           case GamePhase.FINISHED:
             GameManager.removeGame(this.id);
-            pm.send(username, { type: "RedirectHome" });
             break;
         }
         break;

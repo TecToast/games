@@ -34,7 +34,7 @@ async function loginAsDummy() {
               <ControlButton @click="loginAsDummy()">
                 Use dummy user
               </ControlButton>
-              <NuxtLink to="/api/auth/discord" :external="true">
+              <NuxtLink to="/api/login" :external="true">
                 <ControlButton>
                   Login with Discord
                 </ControlButton>

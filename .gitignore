@@ -25,4 +25,5 @@ logs
 
 # lockfiles
 package-lock.json
-cards/
+cards
+media

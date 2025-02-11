@@ -1,14 +1,14 @@
 import { Collection } from "mongodb";
 import { jeopardyDb, nobodyIsPerfectDb } from "~/server/plugins/mongodb";
 import {
-  GameUserData as JeopardyGameUserData,
-  QuizData as JeopardyQuizData,
+  type GameUserData as JeopardyGameUserData,
+  type QuizData as JeopardyQuizData,
 } from "~/utils/jeopardy/types";
 import {
-  GameUserData as NIPGameUserData,
-  QuizData as NIPQuizData,
+  type GameUserData as NIPGameUserData,
+  type QuizData as NIPQuizData,
 } from "~/utils/nobodyisperfect/types";
-import { GameConfigBackendBase } from "~/utils/types";
+import { type GameConfigBackendBase } from "~/utils/types";
 
 export const collections: { [k: string]: Collection<GameConfigBackendBase> } = {
   jeopardy: jeopardyDb,

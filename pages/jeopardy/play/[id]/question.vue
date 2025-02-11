@@ -2,7 +2,6 @@
 import { AnswerState } from "~/utils/jeopardy/types";
 
 const jeopardy = useJeopardyStore();
-const route = useRoute();
 const { jdata, currentQuestion, questionRevealed, answerState } =
   storeToRefs(jeopardy);
 const questionData = computed(() => {
@@ -17,7 +16,7 @@ const questionSrc = computed(() => {
     !jdata.value
   )
     return "";
-  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${toID(currentQuestion.value!.category)}/${toID(currentQuestion.value!.points)}/Question/${questionData.value!.question.image}`;
+  return `/api/jeopardy/media/${questionData.value!.question.image}`;
 });
 const answerSrc = computed(() => {
   if (
@@ -26,7 +25,7 @@ const answerSrc = computed(() => {
     !jdata.value
   )
     return "";
-  return `/api/jeopardy/media/${jdata.value?.host}/${route.params.id}/${toID(currentQuestion.value!.category)}/${toID(currentQuestion.value!.points)}/Answer/${questionData.value!.answer.image}`;
+  return `/api/jeopardy/media/${questionData.value!.answer.image}`;
 });
 const link = computed(() => [
   ...(questionSrc.value
@@ -36,7 +35,6 @@ const link = computed(() => [
     ? [{ rel: "preload", href: answerSrc.value, as: "image" }]
     : []),
 ]);
-console.log(link);
 useHead({
   // @ts-ignore
   link: link,

@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxt/scripts",
     "nuxt-auth-utils",
+    "nuxt-file-storage",
   ],
   app: {
     head: {
@@ -32,9 +33,19 @@ export default defineNuxtConfig({
     discord: {
       token: "",
     },
+    redis: {
+      host: "localhost",
+      port: 6379,
+    },
+    media: {
+      base: "./media",
+    },
+    cards: {
+      wizard: "./cards/wizard",
+    },
     session: {
       maxAge: 60 * 60 * 24 * 7,
-      password: process.env.NUXT_SESSION_PASSWORD || "",
+      password: "",
     },
   },
   ui: {
@@ -48,6 +59,7 @@ export default defineNuxtConfig({
         "border-green-400",
         "border-blue-400",
       ],
+      darkMode: "selector",
     },
   },
   colorMode: {
@@ -59,11 +71,6 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       websocket: true,
-    },
-    storage: {
-      redis: {
-        driver: "redis",
-      },
     },
   },
 });

@@ -16,7 +16,7 @@ export default function <T extends GameConfigBase<GUserData>, GUserData>(
     // @ts-ignore
     () => {
       if (route.params.id && route.fullPath.includes(gameId)) {
-        return $fetch<T>(`/api/${gameId}/data/${route.params.id}`);
+        return useRequestFetch()<T>(`/api/${gameId}/data/${route.params.id}`);
       }
       return new Promise<null>((resolve) =>
         setTimeout(() => resolve(null), 500),

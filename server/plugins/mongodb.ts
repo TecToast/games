@@ -1,7 +1,7 @@
 import { Collection, Db, MongoClient } from "mongodb";
 import { type JeopardyData } from "~/utils/jeopardy/types";
 import { type NobodyIsPerfectData } from "~/utils/nobodyisperfect/types";
-import { GameConfigBackendBase } from "~/utils/types";
+import { type GameConfigBackendBase } from "~/utils/types";
 
 type UserPermission = {
   user: string;
