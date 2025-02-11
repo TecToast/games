@@ -122,7 +122,7 @@ function nameToImageSrc(num: number): string {
           <img
             v-if="qData.answer.file && !qData.answer.file.endsWith('mp4')"
             class="h-[50vh]"
-            :src="`/api/media/${game.gdata?.host}/${id}/${currentQuestionIndex + 1}/Answer/${qData.answer.file}`"
+            :src="`/api/media/${qData.answer.file}`"
             :alt="qData.answer.file"
           />
           <video
@@ -131,7 +131,7 @@ function nameToImageSrc(num: number): string {
             class="h-[50vh]"
           >
             <source
-              :src="`/api/media/${game.gdata?.host}/${id}/${currentQuestionIndex + 1}/Answer/${qData.answer.file}`"
+              :src="`/api/media/${qData.answer.file}`"
               type="video/mp4"
             />
           </video>
