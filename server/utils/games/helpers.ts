@@ -42,8 +42,14 @@ export async function getQuizData(game: string, id: string, host: string) {
 
 async function getDiscordUserData(uid: string) {
   const user = await client.users.fetch(uid);
+  let avatar = user.avatarURL();
+  if (avatar) {
+    avatar = avatar.substring(0, avatar.lastIndexOf(".")) + ".png?size=512";
+  } else {
+    avatar = user.defaultAvatarURL;
+  }
   return {
     n: user.displayName,
-    a: user.avatarURL()?.replace(".gif", ".png") ?? user.defaultAvatarURL,
+    a: avatar,
   };
 }
