@@ -23,6 +23,7 @@ export default defineNuxtConfig({
       protectedUrls: ["/jeopardy", "/wizard", "/nobodyisperfect"],
       userdataRequired: ["/jeopardy", "/nobodyisperfect"],
       wizardYT: false,
+      host: "",
     },
     oauth: {
       discord: {
