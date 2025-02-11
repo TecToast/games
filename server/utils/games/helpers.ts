@@ -22,7 +22,9 @@ export async function getQuizData(game: string, id: string, host: string) {
           }>(`displaydata:${uid}`);
           if (userDisplayData === null) {
             userDisplayData = await getDiscordUserData(uid);
-            await userCache.setItem(`displaydata:${uid}`, userDisplayData);
+            await userCache.setItem(`displaydata:${uid}`, userDisplayData, {
+              ttl: 60 * 60 * 24 * 7,
+            });
           }
           return [
             uid,
