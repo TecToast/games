@@ -25,5 +25,5 @@ logs
 
 # lockfiles
 package-lock.json
-cards
-media
+cards/**/*.webp
+media/*.png
