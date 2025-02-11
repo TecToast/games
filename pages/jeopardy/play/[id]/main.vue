@@ -5,36 +5,70 @@ const jdata = computed(() => jAllData.value?.categories);
 </script>
 
 <template>
-  <div v-if="jdata" style="background-image: linear-gradient(#8902c7, #4402c7)" class="min-h-screen">
+  <div
+    v-if="jdata"
+    style="background-image: linear-gradient(#8902c7, #4402c7)"
+    class="min-h-screen"
+  >
     <div class="flex flex-col items-center justify-start">
-      <div class="flex min-w-full items-start justify-evenly" style="min-height: 50vh">
-        <div v-for="cat of Object.keys(jdata)" class="mt-5 flex flex-col items-center">
+      <div
+        class="flex min-w-full items-start justify-evenly"
+        style="min-height: 50vh"
+      >
+        <div
+          v-for="cat of Object.keys(jdata)"
+          class="mt-5 flex flex-col items-center"
+        >
           <TextBox class="px-8">{{ cat }}</TextBox>
           <div class="mt-5 h-full w-full items-center justify-start">
-            <div v-for="q of Object.keys(jdata[cat])" class="mt-4 flex items-center justify-center">
-              <TextBox class="px-12" :class="jdata[cat][Number.parseInt(q)].used ? '!bg-[#505050]' : ''
-                ">
-                {{ q }}</TextBox>
+            <div
+              v-for="q of Object.keys(jdata[cat])"
+              class="mt-4 flex items-center justify-center"
+            >
+              <TextBox
+                class="px-12"
+                :class="
+                  jdata[cat][Number.parseInt(q)].used ? '!bg-[#505050]' : ''
+                "
+              >
+                {{ q }}</TextBox
+              >
             </div>
           </div>
         </div>
       </div>
-      <div v-if="users" class="mt-10 flex min-w-full items-center justify-around">
-        <div v-for="user of users.list" class="flex h-full flex-col items-center justify-end gap-8">
+      <div
+        v-if="users"
+        class="mt-10 flex min-w-full items-center justify-around"
+      >
+        <div
+          v-for="user of users.list"
+          class="flex h-full flex-col items-center justify-end gap-8"
+        >
           <div class="flex w-48 justify-evenly">
             <template v-if="jAllData" v-for="joker of jAllData.jokers">
-              <div v-if="users.data[user].data.usedJokers != undefined"
-                class="flex h-12 w-12 items-center justify-center rounded-full text-3xl text-white" :class="{
-                  'bg-[#888888]': users.data[user].data.usedJokers.includes(joker),
-                  'bg-[#007800]': !users.data[user].data.usedJokers.includes(joker),
-                }">
+              <div
+                v-if="users.data[user].data.usedJokers != undefined"
+                class="flex h-12 w-12 items-center justify-center rounded-full text-3xl text-white"
+                :class="{
+                  'bg-[#888888]':
+                    users.data[user].data.usedJokers.includes(joker),
+                  'bg-[#007800]':
+                    !users.data[user].data.usedJokers.includes(joker),
+                }"
+              >
                 {{ joker }}
               </div>
             </template>
           </div>
-          <img class="w-52 rounded-full" :class="{
-            'border-4 border-yellow-400': user == jeopardy.currentUser,
-          }" :src="users.data[user].avatarUrl" :alt="user" />
+          <img
+            class="w-52 rounded-full"
+            :class="{
+              'border-4 border-yellow-400': user == jeopardy.currentUser,
+            }"
+            :src="users.data[user].avatarUrl"
+            :alt="user"
+          />
           <TextBox class="px-2">{{ users.data[user].data.points }}</TextBox>
         </div>
       </div>

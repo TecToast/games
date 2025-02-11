@@ -1,9 +1,12 @@
 <script lang="ts" setup>
-const { data: games } = await useFetch("/api/mygames")
+const { data: games } = await useFetch("/api/mygames");
 const { user, fetch: fetchSession } = useUserSession();
 
 async function loginAsDummy() {
-  await $fetch("/api/auth/userswitch", { method: "POST", body: { name: "TestUser0" } });
+  await $fetch("/api/auth/userswitch", {
+    method: "POST",
+    body: { name: "TestUser0" },
+  });
   await fetchSession();
 }
 </script>
@@ -11,7 +14,9 @@ async function loginAsDummy() {
 <template>
   <DefaultBackground class="flex flex-col items-center">
     <div class="mt-4 flex flex-col items-center">
-      <TextBox v-if="!games || games.length === 0" class="p-4">You don't have permission to access a game.</TextBox>
+      <TextBox v-if="!games || games.length === 0" class="p-4"
+        >You don't have permission to access a game.</TextBox
+      >
       <div v-else class="flex flex-col items-center gap-4">
         <div class="flex items-center gap-2">
           <TextBox class="p-4 text-2xl">Your games:</TextBox>
@@ -21,8 +26,15 @@ async function loginAsDummy() {
           </HelpModal>
         </div>
         <div class="flex flex-col items-center gap-4">
-          <NuxtLink v-for="game of games" :key="game.displayName" :to="game.url">
-            <ControlButton :disabled="!user" :class="{ 'cursor-not-allowed': !user, '!bg-[#215f98]': !user }">
+          <NuxtLink
+            v-for="game of games"
+            :key="game.displayName"
+            :to="game.url"
+          >
+            <ControlButton
+              :disabled="!user"
+              :class="{ 'cursor-not-allowed': !user, '!bg-[#215f98]': !user }"
+            >
               {{ game.displayName }}
             </ControlButton>
           </NuxtLink>
@@ -35,9 +47,7 @@ async function loginAsDummy() {
                 Use dummy user
               </ControlButton>
               <NuxtLink to="/api/login" :external="true">
-                <ControlButton>
-                  Login with Discord
-                </ControlButton>
+                <ControlButton> Login with Discord </ControlButton>
               </NuxtLink>
             </div>
           </div>

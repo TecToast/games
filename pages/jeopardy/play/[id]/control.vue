@@ -10,41 +10,78 @@ const { id } = useRoute().params;
 <template>
   <DefaultBackground v-if="jdata">
     <div class="flex justify-around">
-      <div v-for="cat of Object.keys(jdata)" class="mt-8 flex flex-col items-center">
+      <div
+        v-for="cat of Object.keys(jdata)"
+        class="mt-8 flex flex-col items-center"
+      >
         <TextBox class="rounded-lg px-2 text-2xl">{{ cat }}</TextBox>
         <div class="mt-4 flex flex-col gap-4">
-          <div v-for="q of Object.keys(jdata[cat])" class="flex items-center justify-center">
-            <ControlButton :class="{ 'bg-[#B0B0B0]': jdata[cat][Number.parseInt(q)].used }"
-              @click="jeopardy.selectQuestion(cat, Number.parseInt(q))">{{ q }}</ControlButton>
+          <div
+            v-for="q of Object.keys(jdata[cat])"
+            class="flex items-center justify-center"
+          >
+            <ControlButton
+              :class="{ 'bg-[#B0B0B0]': jdata[cat][Number.parseInt(q)].used }"
+              @click="jeopardy.selectQuestion(cat, Number.parseInt(q))"
+              >{{ q }}</ControlButton
+            >
           </div>
         </div>
       </div>
     </div>
     <div class="ml-16 mt-12 flex gap-10">
       <TextBox class="rounded-lg p-2 text-2xl">Questions</TextBox>
-      <ControlButton @click="jeopardy.questionRevealed = true">Reveal Question</ControlButton>
-      <ControlButton @click="jeopardy.answerState = AnswerState.Correct" class="border-2 border-green-700">Answer
-        Correct</ControlButton>
-      <ControlButton @click="jeopardy.answerState = AnswerState.Incorrect" class="border-2 border-red-700">Answer Wrong
+      <ControlButton @click="jeopardy.questionRevealed = true"
+        >Reveal Question</ControlButton
+      >
+      <ControlButton
+        @click="jeopardy.answerState = AnswerState.Correct"
+        class="border-2 border-green-700"
+        >Answer Correct</ControlButton
+      >
+      <ControlButton
+        @click="jeopardy.answerState = AnswerState.Incorrect"
+        class="border-2 border-red-700"
+        >Answer Wrong
       </ControlButton>
-      <ControlButton @click="jeopardy.answerState = AnswerState.Unanswered">Hide Answer</ControlButton>
+      <ControlButton @click="jeopardy.answerState = AnswerState.Unanswered"
+        >Hide Answer</ControlButton
+      >
     </div>
     <div class="ml-16 mt-12 flex gap-10">
       <div v-if="users" v-for="user of users.list" class="flex flex-col gap-4">
-        <ControlButton class="bg-[#2b6499]" :class="jeopardy.currentUser == user ? '!bg-gray-500' : ''"
-          :disabled="jeopardy.currentUser == user" @click="jeopardy.currentUser = user">{{ users.data[user].displayName
-          }}
+        <ControlButton
+          class="bg-[#2b6499]"
+          :class="jeopardy.currentUser == user ? '!bg-gray-500' : ''"
+          :disabled="jeopardy.currentUser == user"
+          @click="jeopardy.currentUser = user"
+          >{{ users.data[user].displayName }}
         </ControlButton>
         <div class="flex">
-          <ControlButton v-if="jAllData" v-for="joker of jAllData.jokers"
-            @click="jeopardy.toggleJokerFromUser(user, joker)" :class="users.data[user].data.usedJokers.includes(joker) ? '!bg-gray-500' : ''
-              ">{{ joker }}</ControlButton>
+          <ControlButton
+            v-if="jAllData"
+            v-for="joker of jAllData.jokers"
+            @click="jeopardy.toggleJokerFromUser(user, joker)"
+            :class="
+              users.data[user].data.usedJokers.includes(joker)
+                ? '!bg-gray-500'
+                : ''
+            "
+            >{{ joker }}</ControlButton
+          >
         </div>
         <div class="flex justify-center">
-          <ControlButton v-for="num of [100, 50]" @click="jeopardy.addPointsToUser(user, num)">{{ num }}</ControlButton>
+          <ControlButton
+            v-for="num of [100, 50]"
+            @click="jeopardy.addPointsToUser(user, num)"
+            >{{ num }}</ControlButton
+          >
         </div>
         <div class="flex justify-center">
-          <ControlButton v-for="num of [-100, -50]" @click="jeopardy.addPointsToUser(user, num)">{{ num }}
+          <ControlButton
+            v-for="num of [-100, -50]"
+            @click="jeopardy.addPointsToUser(user, num)"
+            >{{ num }}
           </ControlButton>
         </div>
       </div>
@@ -52,7 +89,9 @@ const { id } = useRoute().params;
     <div class="ml-16 mr-4 mt-12 flex justify-between">
       <div class="flex gap-10">
         <TextBox class="rounded-lg p-2 text-2xl">Control</TextBox>
-        <ControlButton @click="jeopardy.nextPlayerAndMainPage()">Next player + Main Page</ControlButton>
+        <ControlButton @click="jeopardy.nextPlayerAndMainPage()"
+          >Next player + Main Page</ControlButton
+        >
         <ControlButton @click="jeopardy.mainPage()">Main Page</ControlButton>
         <!-- <ControlButton @click="jeopardy.refreshData()">Reload data from server</ControlButton> -->
       </div>
