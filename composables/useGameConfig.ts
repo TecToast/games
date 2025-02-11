@@ -4,6 +4,10 @@ import type { GameConfigBase } from "~/utils/types";
 
 export default function <T extends GameConfigBase, GUserData>(gameId: string) {
   const route = useRoute();
+  const users: Ref<{
+    data: { [key: string]: GUserData };
+    list: string[];
+  } | null> = ref(null);
   const {
     data: gdata,
     status,
@@ -14,9 +18,20 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
     // @ts-ignore
     async () => {
       if (route.params.id && route.fullPath.includes(gameId)) {
-        return useRequestFetch()<T>(
+        const result = await useRequestFetch()<T>(
           `/api/${gameId}/data/${route.params.id}`,
-        ) as Promise<T>;
+        );
+        users.value = {
+          data: Object.fromEntries(
+            // @ts-ignore
+            result.participantsList.map((p) => [
+              p,
+              { ...defaultGameUserData[gameId] },
+            ]),
+          ),
+          list: result.participantsList,
+        };
+        return result;
       }
       return new Promise<null>((resolve) =>
         setTimeout(() => resolve(null), 500),
@@ -26,21 +41,6 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
     { deep: true, watch: () => route.params.id },
   );
   // const gdata = computed(() => ggdata.value as T | null);
-  const users = computed(() => {
-    const data = gdata.value;
-    if (!data) return null;
-    return {
-      // @ts-ignore
-      list: data.participantsList,
-      data: Object.fromEntries(
-        // @ts-ignore
-        data.participantsList.map((p) => [p, defaultGameUserData[gameId]]),
-      ),
-    } as {
-      list: string[];
-      data: { [key: string]: GUserData };
-    };
-  });
   const unsavedChanges = ref(false);
 
   function markUnsaved() {
@@ -78,10 +78,7 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
     status: Ref<AsyncDataRequestStatus>;
     error: Ref<NuxtError | null>;
     refreshData: () => void;
-    users: Ref<{
-      list: string[];
-      data: { [key: string]: GUserData };
-    } | null>;
+    users: Ref<{ data: { [key: string]: GUserData }; list: string[] } | null>;
     unsavedChanges: Ref<boolean>;
     markUnsaved: () => void;
     saveToDB: () => void;

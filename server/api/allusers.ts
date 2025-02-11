@@ -1,12 +1,13 @@
 import { type ParticipantData } from "~/utils/types";
-import { client } from "../plugins/discord";
-import { getAvatarUrl } from "../utils/games/helpers";
+import { client } from "~/server/plugins/discord";
+import { GuildMember } from "discord.js";
 
 export default defineCachedEventHandler(
   async (event) => {
+    await requireUserSession(event);
     const guild = await client.guilds.fetch(useRuntimeConfig().discord.guild);
+    // TODO: fetch only required users
     const members = await guild.members.fetch();
-    // console.log(members);
     const result: { [id: string]: ParticipantData } = Object.fromEntries(
       members
         .entries()
@@ -25,3 +26,9 @@ export default defineCachedEventHandler(
   },
   { maxAge: 60 * 60 * 24 },
 );
+
+function getAvatarUrl(user: GuildMember) {
+  let avatar = user.displayAvatarURL();
+  avatar = avatar.substring(0, avatar.lastIndexOf(".")) + ".png?size=512";
+  return avatar;
+}
