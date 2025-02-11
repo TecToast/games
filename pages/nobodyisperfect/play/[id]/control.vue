@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { NIPMessage } from "~/utils/nobodyisperfect/messages";
 
 const game = useNobodyIsPerfectStore();
 const { gdata, users, totalAnswerCount, currentQuestionIndex } =
@@ -18,21 +17,6 @@ const answerMediaOptions = [
   { value: "answer", label: "Antwort" },
 ];
 const ytLink = ref("");
-
-const { data, status, sendWS } = useTypedWebsocket<NIPMessage>(
-  process.env.NODE_ENV === "development"
-    ? `ws://localhost:9934/api/nobodyisperfect/ws/${id}`
-    : `wss://games.tectoast.de/api/nobodyisperfect/ws/${id}`,
-);
-watch(data, (newDataStr) => {
-  const newData = JSON.parse(newDataStr);
-  const type = newData.type;
-  if (type == "Answer") {
-    game.answers[newData.user] = newData.answer;
-  } else if (type == "AllAnswers") {
-    game.answers = newData.answers;
-  }
-});
 const { pause, resume } = useIntervalFn(
   () => {
     if (game.timer > 0) {
@@ -52,7 +36,7 @@ function resetTimer() {
 }
 
 function acceptAnswers(state: boolean, deleteAnswers = false, saveIndex = -1) {
-  sendWS({ type: "AcceptAnswers", state, deleteAnswers, saveIndex });
+  // TODO
 }
 
 function resetAnswers() {
@@ -66,6 +50,52 @@ function previousQuestion() {
     currentQuestionIndex.value--;
   }
 }
+
+
+const peers: { [k: string]: RTCPeerConnection } = {};
+const sendChannels: { [k: string]: RTCDataChannel } = {};
+const config = useRuntimeConfig();
+const { data: rtcData, send: rtcSend } = useWebSocket(`wss://${config.public.host}/api/webrtcserver`)
+rtcSend(JSON.stringify({ host: true }))
+watch(rtcData, message => {
+  console.log(message)
+  const msg = JSON.parse(message);
+  console.log("parsing succeeded")
+  const userid = msg.userid;
+  if (!peers[userid]) {
+    peers[userid] = new RTCPeerConnection(peerConnectionConfig)
+    peers[userid].onicecandidate = (event) => {
+      if (event.candidate) {
+        rtcSend(JSON.stringify({
+          to: userid,
+          ice: event.candidate,
+        }))
+      }
+    }
+    peers[userid].ondatachannel = (event) => {
+      const dataChannel = event.channel
+      dataChannel.onmessage = (event) => {
+        game.answers[userid] = event.data
+      }
+    }
+    sendChannels[userid] = peers[userid].createDataChannel("sendChannel")
+  }
+  const peer = peers[userid];
+  if (msg.sdp) {
+    peer.setRemoteDescription(new RTCSessionDescription(msg.sdp)).then(() => {
+      peer.createAnswer().then((answer) => {
+        peer.setLocalDescription(answer).then(() => {
+          rtcSend(JSON.stringify({
+            to: userid,
+            sdp: answer,
+          }))
+        })
+      })
+    })
+  } else if (msg.ice) {
+    peer.addIceCandidate(new RTCIceCandidate(msg.ice))
+  }
+})
 </script>
 
 <template>
@@ -147,39 +177,6 @@ function previousQuestion() {
             "
             >Reveal Question
           </ControlButton>
-          <ControlButton
-            @click="
-              sendWS({
-                type: 'PlayTrackOfQuestion',
-                questionIndex: currentQuestionIndex,
-              })
-            "
-            v-if="qData"
-            :disabled="!qData.question.audio"
-            :class="{ 'bg-gray-800': !qData.question.audio }"
-            >Play track of question
-          </ControlButton>
-          <ControlButton
-            @click="
-              sendWS({
-                type: 'PlayTrackOfAnswer',
-                questionIndex: currentQuestionIndex,
-              })
-            "
-            v-if="qData"
-            :disabled="!qData.answer.audio"
-            :class="{ 'bg-gray-800': !qData.answer.audio }"
-            >Play track of answer
-          </ControlButton>
-          <ControlButton
-            @click="sendWS({ type: 'StopTrack' })"
-            v-if="qData"
-            :disabled="!qData.question.audio && !qData.answer.audio"
-            :class="{
-              'bg-gray-800': !qData.question.audio && !qData.answer.audio,
-            }"
-            >Pause track
-          </ControlButton>
         </div>
         <URadioGroup
           color="blue"
@@ -226,14 +223,6 @@ function previousQuestion() {
             >Jump directly to answer screen</ControlButton
           >
         </div>
-        <div class="flex items-center gap-2">
-          <UInput size="md" label="hey" color="blue" v-model="ytLink" />
-          <UButton
-            @click="sendWS({ type: 'PlayYT', url: ytLink })"
-            label="YT-Link abspielen"
-            color="blue"
-          />
-        </div>
       </div>
     </div>
     <div class="ml-8 mr-4 mt-12 flex justify-between">
@@ -243,11 +232,6 @@ function previousQuestion() {
             Open main page to stream
           </ControlButton>
         </NuxtLink>
-        <ControlButton
-          @click="sendWS({ type: 'Join' })"
-          class="bg-orange-700 p-2"
-          >Connect with Quiz-Gon Jinn
-        </ControlButton>
         <NuxtLink :to="`/nobodyisperfect/config/${id}`">
           <ControlButton class="bg-red-900 p-2"> Back to config</ControlButton>
         </NuxtLink>

@@ -21,6 +21,7 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
         const result = await useRequestFetch()<T>(
           `/api/${gameId}/data/${route.params.id}`,
         );
+        // TODO update once users get modified
         users.value = {
           data: Object.fromEntries(
             // @ts-ignore
