@@ -641,9 +641,9 @@ export class Game {
           this.stitchValue = 3; // Stonks card
         else if (card.value === 69 && dragonIngame) this.stitchValue = -3; // Dragon deez nuts combination
 
-        if (card === GAMBLING)
+        if (isSameCard(card, GAMBLING))
           stitchEvaluationMethod = StitchEvaluationMethod.RANDOM;
-        else if (card === DEMOCRACY)
+        else if (isSameCard(card, DEMOCRACY))
           stitchEvaluationMethod = StitchEvaluationMethod.POLL;
       });
 
