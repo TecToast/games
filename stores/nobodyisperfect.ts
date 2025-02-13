@@ -12,10 +12,11 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
     status,
     error,
     refreshData,
-    users,
+    userdata,
     unsavedChanges,
     markUnsaved,
     saveToDB,
+    usersUpdatedHandler,
   } = useGameConfig<NobodyIsPerfectData, GameUserData>("nobodyisperfect");
   const state = ref<State>("overview");
   const timerStart = ref(60);
@@ -24,7 +25,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   const answers = ref<{
     [key: string]: string;
   }>({});
-  const userCount = computed(() => users.value!.list.length);
+  const userCount = computed(() => gdata.value!.participantsList.length);
   const totalAnswerCount = computed(() => userCount.value + 1);
   const revealedAnswers = ref<
     { answer: string; user: string; showUser: boolean; guessedThis: string[] }[]
@@ -32,9 +33,9 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   const answerMediaState = ref("nothing");
 
   function addPointsToUser(user: string, points: number) {
-    const userdata = users.value;
-    if (!userdata) return;
-    userdata.data[user].points += points;
+    const data = userdata.value;
+    if (!data) return;
+    data[user].points += points;
   }
 
   function switchToAnswerScreen() {
@@ -94,7 +95,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
     gdata,
     status,
     error,
-    users,
+    userdata,
     unsavedChanges,
     state,
     currentQuestionIndex,
@@ -115,5 +116,6 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
     nextQuestion,
     revealFromWhichUser,
     revealAnswerFromUser,
+    usersUpdatedHandler,
   };
 });

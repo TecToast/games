@@ -12,7 +12,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
     status,
     error,
     refreshData,
-    users,
+    userdata,
     unsavedChanges,
     markUnsaved,
     saveToDB,
@@ -45,9 +45,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
   });
 
   function toggleJokerFromUser(user: string, joker: string) {
-    const userdata = users.value;
-    if (!userdata) return;
-    const usedJokers = userdata.data[user].usedJokers;
+    const usedJokers = userdata.value[user].usedJokers;
     const jokerIndex = usedJokers.indexOf(joker);
     if (jokerIndex === -1) {
       usedJokers.push(joker);
@@ -57,15 +55,12 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
   }
 
   function addPointsToUser(user: string, points: number) {
-    const userdata = users.value;
-    if (!userdata) return;
-    userdata.data[user].points += points;
+    userdata.value[user].points += points;
   }
 
   function nextPlayerAndMainPage() {
-    const data = users.value;
-    if (!data) return;
-    const userKeys = data.list;
+    const userKeys = jdata.value?.participantsList;
+    if (!userKeys) return;
     const currentUserIndex = userKeys.indexOf(currentUser.value);
     currentUser.value = userKeys[(currentUserIndex + 1) % userKeys.length];
     mainPage();
@@ -106,7 +101,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
     jdata,
     status,
     error,
-    users,
+    userdata,
     currentUser,
     currentQuestion,
     questionRevealed,

@@ -5,7 +5,7 @@ import type { ParticipantDataWithId } from "~/utils/types";
 const route = useRoute();
 const game = useNobodyIsPerfectStore();
 const gameId = "nobodyisperfect";
-const { gdata, users, status } = storeToRefs(game);
+const { gdata, userdata, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
@@ -15,7 +15,8 @@ const allUsers: ParticipantDataWithId[] = Object.entries(getUsersOnServer()).map
 
 watch(() => gdata.value?.participantsList, () => {
   game.markUnsaved();
-});
+  game.usersUpdatedHandler();
+}, {flush: "sync"});
 
 function addQuestion() {
   gdata.value!.questions.push({
@@ -76,7 +77,7 @@ function addQuestion() {
           {{ option.displayName }}
         </template>  
       </USelectMenu>
-      <ControlDiv class="px-2" v-for="user of users!.list">
+      <ControlDiv class="px-2" v-for="user of gdata.participantsList">
         {{ getDisplayName(user) }}
       </ControlDiv>
     </div>

@@ -2,7 +2,7 @@
 const route = useRoute();
 const game = useJeopardyStore();
 const gameId = "jeopardy";
-const { jdata, users, status } = storeToRefs(game);
+const { jdata, userdata, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
@@ -56,7 +56,7 @@ function reload() {
           click on the reload button to see the new participants.
         </HelpModal>
       </div>
-      <ControlDiv class="px-2" v-for="user of users?.list">
+      <ControlDiv class="px-2" v-for="user of jdata.participantsList">
         {{ getDisplayName(user) }}
       </ControlDiv>
     </div>

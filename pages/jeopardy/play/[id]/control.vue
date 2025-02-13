@@ -2,7 +2,7 @@
 import { AnswerState } from "~/utils/jeopardy/types";
 
 const jeopardy = useJeopardyStore();
-const { jdata: jAllData, users } = storeToRefs(jeopardy);
+const { jdata: jAllData, userdata } = storeToRefs(jeopardy);
 const jdata = computed(() => jAllData.value?.categories);
 const { id } = useRoute().params;
 </script>
@@ -49,7 +49,7 @@ const { id } = useRoute().params;
       >
     </div>
     <div class="ml-16 mt-12 flex gap-10">
-      <div v-if="users" v-for="user of users.list" class="flex flex-col gap-4">
+      <div v-if="jAllData" v-for="user of jAllData?.participantsList" class="flex flex-col gap-4">
         <ControlButton
           class="bg-[#2b6499]"
           :class="jeopardy.currentUser == user ? '!bg-gray-500' : ''"
@@ -63,7 +63,7 @@ const { id } = useRoute().params;
             v-for="joker of jAllData.jokers"
             @click="jeopardy.toggleJokerFromUser(user, joker)"
             :class="
-              users.data[user].usedJokers.includes(joker)
+              userdata[user].usedJokers.includes(joker)
                 ? '!bg-gray-500'
                 : ''
             "

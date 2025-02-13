@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const game = useNobodyIsPerfectStore();
-const { gdata, users, state, currentQuestionIndex, timer } = storeToRefs(game);
+const { gdata, userdata, state, currentQuestionIndex, timer } = storeToRefs(game);
 const qData = computed(
   () => gdata.value?.questions[currentQuestionIndex.value],
 );
@@ -30,11 +30,11 @@ function nameToImageSrc(num: number): string {
           {{ currentQuestionIndex == 0 ? "Testfrage" : `Frage ${currentQuestionIndex}` }}
         </TextBox>
         <div
-          v-if="users"
+          v-if="gdata?.participantsList"
           class="mt-10 flex min-w-full items-center justify-around"
         >
           <div
-            v-for="user of users.list"
+            v-for="user of gdata.participantsList"
             class="flex h-full flex-col items-center justify-end gap-8"
           >
             <img
@@ -42,7 +42,7 @@ function nameToImageSrc(num: number): string {
               :src="getAvatarUrl(user)"
               :alt="user"
             />
-            <TextBox class="px-2">{{ users.data[user].points }}</TextBox>
+            <TextBox class="px-2">{{ userdata[user].points }}</TextBox>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const jeopardy = useJeopardyStore();
-const { jdata: jAllData, users } = storeToRefs(jeopardy);
+const { jdata: jAllData, userdata } = storeToRefs(jeopardy);
 const jdata = computed(() => jAllData.value?.categories);
 </script>
 
@@ -38,23 +38,22 @@ const jdata = computed(() => jAllData.value?.categories);
         </div>
       </div>
       <div
-        v-if="users"
         class="mt-10 flex min-w-full items-center justify-around"
       >
         <div
-          v-for="user of users.list"
+          v-for="user of jAllData?.participantsList"
           class="flex h-full flex-col items-center justify-end gap-8"
         >
           <div class="flex w-48 justify-evenly">
             <template v-if="jAllData" v-for="joker of jAllData.jokers">
               <div
-                v-if="users.data[user].usedJokers != undefined"
+                v-if="userdata[user].usedJokers != undefined"
                 class="flex h-12 w-12 items-center justify-center rounded-full text-3xl text-white"
                 :class="{
                   'bg-[#888888]':
-                    users.data[user].usedJokers.includes(joker),
+                    userdata[user].usedJokers.includes(joker),
                   'bg-[#007800]':
-                    !users.data[user].usedJokers.includes(joker),
+                    !userdata[user].usedJokers.includes(joker),
                 }"
               >
                 {{ joker }}
@@ -69,7 +68,7 @@ const jdata = computed(() => jAllData.value?.categories);
             :src="getAvatarUrl(user)"
             :alt="user"
           />
-          <TextBox class="px-2">{{ users.data[user].points }}</TextBox>
+          <TextBox class="px-2">{{ userdata[user].points }}</TextBox>
         </div>
       </div>
     </div>

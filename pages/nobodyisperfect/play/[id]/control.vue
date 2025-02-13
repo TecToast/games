@@ -1,11 +1,8 @@
 <script lang="ts" setup>
 
 const game = useNobodyIsPerfectStore();
-const { gdata, users, totalAnswerCount, currentQuestionIndex } =
+const { gdata, userdata, totalAnswerCount, currentQuestionIndex } =
   storeToRefs(game);
-const qData = computed(
-  () => gdata.value?.questions[currentQuestionIndex.value],
-);
 const { id } = useRoute().params;
 
 const answerMediaOptions = [
@@ -16,7 +13,6 @@ const answerMediaOptions = [
   },
   { value: "answer", label: "Antwort" },
 ];
-const ytLink = ref("");
 const { pause, resume } = useIntervalFn(
   () => {
     if (game.timer > 0) {
@@ -105,7 +101,7 @@ watch(rtcData, message => {
         <div class="mt-10 flex flex-col gap-4">
           <div
             class="flex items-center gap-4 text-lg text-white"
-            v-for="u of users!.list"
+            v-for="u of gdata.participantsList"
           >
             <ControlButton @click="game.revealFromWhichUser(u)"
               >{{ getDisplayName(u) }}
@@ -137,7 +133,7 @@ watch(rtcData, message => {
           </div>
         </div>
         <div class="flex flex-col">
-          <template v-for="u of users!.list" class="flex gap-4">
+          <template v-for="u of gdata!.participantsList" class="flex gap-4">
             <div class="mt-8 text-lg text-white">
               {{ getDisplayName(u) }}
             </div>

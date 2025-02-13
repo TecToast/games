@@ -4,10 +4,9 @@ import type { GameConfigBase } from "~/utils/types";
 
 export default function <T extends GameConfigBase, GUserData>(gameId: string) {
   const route = useRoute();
-  const users: Ref<{
-    data: { [key: string]: GUserData };
-    list: string[];
-  } | null> = ref(null);
+  const userdata: Ref<{
+    [key: string]: GUserData;
+  }> = ref({});
   const {
     data: gdata,
     status,
@@ -21,18 +20,14 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
         const result = await useRequestFetch()<T>(
           `/api/${gameId}/data/${route.params.id}`,
         );
-        // TODO update once users get modified
-        users.value = {
-          data: Object.fromEntries(
-            // @ts-ignore
-            result.participantsList.map((p) => [
-              p,
-              { ...defaultGameUserData[gameId] },
-            ]),
-          ),
-          list: result.participantsList,
-        };
-        return result;
+        userdata.value = Object.fromEntries(
+          // @ts-ignore
+          result.participantsList.map((p) => [
+            p,
+            { ...defaultGameUserData[gameId] },
+          ]),
+        );
+        return result as T;
       }
       return new Promise<null>((resolve) =>
         setTimeout(() => resolve(null), 500),
@@ -43,6 +38,21 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
   );
   // const gdata = computed(() => ggdata.value as T | null);
   const unsavedChanges = ref(false);
+
+  function usersUpdatedHandler() {
+    const data = gdata.value;
+    if (data) {
+      userdata.value = {
+        ...userdata.value,
+        ...Object.fromEntries(
+          // @ts-ignore
+          (data.participantsList as string[])
+            .filter((p) => !(p in userdata.value))
+            .map((p) => [p, { ...defaultGameUserData[gameId] }]),
+        ),
+      };
+    }
+  }
 
   function markUnsaved() {
     unsavedChanges.value = true;
@@ -69,19 +79,21 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
     status,
     error,
     refreshData,
-    users,
+    userdata,
     unsavedChanges,
     markUnsaved,
     saveToDB,
+    usersUpdatedHandler,
   } as {
     route: RouteLocationNormalizedGeneric;
     gdata: Ref<T | null>;
     status: Ref<AsyncDataRequestStatus>;
     error: Ref<NuxtError | null>;
     refreshData: () => void;
-    users: Ref<{ data: { [key: string]: GUserData }; list: string[] } | null>;
+    userdata: Ref<{ [key: string]: GUserData }>;
     unsavedChanges: Ref<boolean>;
     markUnsaved: () => void;
     saveToDB: () => void;
+    usersUpdatedHandler: () => void;
   };
 }
