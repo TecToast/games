@@ -352,6 +352,7 @@ function muteSpeaker() {
               </UTooltip>
             </p>
             <WizardCard
+              class="mt-2"
               :card="c.card"
               :type="'layed'"
               :firstCard="firstCard"
