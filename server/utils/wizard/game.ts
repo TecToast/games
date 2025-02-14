@@ -189,9 +189,11 @@ export class Game {
     const playerPoints = sortedPlayers.map((player) => ({
       player: `${player}${
         this.checkRule("Spezialrollen") !== "Deaktiviert"
-          ? ` - ${Object.entries(this.specialRoles)
-              .filter(([_, value]) => value === player)
-              .join(", ")}`
+          ? ` - ${
+              Object.entries(this.specialRoles).filter(
+                ([_, value]) => value === player,
+              )[0][0]
+            }`
           : ""
       }`,
       points: this.points[player],
@@ -768,7 +770,9 @@ export class Game {
     } else {
       this.broadcast({
         type: "SelectedRoles",
-        roles: this.specialRoles,
+        roles: Object.fromEntries(
+          Object.entries(this.specialRoles).map(([role, p]) => [p, role]),
+        ),
       });
     }
   }
