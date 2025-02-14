@@ -1,52 +1,10 @@
-import type { BaseMessage } from "../types";
+import { z } from "zod";
 
-export type NIPMessage =
-  | AcceptAnswers
-  | PlayTrackOfQuestion
-  | PlayTrackOfAnswer
-  | PlayYT
-  | StopTrack
-  | Join
-  | Answer
-  | AllAnswers;
+export const perfectAnswersSchema = z.object({
+  host: z.string(),
+  gameID: z.string(),
+  answers: z.record(z.string()),
+  questionIndex: z.number(),
+});
 
-interface AcceptAnswers extends BaseMessage {
-  type: "AcceptAnswers";
-  state: boolean;
-  deleteAnswers: boolean;
-  saveIndex: number;
-}
-
-interface PlayTrackOfQuestion extends BaseMessage {
-  type: "PlayTrackOfQuestion";
-  questionIndex: number;
-}
-
-interface PlayTrackOfAnswer extends BaseMessage {
-  type: "PlayTrackOfAnswer";
-  questionIndex: number;
-}
-
-interface PlayYT extends BaseMessage {
-  type: "PlayYT";
-  url: string;
-}
-
-interface StopTrack extends BaseMessage {
-  type: "StopTrack";
-}
-
-interface Join extends BaseMessage {
-  type: "Join";
-}
-
-interface Answer extends BaseMessage {
-  type: "Answer";
-  user: string;
-  answer: string;
-}
-
-interface AllAnswers extends BaseMessage {
-  type: "AllAnswers";
-  answers: Record<string, string>;
-}
+export type PerfectAnswersRequest = z.infer<typeof perfectAnswersSchema>;

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import { type PerfectAnswersRequest } from "~/utils/nobodyisperfect/messages";
 
 const game = useNobodyIsPerfectStore();
-const { gdata, userdata, totalAnswerCount, currentQuestionIndex } =
-  storeToRefs(game);
+const { gdata, totalAnswerCount, currentQuestionIndex } = storeToRefs(game);
 const { id } = useRoute().params;
+const answersFrozen = ref(false);
 
 const answerMediaOptions = [
   { value: "nothing", label: "Nichts" },
@@ -31,14 +32,30 @@ function resetTimer() {
   game.timer = game.timerStart;
 }
 
-function acceptAnswers(state: boolean, deleteAnswers = false, saveIndex = -1) {
-  // TODO
+watch(answersFrozen, freezeAnswers);
+
+async function freezeAnswers(frozen: boolean) {
+  Object.values(sendChannels).forEach((channel) => {
+    channel.send(frozen ? "FROZEN" : "FREE");
+  });
+  const data = gdata.value;
+  if (frozen && data) {
+    await $fetch("/api/perfectanswers", {
+      method: "POST",
+      body: {
+        host: data.host,
+        answers: game.answers,
+        gameID: data.id,
+        questionIndex: currentQuestionIndex.value,
+      } satisfies PerfectAnswersRequest,
+    });
+  }
 }
 
 function resetAnswers() {
   game.answers = {};
   game.revealedAnswers = [];
-  acceptAnswers(true, true, currentQuestionIndex.value);
+  freezeAnswers(true);
 }
 
 function previousQuestion() {
@@ -47,51 +64,56 @@ function previousQuestion() {
   }
 }
 
-
 const peers: { [k: string]: RTCPeerConnection } = {};
 const sendChannels: { [k: string]: RTCDataChannel } = {};
 const config = useRuntimeConfig();
-const { data: rtcData, send: rtcSend } = useWebSocket(`wss://${config.public.host}/api/webrtcserver`)
-rtcSend(JSON.stringify({ host: true }))
-watch(rtcData, message => {
-  console.log(message)
+const { data: rtcData, send: rtcSend } = useWebSocket(
+  `wss://${config.public.host}/api/webrtcserver`,
+);
+rtcSend(JSON.stringify({ host: true }));
+watch(rtcData, (message) => {
+  console.log(message);
   const msg = JSON.parse(message);
-  console.log("parsing succeeded")
+  console.log("parsing succeeded");
   const userid = msg.userid;
   if (!peers[userid]) {
-    peers[userid] = new RTCPeerConnection(peerConnectionConfig)
+    peers[userid] = new RTCPeerConnection(peerConnectionConfig);
     peers[userid].onicecandidate = (event) => {
       if (event.candidate) {
-        rtcSend(JSON.stringify({
-          to: userid,
-          ice: event.candidate,
-        }))
+        rtcSend(
+          JSON.stringify({
+            to: userid,
+            ice: event.candidate,
+          }),
+        );
       }
-    }
+    };
     peers[userid].ondatachannel = (event) => {
-      const dataChannel = event.channel
+      const dataChannel = event.channel;
+      sendChannels[userid] = dataChannel;
       dataChannel.onmessage = (event) => {
-        game.answers[userid] = event.data
-      }
-    }
-    sendChannels[userid] = peers[userid].createDataChannel("sendChannel")
+        if (!answersFrozen.value) game.answers[userid] = event.data;
+      };
+    };
   }
   const peer = peers[userid];
   if (msg.sdp) {
     peer.setRemoteDescription(new RTCSessionDescription(msg.sdp)).then(() => {
       peer.createAnswer().then((answer) => {
         peer.setLocalDescription(answer).then(() => {
-          rtcSend(JSON.stringify({
-            to: userid,
-            sdp: answer,
-          }))
-        })
-      })
-    })
+          rtcSend(
+            JSON.stringify({
+              to: userid,
+              sdp: answer,
+            }),
+          );
+        });
+      });
+    });
   } else if (msg.ice) {
-    peer.addIceCandidate(new RTCIceCandidate(msg.ice))
+    peer.addIceCandidate(new RTCIceCandidate(msg.ice));
   }
-})
+});
 </script>
 
 <template>
@@ -124,13 +146,7 @@ watch(rtcData, message => {
               {{ gdata.questions[game.currentQuestionIndex].answer.title }}
             </div>
           </div>
-          <div class="flex">
-            <ControlButton
-              @click="acceptAnswers(false, false, currentQuestionIndex)"
-              >FREEZE</ControlButton
-            >
-            <ControlButton @click="acceptAnswers(true)">UNFREEZE</ControlButton>
-          </div>
+          <UCheckbox label="Antworten gefreezed" v-model="answersFrozen" />
         </div>
         <div class="flex flex-col">
           <template v-for="u of gdata!.participantsList" class="flex gap-4">
