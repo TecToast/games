@@ -1,6 +1,4 @@
-import { GuildMember, User } from "discord.js";
 import { collections } from "./constants";
-import { client } from "~/server/plugins/discord";
 
 export async function getQuizData(game: string, id: string, host: string) {
   const coll = collections[game];
