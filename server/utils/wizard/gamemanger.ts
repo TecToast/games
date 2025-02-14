@@ -38,11 +38,11 @@ export const GameManager = {
     }
     return id;
   },
-  removeGame(id: number) {
+  removeGame(id: number, sendToHome = true) {
     const game = this.games.get(id);
     this.games.delete(id);
     if (game) {
-      game.broadcast({ type: "RedirectHome" });
+      if (sendToHome) game.broadcast({ type: "RedirectHome" });
       this.updateOpenGames();
     }
   },

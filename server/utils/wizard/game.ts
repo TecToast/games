@@ -199,6 +199,7 @@ export class Game {
       points: this.points[player],
     }));
     this.broadcast({ type: "EndGame", players: playerPoints });
+    GameManager.removeGame(this.id, false);
   }
 
   async nextRound(nodelay: boolean) {
@@ -926,7 +927,7 @@ export class Game {
             this.phase = GamePhase.FINISHED;
             break;
           case GamePhase.FINISHED:
-            GameManager.removeGame(this.id);
+            pm.send(username, { type: "RedirectHome" });
             break;
         }
         break;
