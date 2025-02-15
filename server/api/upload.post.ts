@@ -1,4 +1,4 @@
-import { type ServerFile } from "nuxt-file-storage";
+import type { ServerFile } from "nuxt-file-storage";
 import * as crypto from "crypto";
 
 export default defineEventHandler(async (event) => {

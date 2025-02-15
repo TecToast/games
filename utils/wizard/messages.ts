@@ -1,11 +1,5 @@
-import {
-  type Card,
-  Color,
-  type LayedCard,
-  type OpenGamesData,
-  type Rule,
-} from "./types";
-import { type BaseMessage } from "~/utils/types";
+import type { Color, Card, LayedCard, OpenGamesData, Rule } from "./types";
+import type { BaseMessage } from "~/utils/types";
 
 export type WSMessage =
   | CreateGame

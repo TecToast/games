@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { type PerfectAnswersRequest } from "~/utils/nobodyisperfect/messages";
+import type { PerfectAnswersRequest } from "~/utils/nobodyisperfect/messages";
 
 const game = useNobodyIsPerfectStore();
 const { gdata, totalAnswerCount, currentQuestionIndex } = storeToRefs(game);
@@ -122,15 +122,15 @@ watch(rtcData, (message) => {
       <div class="flex justify-around">
         <div class="mt-10 flex flex-col gap-4">
           <div
-            class="flex items-center gap-4 text-lg text-white"
             v-for="u of gdata.participantsList"
+            class="flex items-center gap-4 text-lg text-white"
           >
             <ControlButton @click="game.revealFromWhichUser(u)"
               >{{ getDisplayName(u) }}
             </ControlButton>
             <div
-              @click="game.revealAnswerFromUser(u)"
               class="cursor-pointer bg-gray-800"
+              @click="game.revealAnswerFromUser(u)"
             >
               {{ game.answers[u] ?? "-" }}
             </div>
@@ -140,13 +140,13 @@ watch(rtcData, (message) => {
               >RICHTIG
             </ControlButton>
             <div
-              @click="game.revealAnswerFromUser('RICHTIG')"
               class="cursor-pointer bg-gray-800"
+              @click="game.revealAnswerFromUser('RICHTIG')"
             >
               {{ gdata.questions[game.currentQuestionIndex].answer.title }}
             </div>
           </div>
-          <UCheckbox label="Antworten gefreezed" v-model="answersFrozen" />
+          <UCheckbox v-model="answersFrozen" label="Antworten gefreezed" />
         </div>
         <div class="flex flex-col">
           <template v-for="u of gdata!.participantsList" class="flex gap-4">
@@ -157,12 +157,12 @@ watch(rtcData, (message) => {
               <ControlButton @click="game.addPointsToUser(u, 1)"
                 >+1
               </ControlButton>
-              <ControlButton @click="game.addPointsToUser(u, -1)" class="mr-4"
+              <ControlButton class="mr-4" @click="game.addPointsToUser(u, -1)"
                 >-1
               </ControlButton>
               <ControlButton
-                class="!min-w-12 max-w-12"
                 v-for="num in totalAnswerCount"
+                class="!min-w-12 max-w-12"
                 @click="game.selectAnswerForUser(u, num - 1)"
               >
                 {{ String.fromCharCode(num + 96) }}
@@ -191,8 +191,8 @@ watch(rtcData, (message) => {
           </ControlButton>
         </div>
         <URadioGroup
-          color="blue"
           v-model="game.answerMediaState"
+          color="blue"
           legend="Welche Media soll auf der Antwortenseite angezeigt werden?"
           :options="answerMediaOptions"
         />
@@ -218,11 +218,11 @@ watch(rtcData, (message) => {
             >Start timer from start</ControlButton
           >
           <UInput
+            v-model="game.timerStart"
             size="2xs"
             type="number"
             label="hey"
             color="blue"
-            v-model="game.timerStart"
           />
           <ControlButton @click="pause()">Stop timer</ControlButton>
           <ControlButton @click="resume()">Resume timer</ControlButton>

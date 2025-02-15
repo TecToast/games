@@ -13,7 +13,7 @@ import {
   isSameCard,
 } from "~/utils/wizard/types";
 import pm from "./peermanager";
-import { type LayCard, type WSMessage } from "~/utils/wizard/messages";
+import type { LayCard, WSMessage } from "~/utils/wizard/messages";
 import {
   NOTHINGCARD,
   BOMB,
@@ -285,7 +285,7 @@ export class Game {
               ).chance,
             ) === 0
           ) {
-            const [role, rolePlayer] = specialRoleEntry;
+            const rolePlayer = specialRoleEntry[1];
             const rolePlayerCards = this.cards[rolePlayer];
             if (rolePlayerCards.length >= this.round) {
               replacedCard = rolePlayerCards[randomInt(rolePlayerCards.length)];
@@ -519,6 +519,7 @@ export class Game {
       if (isSameCard(this.layedCards[playerToCheck], BLOCKED)) {
         const nextPlayer =
           this.originalOrderForSubround[(index + 1) % this.players.length];
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete this.layedCards[nextPlayer];
       }
       if (isSameCard(this.layedCards[playerToCheck], FLEXTAPE)) {
@@ -526,6 +527,7 @@ export class Game {
           this.originalOrderForSubround[
             (index - 1 + this.players.length) % this.players.length
           ];
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete this.layedCards[previousPlayer];
       }
     });
@@ -931,7 +933,7 @@ export class Game {
             break;
         }
         break;
-      case "StitchGoal":
+      case "StitchGoal": {
         if (!this.isPredict) return;
         const defaultPrediction = this.checkRule("Ansage") === "Nacheinander";
         if (defaultPrediction && username !== this.currentPlayer) return;
@@ -945,7 +947,7 @@ export class Game {
           this.checkIfAllPredicted(username);
         }
         break;
-
+      }
       case "RuleChangeRequest":
         if (username === this.owner && this.phase === GamePhase.LOBBY) {
           this.changeRule(msg.rule, msg.value);
@@ -984,7 +986,7 @@ export class Game {
         }
         break;
 
-      case "ChangeStitchPrediction":
+      case "ChangeStitchPrediction": {
         if (username !== this.userToChangeStitchPrediction) return;
         if (Math.abs(msg.value) !== 1) return;
         const resultingStitchGoal = this.stitchGoals[username] + msg.value;
@@ -1004,7 +1006,7 @@ export class Game {
         }
         this.newSubround();
         break;
-
+      }
       case "ChangeCard":
         if (
           !this.isSevenPointFiveUsed ||

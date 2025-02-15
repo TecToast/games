@@ -9,14 +9,20 @@ const { gdata, userdata, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
-const allUsers: ParticipantDataWithId[] = Object.entries(getUsersOnServer()).map(([id, data]) => {
-  return {id, ...data};
+const allUsers: ParticipantDataWithId[] = Object.entries(
+  getUsersOnServer(),
+).map(([id, data]) => {
+  return { id, ...data };
 });
 
-watch(() => gdata.value?.participantsList, () => {
-  game.markUnsaved();
-  game.usersUpdatedHandler();
-}, {flush: "sync"});
+watch(
+  () => gdata.value?.participantsList,
+  () => {
+    game.markUnsaved();
+    game.usersUpdatedHandler();
+  },
+  { flush: "sync" },
+);
 
 function addQuestion() {
   gdata.value!.questions.push({
@@ -71,13 +77,20 @@ function addQuestion() {
           click on the reload button to see the new participants.
         </HelpModal>
       </div>
-      <USelectMenu v-model="gdata.participantsList" :options="allUsers" placeholder="Select participants..." multiple value-attribute="id" class="w-64" >
+      <USelectMenu
+        v-model="gdata.participantsList"
+        :options="allUsers"
+        placeholder="Select participants..."
+        multiple
+        value-attribute="id"
+        class="w-64"
+      >
         <template #option="{ option }">
-          <UAvatar :src="option.avatarUrl"/>
+          <UAvatar :src="option.avatarUrl" />
           {{ option.displayName }}
-        </template>  
+        </template>
       </USelectMenu>
-      <ControlDiv class="px-2" v-for="user of gdata.participantsList">
+      <ControlDiv v-for="user of gdata.participantsList" class="px-2">
         {{ getDisplayName(user) }}
       </ControlDiv>
     </div>

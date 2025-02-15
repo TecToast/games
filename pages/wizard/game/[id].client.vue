@@ -127,17 +127,16 @@ if (config.public.wizardYT) {
     scriptOptions: { trigger: "onNuxtReady" },
   });
 
-  // @ts-ignore
   onLoaded(async ({ YT }) => {
     // wait for the internal YouTube APIs to be ready
     const YouTube = await YT;
     await new Promise<void>((resolve) => {
-      // @ts-ignore
+      // @ts-expect-error - we know that YT.Player is defined
       if (typeof YT.Player === "undefined") YouTube.ready(resolve);
       else resolve();
     });
     // load the API
-    // @ts-ignore
+    // @ts-expect-error - we know that YT.Player is defined
     player.value = new YT.Player(video.value, {
       videoId: "dQw4w9WgXcQ",
       playerVars: {
@@ -146,11 +145,13 @@ if (config.public.wizardYT) {
         playlist: "dQw4w9WgXcQ",
       },
       events: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onReady: (event: any) => {
           event.target.setVolume(volume.value);
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onStateChange: (event: any) => {
-          // @ts-ignore
+          // @ts-expect-error - we know that YT.PlayerState is defined
           if (event.data === YT.PlayerState.ENDED) {
             event.target.playVideo(); // restart video if it reached the end
           }
@@ -163,13 +164,13 @@ if (config.public.wizardYT) {
     volume,
     (v) => {
       if (v == 0) {
-        // @ts-ignore
+        // @ts-expect-error - we know that YT.Player is defined
         player.value?.pauseVideo();
       } else {
-        // @ts-ignore
+        // @ts-expect-error - we know that YT.Player is defined
         player.value?.playVideo();
       }
-      // @ts-ignore
+      // @ts-expect-error - we know that YT.Player is defined
       player.value?.setVolume(v);
     },
     { immediate: true },
@@ -199,25 +200,25 @@ function muteSpeaker() {
       v-if="gamephase === 'lobby'"
       class="mt-20 flex flex-row justify-center"
     >
-      <div class="hidden" ref="video" />
+      <div ref="video" class="hidden" />
       <div class="w-1/3">
         <p class="mb-3 text-center text-3xl text-gray-300">Spieler</p>
         <ul class="divide-y-2 divide-gray-100 rounded-lg bg-white shadow">
-          <li class="p-3" v-for="(c, index) of playersInLobby">
+          <li v-for="(c, index) of playersInLobby" :key="c" class="p-3">
             {{ c + (index == 0 ? " (Owner)" : "") }}
           </li>
         </ul>
         <button
-          @click="startGame()"
           v-if="isOwner"
           :class="noStart ? 'grayscale' : 'grayscale-0'"
           class="my-4 block w-full rounded bg-blue-500 px-4 py-2 text-white transition-all duration-500 hover:bg-blue-700"
+          @click="startGame()"
         >
           Spiel starten
         </button>
         <button
-          @click="leaveGame()"
           class="my-4 block w-full rounded bg-red-500 px-4 py-2 text-white transition-all duration-500 hover:bg-red-700"
+          @click="leaveGame()"
         >
           Spiel verlassen
         </button>
@@ -229,6 +230,7 @@ function muteSpeaker() {
           <div class="flex flex-col gap-1">
             <div
               v-for="(x, index) of Object.keys(Rules)"
+              :key="x"
               class="flex flex-auto flex-col"
             >
               <hr v-if="index > 0" />
@@ -236,12 +238,13 @@ function muteSpeaker() {
               <div class="flex flex-row gap-2">
                 <button
                   v-for="r of Rules[x as Rule]"
-                  @click="switchRule(x as Rule, r)"
+                  :key="r"
                   :disabled="!isOwner"
                   :class="
                     rules[x] == r && !notSet ? 'grayscale-0' : 'grayscale'
                   "
                   class="my-4 block w-full rounded bg-green-500 px-4 py-2 text-white transition-all duration-500 hover:bg-green-700"
+                  @click="switchRule(x as Rule, r)"
                 >
                   {{ r }}
                 </button>
@@ -250,11 +253,11 @@ function muteSpeaker() {
           </div>
         </div>
       </div>
-      <div class="group fixed bottom-4 right-4" v-if="config.public.wizardYT">
+      <div v-if="config.public.wizardYT" class="group fixed bottom-4 right-4">
         <!-- Lautsprecher-Icon -->
         <img
-          :src="speakerImgSrc"
           id="speakerImgID"
+          :src="speakerImgSrc"
           class="h-8 w-8 cursor-pointer"
           alt="Speaker Icon"
           @click="muteSpeaker"
@@ -265,11 +268,11 @@ function muteSpeaker() {
           class="absolute bottom-12 right-0 w-32 rounded-lg bg-white p-2 opacity-0 shadow-lg transition-opacity duration-500 group-hover:opacity-100"
         >
           <input
+            v-model="volume"
             type="range"
             min="0"
             max="100"
             step="1"
-            v-model="volume"
             class="w-full"
           />
         </div>
@@ -279,8 +282,8 @@ function muteSpeaker() {
     <div v-if="gamephase === 'game'">
       <div class="absolute right-2 top-2">
         <button
-          @click="stopGame()"
           class="max-h-10 rounded-xl border border-red-500 p-2 text-white transition duration-100 hover:cursor-pointer hover:bg-red-500"
+          @click="stopGame()"
         >
           Spiel beenden
         </button>
@@ -296,7 +299,7 @@ function muteSpeaker() {
         <div>
           <strong class="text-center">Trumpf{{ trumpShift }}</strong>
           <div>
-            <WizardCard :card="trump" type="trump"></WizardCard>
+            <WizardCard :card="trump" type="trump" />
           </div>
         </div>
         <p
@@ -312,7 +315,7 @@ function muteSpeaker() {
           Warte auf andere Spieler
         </p>
         <div class="flex flex-row justify-evenly gap-5 align-middle">
-          <div v-for="c of layedCards">
+          <div v-for="c of layedCards" :key="c.card.color + c.card.value">
             <p
               class="text-center"
               :class="{ 'border-2 border-pink-500': currentPlayer == c.player }"
@@ -355,8 +358,8 @@ function muteSpeaker() {
               class="mt-2"
               :card="c.card"
               :type="'layed'"
-              :firstCard="firstCard"
-            ></WizardCard>
+              :first-card="firstCard"
+            />
           </div>
         </div>
       </div>
@@ -370,26 +373,26 @@ function muteSpeaker() {
           </template>
           <div class="flex gap-3">
             <button
-              @click="layCardWithColor(Color.Red)"
               class="w-1/4 rounded bg-red-700 px-4 py-2"
+              @click="layCardWithColor(Color.Red)"
             >
               Rot
             </button>
             <button
-              @click="layCardWithColor(Color.Yellow)"
               class="w-1/4 rounded bg-yellow-500 px-4 py-2"
+              @click="layCardWithColor(Color.Yellow)"
             >
               Gelb
             </button>
             <button
-              @click="layCardWithColor(Color.Green)"
               class="w-1/4 rounded bg-green-800 px-4 py-2"
+              @click="layCardWithColor(Color.Green)"
             >
               Grün
             </button>
             <button
-              @click="layCardWithColor(Color.Blue)"
               class="w-1/4 rounded bg-blue-700 px-4 py-2"
+              @click="layCardWithColor(Color.Blue)"
             >
               Blau
             </button>
@@ -406,15 +409,15 @@ function muteSpeaker() {
           <div class="flex justify-center gap-3">
             <button
               v-if="stitchGoals[playerName] != 0"
-              @click="changeStitchPrediction(-1)"
               class="w-1/4 rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
+              @click="changeStitchPrediction(-1)"
             >
               - 1
             </button>
             <button
               v-if="stitchGoals[playerName] != round"
-              @click="changeStitchPrediction(1)"
               class="w-1/4 rounded bg-gray-400 px-4 py-2 font-bold"
+              @click="changeStitchPrediction(1)"
             >
               + 1
             </button>
@@ -442,14 +445,15 @@ function muteSpeaker() {
           </template>
           <div class="flex justify-center gap-1">
             <div
-              v-for="player of playersInLobby.filter((p) => p != playerName)"
+              v-for="pl of playersInLobby.filter((p) => p != playerName)"
+              :key="pl"
               class="px-2 py-0"
             >
               <button
-                @click="voteForWinner(player)"
                 class="rounded bg-gray-800 px-4 py-2 font-bold text-gray-100"
+                @click="voteForWinner(pl)"
               >
-                {{ player }}
+                {{ pl }}
               </button>
             </div>
           </div>
@@ -463,7 +467,7 @@ function muteSpeaker() {
         <div>Tipp: {{ firstCome }} kommt raus!</div>
       </div>
 
-      <form @submit.prevent="saveStitches()" v-if="firstCome != ''">
+      <form v-if="firstCome != ''" @submit.prevent="saveStitches()">
         <div
           class="absolute flex min-w-full flex-row justify-center gap-4 align-middle"
           style="top: 35%"
@@ -471,10 +475,10 @@ function muteSpeaker() {
           <div class="flex flex-col">
             <label for="stitches" class="text-gray-300">Stiche</label>
             <input
+              id="stitches"
               v-model="stitchesPredicted"
               name="stitches"
               class="focus:shadow-outline w-32 appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-              id="stitches"
               type="number"
               placeholder="0"
               min="0"
@@ -515,18 +519,19 @@ function muteSpeaker() {
         style="top: 45%"
       >
         <WizardCard
-          class="z-20"
-          v-model:selectChangeCardState="selectChangeCardState"
           v-for="c of playerCards"
+          :key="c.color + c.value"
+          v-model:select-change-card-state="selectChangeCardState"
+          class="z-20"
           type="hand"
           :card="c"
-          :firstCard
-          :playerCards
-          :playersTurn
-          :isPredict
-          :firstCome
-          @removeCard="removeCardFromDeck"
-        ></WizardCard>
+          :first-card
+          :player-cards
+          :players-turn
+          :is-predict
+          :first-come
+          @remove-card="removeCardFromDeck"
+        />
       </div>
     </div>
     <div v-if="gamephase == 'finished'">
@@ -536,7 +541,7 @@ function muteSpeaker() {
         <div class="w-full p-4 md:w-1/2 lg:w-1/3">
           <p class="text-center text-4xl">Rangliste</p>
           <ul class="my-5">
-            <li v-for="(pl, i) of ranks" class="my-2">
+            <li v-for="(pl, i) of ranks" :key="pl.player" class="my-2">
               <div class="flex flex-row justify-center gap-4 align-middle">
                 <p class="text-lg text-gray-200">
                   Platz {{ i + 1 }}: {{ pl.player }} ({{ pl.points }} Punkte)
@@ -545,60 +550,60 @@ function muteSpeaker() {
             </li>
           </ul>
           <button
-            @click="leaveGame()"
             class="my-4 block w-full rounded bg-red-500 px-4 py-2 text-white transition-all duration-500 hover:bg-red-700"
+            @click="leaveGame()"
           >
             Spiel löschen
           </button>
         </div>
       </div>
     </div>
-  </DefaultBackground>
-
-  <UModal v-model="isRoleSelectionModalOpen" prevent-close>
-    <UCard class="px-2 py-0">
-      <template #header>
-        <div class="text-center text-2xl font-bold text-gray-300">
-          Wähle eine Rolle aus
-        </div>
-      </template>
-      <div
-        v-for="role of Object.keys(SpecialRolesDescriptions)"
-        class="px-2 py-0"
-      >
-        <UTooltip
-          :text="SpecialRolesDescriptions[role]"
-          :popper="{ placement: 'right' }"
-          :ui="{ width: 'max-w-screen-xl' }"
-          class="w-full"
+    <UModal v-model="isRoleSelectionModalOpen" prevent-close>
+      <UCard class="px-2 py-0">
+        <template #header>
+          <div class="text-center text-2xl font-bold text-gray-300">
+            Wähle eine Rolle aus
+          </div>
+        </template>
+        <div
+          v-for="role of Object.keys(SpecialRolesDescriptions)"
+          :key="role"
+          class="px-2 py-0"
         >
-          <button
-            @click="requestSelectedRole(role)"
-            :class="
-              !Object.values(playerRoles).includes(role)
-                ? 'grayscale-0'
-                : 'grayscale'
-            "
-            class="my-2 w-full rounded bg-green-500 px-4 py-2 text-white transition-all duration-500 hover:bg-green-700"
+          <UTooltip
+            :text="SpecialRolesDescriptions[role]"
+            :popper="{ placement: 'right' }"
+            :ui="{ width: 'max-w-screen-xl' }"
+            class="w-full"
           >
-            {{ role }}
-          </button>
-        </UTooltip>
-      </div>
-    </UCard>
-  </UModal>
-  <UModal
-    v-model="isWaitingForOtherPlayersRoleSelectionModalOpen"
-    prevent-close
-  >
-    <UCard class="px-2 py-0">
-      <template #header>
-        <div class="text-center text-2xl font-bold text-gray-300">
-          {{ currentRoleSelectingPlayer + " wählt gerade eine Rolle aus" }}
+            <button
+              :class="
+                !Object.values(playerRoles).includes(role)
+                  ? 'grayscale-0'
+                  : 'grayscale'
+              "
+              class="my-2 w-full rounded bg-green-500 px-4 py-2 text-white transition-all duration-500 hover:bg-green-700"
+              @click="requestSelectedRole(role)"
+            >
+              {{ role }}
+            </button>
+          </UTooltip>
         </div>
-      </template>
-    </UCard>
-  </UModal>
+      </UCard>
+    </UModal>
+    <UModal
+      v-model="isWaitingForOtherPlayersRoleSelectionModalOpen"
+      prevent-close
+    >
+      <UCard class="px-2 py-0">
+        <template #header>
+          <div class="text-center text-2xl font-bold text-gray-300">
+            {{ currentRoleSelectingPlayer + " wählt gerade eine Rolle aus" }}
+          </div>
+        </template>
+      </UCard>
+    </UModal>
+  </DefaultBackground>
 </template>
 
 <style scoped></style>

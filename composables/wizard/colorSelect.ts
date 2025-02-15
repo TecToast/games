@@ -1,5 +1,5 @@
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
-import { type Card, Color } from "~/utils/wizard/types";
+import type { Color, Card } from "~/utils/wizard/types";
 
 export function useColorSelect() {
   const { sendWS } = useWizardConnection();

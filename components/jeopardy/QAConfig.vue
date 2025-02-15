@@ -31,12 +31,12 @@ async function handleFile(event: Event) {
       {{ props.name }}:
     </div>
     <textarea
-      class="mt-4 h-[10vh] w-[50vw] bg-gray-800 p-2 text-white"
       v-model="text"
-    ></textarea>
+      class="mt-4 h-[10vh] w-[50vw] bg-gray-800 p-2 text-white"
+    />
     <div class="mt-4 flex items-center gap-2 bg-gray-700 p-2 text-gray-400">
       <div>Upload image:</div>
-      <input type="file" ref="fileInput" @input="handleFile" />
+      <input ref="fileInput" type="file" @input="handleFile" />
       <img
         v-if="fileName"
         class="w-16"

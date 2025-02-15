@@ -113,8 +113,8 @@ export enum StitchEvaluationMethod {
 export type SelectChangeCard = "selectCard" | "waitForOthers" | "nothing";
 
 export const AllCards: Card[] = (function () {
-  let allCards: Card[] = [];
-  for (let color of ["Rot", "Gelb", "Grün", "Blau"]) {
+  const allCards: Card[] = [];
+  for (const color of ["Rot", "Gelb", "Grün", "Blau"]) {
     for (let value = 1; value <= 13; value++) {
       allCards.push(<Card>{ color, value });
     }
@@ -126,7 +126,7 @@ export const AllCards: Card[] = (function () {
     allCards.push({ color: Color.Fool, value: i });
   }
   const specialCards = [1, 7.5, 9.75, -1, 14, 69, 1, 2, 3, 6, 7];
-  for (let i of specialCards) {
+  for (const i of specialCards) {
     allCards.push({ color: Color.Special, value: i });
   }
   return allCards;

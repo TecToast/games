@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "nuxt-auth-utils",
     "nuxt-file-storage",
+    "@nuxt/eslint",
   ],
   app: {
     head: {

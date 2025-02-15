@@ -31,14 +31,14 @@ watch(
 <template>
   <div v-if="qData">
     <JeopardyQAConfig
-      name="Question"
       v-model:text="qData.question.title"
       v-model:file="qData.question.image"
+      name="Question"
     />
     <JeopardyQAConfig
-      name="Answer"
       v-model:text="qData.answer.title"
       v-model:file="qData.answer.image"
+      name="Answer"
     />
     <NuxtLink
       :to="`/jeopardy/config/${id}/${toID(category.toString())}`"

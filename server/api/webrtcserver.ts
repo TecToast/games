@@ -1,7 +1,7 @@
-import { Peer } from "crossws";
+import type { Peer } from "crossws";
 let host: string | undefined = undefined;
-let peers: { [key: string]: Peer } = {};
-let peerIDToUserID: { [key: string]: string } = {};
+const peers: { [key: string]: Peer } = {};
+const peerIDToUserID: { [key: string]: string } = {};
 export default defineWebSocketHandler({
   open: async (peer) => {
     console.log("OPENING");
@@ -11,6 +11,7 @@ export default defineWebSocketHandler({
     peers[session.user.id] = peer;
   },
   async message(peer, message) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const msg: any = message.json();
     console.log(peer.id);
     console.log("V");

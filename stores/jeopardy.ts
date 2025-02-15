@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { watch } from "vue";
-import { AnswerState, type JeopardyData } from "~/utils/jeopardy/types";
-import type { GameUserData } from "~/utils/jeopardy/types";
+import {
+  type GameUserData,
+  type JeopardyData,
+  AnswerState,
+} from "~/utils/jeopardy/types";
 import { useRoute } from "vue-router";
 import useGameConfig from "~/composables/useGameConfig";
 

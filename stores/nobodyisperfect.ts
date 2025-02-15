@@ -46,7 +46,7 @@ export const useNobodyIsPerfectStore = defineStore("nobodyisperfect", () => {
   function selectAnswerForUser(user: string, answerIndex: number) {
     let index = 0;
     const url = getAvatarUrl(user);
-    for (let data of revealedAnswers.value) {
+    for (const data of revealedAnswers.value) {
       const guessed = data.guessedThis;
       const i = guessed.indexOf(url);
       if (index == answerIndex) {

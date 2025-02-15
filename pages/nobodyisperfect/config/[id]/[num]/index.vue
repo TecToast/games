@@ -25,16 +25,16 @@ watch(
 <template>
   <div v-if="qData">
     <NobodyisperfectQAConfig
-      name="Question"
       v-model:text="qData.question.title"
       v-model:file="qData.question.file"
       v-model:audio="qData.question.audio"
+      name="Question"
     />
     <NobodyisperfectQAConfig
-      name="Answer"
       v-model:text="qData.answer.title"
       v-model:file="qData.answer.file"
       v-model:audio="qData.answer.audio"
+      name="Answer"
     />
     <NuxtLink :to="`/nobodyisperfect/config/${id}`" class="flex justify-center">
       <ControlButton class="mt-4">Back</ControlButton>

@@ -1,5 +1,5 @@
-import { type GameUserData as JeopardyGameUserData } from "~/utils/jeopardy/types";
-import { type GameUserData as NIPGameUserData } from "~/utils/nobodyisperfect/types";
+import type { GameUserData as JeopardyGameUserData } from "~/utils/jeopardy/types";
+import type { GameUserData as NIPGameUserData } from "~/utils/nobodyisperfect/types";
 
 export type GameMeta = {
   displayName: string;

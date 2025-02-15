@@ -1,6 +1,6 @@
 import type { EventHandler, EventHandlerRequest, H3Event } from "h3";
-import { Collection } from "mongodb";
-import { type GameConfigBase } from "~/utils/types";
+import type { Collection } from "mongodb";
+import type { GameConfigBase } from "~/utils/types";
 import { collections } from "./constants";
 
 type EventHandlerWithGame<T extends EventHandlerRequest, D> = (

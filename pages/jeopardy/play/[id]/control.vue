@@ -35,13 +35,13 @@ const { id } = useRoute().params;
         >Reveal Question</ControlButton
       >
       <ControlButton
-        @click="jeopardy.answerState = AnswerState.Correct"
         class="border-2 border-green-700"
+        @click="jeopardy.answerState = AnswerState.Correct"
         >Answer Correct</ControlButton
       >
       <ControlButton
-        @click="jeopardy.answerState = AnswerState.Incorrect"
         class="border-2 border-red-700"
+        @click="jeopardy.answerState = AnswerState.Incorrect"
         >Answer Wrong
       </ControlButton>
       <ControlButton @click="jeopardy.answerState = AnswerState.Unanswered"
@@ -49,7 +49,11 @@ const { id } = useRoute().params;
       >
     </div>
     <div class="ml-16 mt-12 flex gap-10">
-      <div v-if="jAllData" v-for="user of jAllData?.participantsList" class="flex flex-col gap-4">
+      <div
+        v-for="user of jAllData?.participantsList"
+        v-if="jAllData"
+        class="flex flex-col gap-4"
+      >
         <ControlButton
           class="bg-[#2b6499]"
           :class="jeopardy.currentUser == user ? '!bg-gray-500' : ''"
@@ -59,14 +63,12 @@ const { id } = useRoute().params;
         </ControlButton>
         <div class="flex">
           <ControlButton
-            v-if="jAllData"
             v-for="joker of jAllData.jokers"
-            @click="jeopardy.toggleJokerFromUser(user, joker)"
+            v-if="jAllData"
             :class="
-              userdata[user].usedJokers.includes(joker)
-                ? '!bg-gray-500'
-                : ''
+              userdata[user].usedJokers.includes(joker) ? '!bg-gray-500' : ''
             "
+            @click="jeopardy.toggleJokerFromUser(user, joker)"
             >{{ joker }}</ControlButton
           >
         </div>

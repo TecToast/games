@@ -3,5 +3,5 @@ await navigateTo("/jeopardy/config");
 </script>
 
 <template>
-  <div></div>
+  <div />
 </template>

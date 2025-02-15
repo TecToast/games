@@ -49,7 +49,7 @@ function createNewQuiz() {
         <ControlButton> {{ quiz }}</ControlButton>
       </NuxtLink>
     </div>
-    <div class="my-8 w-48 border-t-2 border-gray-500"></div>
+    <div class="my-8 w-48 border-t-2 border-gray-500" />
     <ControlButton @click="createNewQuiz()">+ Create a new quiz </ControlButton>
   </DefaultBackground>
 </template>

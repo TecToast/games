@@ -31,18 +31,18 @@ async function handleFile(event: Event) {
       {{ props.name }}:
     </div>
     <textarea
-      class="mt-4 h-[10vh] w-[50vw] bg-gray-800 p-2 text-white"
       v-model="text"
-    ></textarea>
+      class="mt-4 h-[10vh] w-[50vw] bg-gray-800 p-2 text-white"
+    />
     <input
+      v-model="audioUrl"
       class="mt-4 h-8 bg-gray-800 p-2 text-white"
       type="text"
       placeholder="YT-URL"
-      v-model="audioUrl"
     />
     <div class="mt-4 flex items-center gap-2 bg-gray-700 p-2 text-gray-400">
       <div>Upload image/video:</div>
-      <input type="file" ref="fileInput" @input="handleFile" />
+      <input ref="fileInput" type="file" @input="handleFile" />
 
       <img
         v-if="fileName && !fileName.endsWith('mp4')"
@@ -50,10 +50,10 @@ async function handleFile(event: Event) {
         :src="`/api/media/${fileName}`"
         :alt="fileName"
       />
-      <video controls v-if="fileName && fileName.endsWith('mp4')" class="w-64">
+      <video v-if="fileName && fileName.endsWith('mp4')" controls class="w-64">
         <source :src="`/api/media/${fileName}`" type="video/mp4" />
       </video>
-      <UButton v-if="fileName" @click="fileName = undefined" color="red"
+      <UButton v-if="fileName" color="red" @click="fileName = undefined"
         >Delete media</UButton
       >
     </div>

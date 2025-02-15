@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <script lang="ts" setup>
 const jeopardy = useJeopardyStore();
 const props = defineProps({
@@ -14,6 +15,7 @@ const props = defineProps({
 function removeFromList(thing: unknown) {
   const index = props.list.indexOf(thing);
   if (index > -1) {
+    // TODO clean up Config stuff
     props.list.splice(index, 1);
     jeopardy.markUnsaved();
   }
@@ -40,10 +42,14 @@ function createNew() {
       <div class="text-center text-3xl font-bold text-gray-300">
         {{ props.name }}:
       </div>
-      <slot></slot>
+      <slot />
     </div>
     <div class="mt-4 flex w-[50vw] flex-col items-center gap-4">
-      <div class="flex gap-2" v-for="thing of props.list">
+      <div
+        v-for="thing of props.list"
+        :key="(thing as any).toString()"
+        class="flex gap-2"
+      >
         <ControlDiv> {{ thing }}</ControlDiv>
         <ConfigTrashCan @click="removeFromList(thing)" />
       </div>

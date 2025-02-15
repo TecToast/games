@@ -7,9 +7,9 @@ const props = defineProps<{
 
 <template>
   <button
-    @click="isOpen = true"
     class="h-8 w-8 rounded-full bg-blue-700 text-xl text-white"
     :class="$attrs.class"
+    @click="isOpen = true"
   >
     ?
   </button>
@@ -19,7 +19,7 @@ const props = defineProps<{
         <div class="text-2xl font-bold text-gray-300">Help / {{ name }}</div>
       </template>
       <div class="text-gray-200">
-        <slot></slot>
+        <slot />
       </div>
     </UCard>
   </UModal>

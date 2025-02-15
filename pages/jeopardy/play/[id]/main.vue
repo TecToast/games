@@ -37,23 +37,19 @@ const jdata = computed(() => jAllData.value?.categories);
           </div>
         </div>
       </div>
-      <div
-        class="mt-10 flex min-w-full items-center justify-around"
-      >
+      <div class="mt-10 flex min-w-full items-center justify-around">
         <div
           v-for="user of jAllData?.participantsList"
           class="flex h-full flex-col items-center justify-end gap-8"
         >
           <div class="flex w-48 justify-evenly">
-            <template v-if="jAllData" v-for="joker of jAllData.jokers">
+            <template v-for="joker of jAllData.jokers" v-if="jAllData">
               <div
                 v-if="userdata[user].usedJokers != undefined"
                 class="flex h-12 w-12 items-center justify-center rounded-full text-3xl text-white"
                 :class="{
-                  'bg-[#888888]':
-                    userdata[user].usedJokers.includes(joker),
-                  'bg-[#007800]':
-                    !userdata[user].usedJokers.includes(joker),
+                  'bg-[#888888]': userdata[user].usedJokers.includes(joker),
+                  'bg-[#007800]': !userdata[user].usedJokers.includes(joker),
                 }"
               >
                 {{ joker }}

@@ -1,5 +1,6 @@
-import { Collection, Db, MongoClient } from "mongodb";
-import { type GameConfigBase } from "~/utils/types";
+import type { Collection, Db } from "mongodb";
+import { MongoClient } from "mongodb";
+import type { GameConfigBase } from "~/utils/types";
 
 type UserPermission = {
   user: string;
@@ -21,7 +22,7 @@ export let jeopardyDb: Collection<GameConfigBase>;
 export let nobodyIsPerfectDb: Collection<GameConfigBase>;
 export let perfectAnswersDb: Collection<PerfectAnswers>;
 
-export default defineNitroPlugin((nitroApp) => {
+export default defineNitroPlugin(() => {
   const config = useRuntimeConfig();
   const uri = config.mongodb;
   if (!uri) {

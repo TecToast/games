@@ -1,6 +1,6 @@
 import { GamePhase, type OpenGamesData } from "~/utils/wizard/types";
-import { Game } from "./game";
-import { type OpenGames } from "~/utils/wizard/messages";
+import type { Game } from "./game";
+import type { OpenGames } from "~/utils/wizard/messages";
 import pm from "./peermanager";
 
 export const GameManager = {

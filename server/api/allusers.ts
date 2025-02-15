@@ -1,6 +1,6 @@
-import { type ParticipantData } from "~/utils/types";
+import type { ParticipantData } from "~/utils/types";
 import { client } from "~/server/plugins/discord";
-import { GuildMember } from "discord.js";
+import type { GuildMember } from "discord.js";
 
 export default defineCachedEventHandler(
   async (event) => {

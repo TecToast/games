@@ -69,8 +69,8 @@ async function devSwitchUser(name: string) {
         </template>
         <hr />
         <button
-          @click="createGame()"
           class="my-4 block w-full rounded bg-blue-500 px-4 py-2 text-white transition-all duration-500 hover:bg-blue-700"
+          @click="createGame()"
         >
           Neues Spiel erstellen
         </button>

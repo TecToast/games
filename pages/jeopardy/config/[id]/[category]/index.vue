@@ -56,8 +56,8 @@ function defaultPoints() {
     </ConfigLinkGroup>
     <ControlButton
       v-if="Object.keys(cat!).length == 0"
-      @click="defaultPoints()"
       class="mt-4 bg-yellow-600"
+      @click="defaultPoints()"
     >
       Use default point distribution (100 - 500)
     </ControlButton>

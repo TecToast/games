@@ -73,10 +73,10 @@ const iterateString = computed(() => {
       <div class="text-center text-3xl font-bold text-gray-300">
         {{ props.name }}:
       </div>
-      <slot></slot>
+      <slot />
     </div>
     <div class="mt-4 flex w-[50vw] flex-col items-center gap-4">
-      <div class="flex gap-2" v-for="thing of iterateString">
+      <div v-for="thing of iterateString" class="flex gap-2">
         <NuxtLink :to="`${route.path}/${toID(thing)}`">
           <ControlButton class="h-full"> {{ thing }}</ControlButton>
         </NuxtLink>

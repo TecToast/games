@@ -56,7 +56,7 @@ function reload() {
           click on the reload button to see the new participants.
         </HelpModal>
       </div>
-      <ControlDiv class="px-2" v-for="user of jdata.participantsList">
+      <ControlDiv v-for="user of jdata.participantsList" class="px-2">
         {{ getDisplayName(user) }}
       </ControlDiv>
     </div>

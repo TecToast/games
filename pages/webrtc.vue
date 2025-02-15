@@ -7,7 +7,7 @@ const { data, send, open } = useWebSocket(
 );
 const input = ref<string>("");
 const peerConnection: Ref<RTCPeerConnection | null> = ref(null);
-let sendChannel: Ref<RTCDataChannel | null> = ref(null);
+const sendChannel: Ref<RTCDataChannel | null> = ref(null);
 const freeze = ref(false);
 const connectionState = ref<"Connect" | "Connecting..." | "Connected!">(
   "Connect",
@@ -76,9 +76,9 @@ const { user } = useUserSession();
       Eingabefeld für Quiz-Shows (angemeldet als {{ user?.name }})
     </h1>
     <UButton
-      @click="connect()"
       :disabled="connectionState != 'Connect'"
       :loading="connectionState == 'Connecting...'"
+      @click="connect()"
       >{{ connectionState }}</UButton
     >
     <UTextarea

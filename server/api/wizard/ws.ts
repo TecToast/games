@@ -1,7 +1,7 @@
 import { Game } from "~/server/utils/wizard/game";
 import { GameManager } from "~/server/utils/wizard/gamemanger";
 import pm from "~/server/utils/wizard/peermanager";
-import { type WSMessage } from "~/utils/wizard/messages";
+import type { WSMessage } from "~/utils/wizard/messages";
 import { GamePhase } from "~/utils/wizard/types";
 
 export default defineWebSocketHandler({

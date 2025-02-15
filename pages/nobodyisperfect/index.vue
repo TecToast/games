@@ -3,5 +3,5 @@ await navigateTo("/nobodyisperfect/config");
 </script>
 
 <template>
-  <div></div>
+  <div />
 </template>

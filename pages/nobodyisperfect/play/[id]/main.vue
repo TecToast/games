@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const game = useNobodyIsPerfectStore();
-const { gdata, userdata, state, currentQuestionIndex, timer } = storeToRefs(game);
+const { gdata, userdata, state, currentQuestionIndex, timer } =
+  storeToRefs(game);
 const qData = computed(
   () => gdata.value?.questions[currentQuestionIndex.value],
 );
@@ -27,7 +28,11 @@ function nameToImageSrc(num: number): string {
         <TextBox
           class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center overflow-auto text-wrap border border-gray-800"
         >
-          {{ currentQuestionIndex == 0 ? "Testfrage" : `Frage ${currentQuestionIndex}` }}
+          {{
+            currentQuestionIndex == 0
+              ? "Testfrage"
+              : `Frage ${currentQuestionIndex}`
+          }}
         </TextBox>
         <div
           v-if="gdata?.participantsList"
@@ -64,8 +69,8 @@ function nameToImageSrc(num: number): string {
             :alt="qData.question.file"
           />
           <video
-            controls
             v-if="qData.question.file && qData.question.file.endsWith('mp4')"
+            controls
             class="h-[50vh]"
           >
             <source
@@ -106,8 +111,8 @@ function nameToImageSrc(num: number): string {
             :alt="qData.question.file"
           />
           <video
-            controls
             v-if="qData.question.file && qData.question.file.endsWith('mp4')"
+            controls
             class="h-[50vh]"
           >
             <source
@@ -126,14 +131,11 @@ function nameToImageSrc(num: number): string {
             :alt="qData.answer.file"
           />
           <video
-            controls
             v-if="qData.answer.file && qData.answer.file.endsWith('mp4')"
+            controls
             class="h-[50vh]"
           >
-            <source
-              :src="`/api/media/${qData.answer.file}`"
-              type="video/mp4"
-            />
+            <source :src="`/api/media/${qData.answer.file}`" type="video/mp4" />
           </video>
         </template>
         <div v-else class="flex flex-col gap-8">
@@ -142,8 +144,8 @@ function nameToImageSrc(num: number): string {
             class="flex items-center gap-4"
           >
             <img
-              class="h-16 w-16 rounded-full"
               v-if="!!game.revealedAnswers[num - 1]?.showUser"
+              class="h-16 w-16 rounded-full"
               :src="nameToImageSrc(num)"
               :alt="num.toString()"
             />
@@ -163,9 +165,9 @@ function nameToImageSrc(num: number): string {
                 </div>
                 <div class="flex gap-2">
                   <img
-                    class="h-12 w-12 rounded-full"
                     v-for="url of game.revealedAnswers[num - 1]?.guessedThis ??
                     []"
+                    class="h-12 w-12 rounded-full"
                     :src="url"
                     alt="..."
                   />

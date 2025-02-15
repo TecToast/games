@@ -1,5 +1,5 @@
-import { Peer } from "crossws";
-import { type WSMessage } from "~/utils/wizard/messages";
+import type { Peer } from "crossws";
+import type { WSMessage } from "~/utils/wizard/messages";
 export default {
   peers: new Map<string, Peer>(),
 
