@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
     appendHeader(event, "Content-Type", "image/webp");
     appendHeader(event, "Cache-Control", "max-age=31536000");
     return send(event, image);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // Handle the error if the file is not found or any other error occurs
     event.node.res.statusCode = 404;

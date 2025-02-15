@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const config = useRuntimeConfig();
   if (config.public.userdataRequired.find((url) => to.path.startsWith(url))) {
     await fetchUsersOnServer();

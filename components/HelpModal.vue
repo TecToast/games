@@ -16,7 +16,9 @@ const props = defineProps<{
   <UModal v-model="isOpen">
     <UCard>
       <template #header>
-        <div class="text-2xl font-bold text-gray-300">Help / {{ name }}</div>
+        <div class="text-2xl font-bold text-gray-300">
+          Help / {{ props.name }}
+        </div>
       </template>
       <div class="text-gray-200">
         <slot />

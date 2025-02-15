@@ -1,5 +1,5 @@
 export default function <T>(url: MaybeRefOrGetter<string>) {
-  const { status, data, send, open } = useWebSocket(url, {
+  const { status, data, send } = useWebSocket(url, {
     autoReconnect: true,
   });
 

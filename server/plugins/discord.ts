@@ -6,7 +6,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-export let client: Client;
+let client: Client;
 
 export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig();
@@ -37,3 +37,10 @@ export default defineNitroPlugin(async () => {
     }
   });
 });
+
+export function getDiscordClient(): Client {
+  if (!client) {
+    throw new Error("Discord client is not initialized");
+  }
+  return client;
+}

@@ -36,7 +36,7 @@ const link = computed(() => [
     : []),
 ]);
 useHead({
-  // @ts-ignore
+  // @ts-expect-error - This is a valid head object
   link: link,
 });
 </script>

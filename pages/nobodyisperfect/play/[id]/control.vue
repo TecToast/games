@@ -123,6 +123,7 @@ watch(rtcData, (message) => {
         <div class="mt-10 flex flex-col gap-4">
           <div
             v-for="u of gdata.participantsList"
+            :key="u"
             class="flex items-center gap-4 text-lg text-white"
           >
             <ControlButton @click="game.revealFromWhichUser(u)"
@@ -149,7 +150,7 @@ watch(rtcData, (message) => {
           <UCheckbox v-model="answersFrozen" label="Antworten gefreezed" />
         </div>
         <div class="flex flex-col">
-          <template v-for="u of gdata!.participantsList" class="flex gap-4">
+          <template v-for="u of gdata!.participantsList" :key="u">
             <div class="mt-8 text-lg text-white">
               {{ getDisplayName(u) }}
             </div>
@@ -162,6 +163,7 @@ watch(rtcData, (message) => {
               </ControlButton>
               <ControlButton
                 v-for="num in totalAnswerCount"
+                :key="num"
                 class="!min-w-12 max-w-12"
                 @click="game.selectAnswerForUser(u, num - 1)"
               >

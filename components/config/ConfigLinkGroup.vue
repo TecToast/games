@@ -1,3 +1,5 @@
+<!-- eslint-disable @typescript-eslint/no-dynamic-delete -->
+<!-- eslint-disable vue/no-mutating-props -->
 <script lang="ts" setup>
 import { toID } from "~/stores/jeopardy";
 
@@ -76,7 +78,7 @@ const iterateString = computed(() => {
       <slot />
     </div>
     <div class="mt-4 flex w-[50vw] flex-col items-center gap-4">
-      <div v-for="thing of iterateString" class="flex gap-2">
+      <div v-for="thing of iterateString" :key="thing" class="flex gap-2">
         <NuxtLink :to="`${route.path}/${toID(thing)}`">
           <ControlButton class="h-full"> {{ thing }}</ControlButton>
         </NuxtLink>

@@ -1,9 +1,9 @@
-import { usersDb } from "~/server/plugins/mongodb";
+import { getUsersDb } from "~/server/plugins/mongodb";
 
 export default defineOAuthDiscordEventHandler({
   config: {},
-  async onSuccess(event, { user, tokens }) {
-    if (!(await usersDb.findOne({ user: user.id }))) {
+  async onSuccess(event, { user }) {
+    if (!(await getUsersDb().findOne({ user: user.id }))) {
       await sendRedirect(event, "/error/notwhitelisted");
       return;
     }

@@ -1,7 +1,7 @@
 import redisDriver from "unstorage/drivers/redis";
 import fsDriver from "unstorage/drivers/fs-lite";
 
-export default defineNitroPlugin((nitroApp) => {
+export default defineNitroPlugin(() => {
   const config = useRuntimeConfig();
   const storage = useStorage();
   const redis = redisDriver({

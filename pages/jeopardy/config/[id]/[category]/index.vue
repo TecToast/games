@@ -6,6 +6,8 @@ const { id, category } = route.params;
 const cat = computed(
   () =>
     jdata.value?.categories[
+      //TODO: Fix this
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       jeopardy.nameUnwrapper?.categories[category.toString()]!
     ],
 );
@@ -32,7 +34,7 @@ function defaultPoints() {
 </script>
 
 <template>
-  <template v-if="jdata">
+  <div>
     <ConfigLinkGroup
       name="Points"
       :mapper
@@ -64,6 +66,5 @@ function defaultPoints() {
     <NuxtLink :to="`/jeopardy/config/${id}`" class="flex justify-center">
       <ControlButton class="mt-16">Back to {{ id }}</ControlButton>
     </NuxtLink>
-  </template>
-  <TextBox v-else>You shouldn't be here.</TextBox>
+  </div>
 </template>

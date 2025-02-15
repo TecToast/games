@@ -12,12 +12,14 @@ const { id } = useRoute().params;
     <div class="flex justify-around">
       <div
         v-for="cat of Object.keys(jdata)"
+        :key="cat"
         class="mt-8 flex flex-col items-center"
       >
         <TextBox class="rounded-lg px-2 text-2xl">{{ cat }}</TextBox>
         <div class="mt-4 flex flex-col gap-4">
           <div
             v-for="q of Object.keys(jdata[cat])"
+            :key="q"
             class="flex items-center justify-center"
           >
             <ControlButton
@@ -48,10 +50,10 @@ const { id } = useRoute().params;
         >Hide Answer</ControlButton
       >
     </div>
-    <div class="ml-16 mt-12 flex gap-10">
+    <div v-if="jAllData" class="ml-16 mt-12 flex gap-10">
       <div
         v-for="user of jAllData?.participantsList"
-        v-if="jAllData"
+        :key="user"
         class="flex flex-col gap-4"
       >
         <ControlButton
@@ -61,10 +63,10 @@ const { id } = useRoute().params;
           @click="jeopardy.currentUser = user"
           >{{ getDisplayName(user) }}
         </ControlButton>
-        <div class="flex">
+        <div v-if="jAllData" class="flex">
           <ControlButton
             v-for="joker of jAllData.jokers"
-            v-if="jAllData"
+            :key="joker"
             :class="
               userdata[user].usedJokers.includes(joker) ? '!bg-gray-500' : ''
             "
@@ -75,6 +77,7 @@ const { id } = useRoute().params;
         <div class="flex justify-center">
           <ControlButton
             v-for="num of [100, 50]"
+            :key="num"
             @click="jeopardy.addPointsToUser(user, num)"
             >{{ num }}</ControlButton
           >
@@ -82,6 +85,7 @@ const { id } = useRoute().params;
         <div class="flex justify-center">
           <ControlButton
             v-for="num of [-100, -50]"
+            :key="num"
             @click="jeopardy.addPointsToUser(user, num)"
             >{{ num }}
           </ControlButton>

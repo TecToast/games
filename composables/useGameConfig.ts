@@ -14,14 +14,12 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
     refresh: refreshData,
   } = useAsyncData(
     gameId,
-    // @ts-ignore
     async () => {
       if (route.params.id && route.fullPath.includes(gameId)) {
         const result = await useRequestFetch()<T>(
           `/api/${gameId}/data/${route.params.id}`,
         );
         userdata.value = Object.fromEntries(
-          // @ts-ignore
           result.participantsList.map((p) => [
             p,
             { ...defaultGameUserData[gameId] },
@@ -33,10 +31,9 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
         setTimeout(() => resolve(null), 500),
       );
     },
-    // @ts-ignore
+    // @ts-expect-error deep + watch is apparently not in the types
     { deep: true, watch: () => route.params.id },
   );
-  // const gdata = computed(() => ggdata.value as T | null);
   const unsavedChanges = ref(false);
 
   function usersUpdatedHandler() {
@@ -45,7 +42,7 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
       userdata.value = {
         ...userdata.value,
         ...Object.fromEntries(
-          // @ts-ignore
+          // @ts-expect-error participantsList is not in the types
           (data.participantsList as string[])
             .filter((p) => !(p in userdata.value))
             .map((p) => [p, { ...defaultGameUserData[gameId] }]),

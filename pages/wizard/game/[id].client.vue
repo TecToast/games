@@ -33,7 +33,7 @@ const { startGame, noStart, leaveGame, stopGame, ranks, gamephase } =
   useGamePhase(playersInLobby, layedCards);
 const trumpShift = useTrumpShift();
 const { playerCards, removeCardFromDeck } = usePlayerCards(trump);
-const { firstCard, resetFirstCard } = useFirstCard(layedCards);
+const { firstCard, resetFirstCard } = useFirstCard();
 const {
   stitchGoals,
   stitchDone,

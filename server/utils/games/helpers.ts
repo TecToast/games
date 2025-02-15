@@ -1,7 +1,7 @@
-import { collections } from "./constants";
+import { getCollection } from "./constants";
 
 export async function getQuizData(game: string, id: string, host: string) {
-  const coll = collections[game];
+  const coll = getCollection(game);
   if (!coll) throw createError({ status: 404, message: "Game not found" });
   const queryResult = await coll.findOne({ host, id });
   if (!queryResult)

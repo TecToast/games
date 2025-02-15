@@ -19,14 +19,15 @@ export default defineWebSocketHandler({
     const msg = message.json() as WSMessage;
     const name = (await requireUserSession(peer)).user.name;
     switch (msg.type) {
-      case "CreateGame":
+      case "CreateGame": {
         const id = GameManager.generateGameId();
         const g = new Game(id, name);
         GameManager.register(id, g);
         pm.send(name, { type: "GameCreated", gameID: id });
         GameManager.updateOpenGames();
         break;
-      case "JoinGame":
+      }
+      case "JoinGame": {
         const game = GameManager.findGame(msg.gameID);
         if (!game) {
           pm.send(name, { type: "RedirectHome" });
@@ -40,6 +41,7 @@ export default defineWebSocketHandler({
           game.addPlayer(name);
         }
         break;
+      }
       default:
         GameManager.gameCache.get(name)?.handleMessage(msg, name);
     }

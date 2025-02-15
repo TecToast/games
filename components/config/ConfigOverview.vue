@@ -45,7 +45,11 @@ function createNewQuiz() {
       Choose a quiz:
     </div>
     <div class="mt-10 flex w-[50vw] flex-col items-center gap-4">
-      <NuxtLink v-for="quiz of data" :to="`/${props.gameId}/config/${quiz}`">
+      <NuxtLink
+        v-for="quiz of data"
+        :key="quiz"
+        :to="`/${props.gameId}/config/${quiz}`"
+      >
         <ControlButton> {{ quiz }}</ControlButton>
       </NuxtLink>
     </div>

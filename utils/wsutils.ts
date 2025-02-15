@@ -44,7 +44,7 @@ export function useWebsocketRef<
   const result = ref(start);
   const notSet = ref(true);
   watchMessage(reference, type, (data) => {
-    // @ts-ignore
+    // @ts-expect-error - this is fine
     result.value =
       data[Object.keys(data).find((k) => k !== "type") as keyof typeof data];
     notSet.value = false;

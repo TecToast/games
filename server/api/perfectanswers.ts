@@ -1,4 +1,4 @@
-import { perfectAnswersDb } from "../plugins/mongodb";
+import { getPerfectAnswersDb } from "../plugins/mongodb";
 import { perfectAnswersSchema } from "~/utils/nobodyisperfect/messages";
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   );
   if (questionIndex >= 0) {
     Object.entries(answers).forEach(([uid, answer]) => {
-      perfectAnswersDb.updateOne(
+      getPerfectAnswersDb().updateOne(
         {
           host,
           gameID,

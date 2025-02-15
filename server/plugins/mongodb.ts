@@ -15,12 +15,12 @@ type PerfectAnswers = {
   answer: string;
 };
 
-export let client: MongoClient;
-export let db: Db;
-export let usersDb: Collection<UserPermission>;
-export let jeopardyDb: Collection<GameConfigBase>;
-export let nobodyIsPerfectDb: Collection<GameConfigBase>;
-export let perfectAnswersDb: Collection<PerfectAnswers>;
+let client: MongoClient;
+let db: Db;
+let usersDb: Collection<UserPermission>;
+let jeopardyDb: Collection<GameConfigBase>;
+let nobodyIsPerfectDb: Collection<GameConfigBase>;
+let perfectAnswersDb: Collection<PerfectAnswers>;
 
 export default defineNitroPlugin(() => {
   const config = useRuntimeConfig();
@@ -35,3 +35,45 @@ export default defineNitroPlugin(() => {
   nobodyIsPerfectDb = db.collection("nobodyisperfect");
   perfectAnswersDb = db.collection("perfectanswers");
 });
+
+export function getMongoClient(): MongoClient {
+  if (!client) {
+    throw new Error("MongoClient is not initialized");
+  }
+  return client;
+}
+
+export function getDb(): Db {
+  if (!db) {
+    throw new Error("Database is not initialized");
+  }
+  return db;
+}
+
+export function getUsersDb(): Collection<UserPermission> {
+  if (!usersDb) {
+    throw new Error("Users collection is not initialized");
+  }
+  return usersDb;
+}
+
+export function getJeopardyDb(): Collection<GameConfigBase> {
+  if (!jeopardyDb) {
+    throw new Error("Jeopardy collection is not initialized");
+  }
+  return jeopardyDb;
+}
+
+export function getNobodyIsPerfectDb(): Collection<GameConfigBase> {
+  if (!nobodyIsPerfectDb) {
+    throw new Error("NobodyIsPerfect collection is not initialized");
+  }
+  return nobodyIsPerfectDb;
+}
+
+export function getPerfectAnswersDb(): Collection<PerfectAnswers> {
+  if (!perfectAnswersDb) {
+    throw new Error("PerfectAnswers collection is not initialized");
+  }
+  return perfectAnswersDb;
+}

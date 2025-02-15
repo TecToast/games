@@ -3,10 +3,6 @@ const props = defineProps<{
   name: string;
 }>();
 
-const route = useRoute();
-const { id, category, points } = route.params;
-const jeopardy = useJeopardyStore();
-
 const text = defineModel("text", { type: String });
 const fileName = defineModel("file", { type: String });
 const fileInput = ref<HTMLInputElement | null>(null);

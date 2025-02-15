@@ -22,6 +22,7 @@ export type ParticipantDataWithId = {
   id: string;
 } & ParticipantData;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const defaultGameUserData: { [k: string]: any } = {
   jeopardy: { points: 0, usedJokers: [] } satisfies JeopardyGameUserData,
   nobodyisperfect: { points: 0 } satisfies NIPGameUserData,

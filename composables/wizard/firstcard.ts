@@ -1,9 +1,9 @@
-import type { Card, LayedCard } from "~/utils/wizard/types";
+import type { Card } from "~/utils/wizard/types";
 import { watchWizard } from "~/utils/wsutils";
 import { useWizardConnection } from "~/composables/wizard/useWizardConnection";
 import { NOTHINGCARD } from "~/utils/wizard/specialcards";
 
-export function useFirstCard(layedCards: Ref<LayedCard[]>) {
+export function useFirstCard() {
   const { data } = useWizardConnection();
   const firstCard = ref<Card>(NOTHINGCARD);
   watchWizard(data, "PlayerCard", (msg) => {

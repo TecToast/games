@@ -5,7 +5,7 @@ import type { ParticipantDataWithId } from "~/utils/types";
 const route = useRoute();
 const game = useNobodyIsPerfectStore();
 const gameId = "nobodyisperfect";
-const { gdata, userdata, status } = storeToRefs(game);
+const { gdata, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
@@ -90,25 +90,28 @@ function addQuestion() {
           {{ option.displayName }}
         </template>
       </USelectMenu>
-      <ControlDiv v-for="user of gdata.participantsList" class="px-2">
+      <ControlDiv
+        v-for="user of gdata.participantsList"
+        :key="user"
+        class="px-2"
+      >
         {{ getDisplayName(user) }}
       </ControlDiv>
     </div>
+    <div class="fixed bottom-4 flex items-center gap-4">
+      <NuxtLink :to="`/${gameId}/play/${id}/control`">
+        <ControlButton class="bg-green-600">Switch to game view</ControlButton>
+      </NuxtLink>
+      <NuxtLink class="" :to="`/${gameId}/config`">
+        <ControlButton>Back to overview</ControlButton>
+      </NuxtLink>
+      <HelpModal name="Finish">
+        With "Back to overview" you can go back to the overview of your quizzes.
+        <br /><br />
+        When you configured everything, you can switch to the game view by
+        clicking on "Switch to game view".
+      </HelpModal>
+    </div>
   </div>
   <TextBox v-else class="mt-16 p-4">No quiz found for ID {{ id }}.</TextBox>
-
-  <div class="fixed bottom-4 flex items-center gap-4">
-    <NuxtLink :to="`/${gameId}/play/${id}/control`">
-      <ControlButton class="bg-green-600">Switch to game view</ControlButton>
-    </NuxtLink>
-    <NuxtLink class="" :to="`/${gameId}/config`">
-      <ControlButton>Back to overview</ControlButton>
-    </NuxtLink>
-    <HelpModal name="Finish">
-      With "Back to overview" you can go back to the overview of your quizzes.
-      <br /><br />
-      When you configured everything, you can switch to the game view by
-      clicking on "Switch to game view".
-    </HelpModal>
-  </div>
 </template>

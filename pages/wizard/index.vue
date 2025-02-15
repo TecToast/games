@@ -30,6 +30,7 @@ async function devSwitchUser(name: string) {
       <div class="absolute left-2 top-2 flex gap-3">
         <ControlButton
           v-for="name of ['TestUser1', 'TestUser2', 'TestUser3']"
+          :key="name"
           @click="devSwitchUser(name)"
           >{{ name }}
         </ControlButton>
@@ -54,7 +55,7 @@ async function devSwitchUser(name: string) {
             Derzeit ist kein Spiel offen.
           </p>
           <ul v-else class="my-5">
-            <li v-for="game of openGames" class="my-2">
+            <li v-for="game of openGames" :key="game.id" class="my-2">
               <div class="flex flex-row justify-center gap-4 align-middle">
                 <NuxtLink :to="`/wizard/game/${game.id}`">
                   <button

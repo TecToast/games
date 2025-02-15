@@ -3,10 +3,6 @@ const props = defineProps<{
   name: string;
 }>();
 
-const route = useRoute();
-const { id, num } = route.params;
-const game = useNobodyIsPerfectStore();
-
 const text = defineModel("text", { type: String });
 const fileName = defineModel("file", { type: String });
 const audioUrl = defineModel("audio", { type: String });
