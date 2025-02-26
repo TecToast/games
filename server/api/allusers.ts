@@ -1,5 +1,5 @@
 import type { ParticipantData } from "~/utils/types";
-import { getDiscordClient } from "~/server/plugins/discord";
+import { getDiscordClient } from "+/plugins/discord";
 import type { GuildMember } from "discord.js";
 
 export default defineCachedEventHandler(

@@ -1,5 +1,5 @@
 import type { Collection } from "mongodb";
-import { getJeopardyDb, getNobodyIsPerfectDb } from "~/server/plugins/mongodb";
+import { getJeopardyDb, getNobodyIsPerfectDb } from "+/plugins/mongodb";
 import type { QuizData as JeopardyQuizData } from "~/utils/jeopardy/types";
 import type { QuizData as NIPQuizData } from "~/utils/nobodyisperfect/types";
 import type { GameConfigBase } from "~/utils/types";

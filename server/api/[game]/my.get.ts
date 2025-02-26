@@ -1,4 +1,4 @@
-import { defineGameHandler } from "~/server/utils/games/authenticated";
+import { defineGameHandler } from "+/utils/games/authenticated";
 
 export default defineGameHandler(async (_event, uid, _game, coll) => {
   return await coll

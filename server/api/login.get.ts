@@ -1,4 +1,4 @@
-import { getUsersDb } from "~/server/plugins/mongodb";
+import { getUsersDb } from "+/plugins/mongodb";
 
 export default defineOAuthDiscordEventHandler({
   config: {},

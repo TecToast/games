@@ -1,5 +1,5 @@
-import { defineGameHandler } from "~/server/utils/games/authenticated";
-import { defaultQuizData } from "~/server/utils/games/constants";
+import { defineGameHandler } from "+/utils/games/authenticated";
+import { defaultQuizData } from "+/utils/games/constants";
 
 export default defineGameHandler(async (event, uid, game, coll) => {
   const { id } = await readBody(event);

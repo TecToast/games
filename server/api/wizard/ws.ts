@@ -1,6 +1,6 @@
-import { Game } from "~/server/utils/wizard/game";
-import { GameManager } from "~/server/utils/wizard/gamemanger";
-import pm from "~/server/utils/wizard/peermanager";
+import { Game } from "+/utils/wizard/game";
+import { GameManager } from "+/utils/wizard/gamemanger";
+import pm from "+/utils/wizard/peermanager";
 import type { WSMessage } from "~/utils/wizard/messages";
 import { GamePhase } from "~/utils/wizard/types";
 
