@@ -420,7 +420,7 @@ export class Game {
 
   newSubround() {
     this.cardsToChange = {};
-    if (this.cards[this.currentPlayer].length === 0) {
+    if (Object.values(this.cards).some((cards) => cards.length === 0)) {
       let numberOfLoosingPlayers = 0;
       const results: { [k: string]: number } = {};
 
@@ -694,6 +694,8 @@ export class Game {
           this.players.forEach(
             (player) => (this.winnerVotingTally[player] = 0),
           );
+          this.currentPlayer = "";
+          this.broadcast({ type: "CurrentPlayer", player: "" });
         } else {
           this.afterSubRound(bombUsed, everybodyPointsUsed, this.stitchValue);
         }
