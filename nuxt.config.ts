@@ -56,7 +56,7 @@ export default defineNuxtConfig({
       wizard: "./cards/wizard",
     },
     session: {
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 60 * 24 * 28,
       password: "",
     },
   },
