@@ -45,10 +45,6 @@ export default defineNuxtConfig({
       token: "",
       guild: "",
     },
-    redis: {
-      host: "localhost",
-      port: 6379,
-    },
     media: {
       base: "./media",
     },

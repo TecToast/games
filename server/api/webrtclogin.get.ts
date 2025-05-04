@@ -4,12 +4,12 @@ export default defineEventHandler(async (event) => {
     return;
   }
   const token = getQuery(event)["token"];
-  const redis = useStorage("redis");
-  const user = await redis.getItem<{ id: string; name: string }>(
+  const auth = useStorage("auth");
+  const user = await auth.getItem<{ id: string; name: string }>(
     "webrtclogin:" + token,
   );
   if (!user) return "Invalid token";
-  await redis.removeItem("webrtclogin:" + token);
+  await auth.removeItem("webrtclogin:" + token);
   await setUserSession(event, {
     user,
   });

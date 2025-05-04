@@ -25,8 +25,8 @@ export default defineNitroPlugin(async () => {
     if (!interaction.isCommand()) return;
     if (interaction.commandName === "login") {
       const token = crypto.randomUUID();
-      const redis = useStorage("redis");
-      await redis.setItem("webrtclogin:" + token, {
+      const auth = useStorage("auth");
+      await auth.setItem("webrtclogin:" + token, {
         id: interaction.user.id,
         name: interaction.user.displayName,
       });
