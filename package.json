@@ -13,33 +13,33 @@
   },
   "dependencies": {
     "@iconify-json/heroicons": "^1.2.2",
-    "@nuxt/ui": "^2.21.0",
+    "@nuxt/ui": "^2.22.0",
     "@nuxtus/nuxt-localtunnel": "^1.0.1",
     "@pinia/nuxt": "^0.5.5",
     "@vueuse/nuxt": "^10.11.1",
-    "discord.js": "^14.18.0",
-    "mongodb": "^6.13.1",
+    "discord.js": "^14.19.3",
+    "mongodb": "^6.17.0",
     "pinia": "^2.3.1",
     "pinia-shared-state": "^0.5.1",
-    "unstorage": "^1.15.0",
+    "unstorage": "^1.16.0",
     "vue": "latest",
     "vuedraggable": "^4.1.0",
-    "zod": "^3.24.2"
+    "zod": "^3.25.57"
   },
   "devDependencies": {
     "@nuxt/eslint": "1.0.1",
-    "@nuxt/scripts": "0.9.5",
-    "@nuxtjs/tailwindcss": "^6.13.1",
+    "@nuxt/scripts": "0.11.8",
+    "@nuxtjs/tailwindcss": "^6.14.0",
     "@vueuse/core": "^10.11.1",
-    "eslint": "^9.21.0",
-    "nuxi": "^3.22.2",
-    "nuxt": "^3.15.4",
+    "eslint": "^9.28.0",
+    "nuxi": "^3.25.1",
+    "nuxt": "^3.17.5",
     "nuxt-auth-utils": "0.5.10",
     "nuxt-file-storage": "0.2.9",
-    "prettier": "^3.5.2",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "packageManager": "pnpm@8.15.5+sha1.a58c038faac410c947dbdb93eb30994037d0fce2"
 }
