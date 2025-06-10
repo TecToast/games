@@ -27,3 +27,4 @@ logs
 package-lock.json
 cards/**/*.webp
 media/*.png
+media/*.webp

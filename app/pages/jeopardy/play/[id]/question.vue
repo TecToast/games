@@ -16,7 +16,7 @@ const questionSrc = computed(() => {
     !jdata.value
   )
     return "";
-  return `/api/jeopardy/media/${questionData.value!.question.image}`;
+  return `/api/media/${questionData.value!.question.image}`;
 });
 const answerSrc = computed(() => {
   if (
@@ -25,7 +25,7 @@ const answerSrc = computed(() => {
     !jdata.value
   )
     return "";
-  return `/api/jeopardy/media/${questionData.value!.answer.image}`;
+  return `/api/media/${questionData.value!.answer.image}`;
 });
 const link = computed(() => [
   ...(questionSrc.value

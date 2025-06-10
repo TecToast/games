@@ -11,7 +11,7 @@ const { handleFileInput, files } = useFileStorage({ clearOldFiles: true });
 async function handleFile(event: Event) {
   await handleFileInput(event);
   if (files.value.length > 0) {
-    await $fetch("/api/upload", {
+    fileName.value = await $fetch("/api/upload", {
       method: "POST",
       body: {
         file: files.value[0],
@@ -32,7 +32,7 @@ async function handleFile(event: Event) {
     />
     <div class="mt-4 flex items-center gap-2 bg-gray-700 p-2 text-gray-400">
       <div>Upload image:</div>
-      <input ref="fileInput" type="file" @input="handleFile" />
+      <UInput ref="fileInput" type="file" @input="handleFile" />
       <img
         v-if="fileName"
         class="w-16"

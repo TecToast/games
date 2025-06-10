@@ -34,7 +34,7 @@ function defaultPoints() {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col items-center">
     <ConfigLinkGroup
       name="Points"
       :mapper
