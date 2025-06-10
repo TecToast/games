@@ -32,7 +32,7 @@ export default defineNuxtConfig({
       protectedUrls: ["/jeopardy", "/wizard", "/nobodyisperfect"],
       userdataRequired: ["/jeopardy", "/nobodyisperfect"],
       wizardYT: false,
-      host: "",
+      host: "localhost:3000",
     },
     oauth: {
       discord: {

@@ -67,15 +67,30 @@ function previousQuestion() {
 const peers: { [k: string]: RTCPeerConnection } = {};
 const sendChannels: { [k: string]: RTCDataChannel } = {};
 const config = useRuntimeConfig();
-const { data: rtcData, send: rtcSend } = useWebSocket(
-  `wss://${config.public.host}/api/webrtcserver`,
+const {
+  data: rtcData,
+  send: rtcSend,
+  status: rtcStatus,
+  open: rtcOpen,
+} = useWebSocket(
+  `ws${config.public.host === "localhost:3000" ? "" : "s"}://${config.public.host}/api/webrtcserver`,
 );
 rtcSend(JSON.stringify({ host: true }));
+watch(rtcStatus, (status) => {
+  if (status === "CLOSED") {
+    rtcOpen();
+    rtcSend(JSON.stringify({ host: true }));
+  }
+});
 watch(rtcData, (message) => {
   console.log(message);
   const msg = JSON.parse(message);
   console.log("parsing succeeded");
   const userid = msg.userid;
+  if (msg.newConnection) {
+    peers[userid]?.close();
+    delete peers[userid];
+  }
   if (!peers[userid]) {
     peers[userid] = new RTCPeerConnection(peerConnectionConfig);
     peers[userid].onicecandidate = (event) => {

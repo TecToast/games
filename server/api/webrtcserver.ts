@@ -9,6 +9,13 @@ export default defineWebSocketHandler({
     console.log("SESSION", session.user.id, peer.id);
     peerIDToUserID[peer.id] = session.user.id;
     peers[session.user.id] = peer;
+    if (host) {
+      const sendMsg = JSON.stringify({
+        userid: session.user.id,
+        newConnection: true,
+      });
+      peers[host].send(sendMsg);
+    }
   },
   async message(peer, message) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

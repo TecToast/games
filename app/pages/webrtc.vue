@@ -2,7 +2,7 @@
 import { peerConnectionConfig } from "~/utils/webrtc";
 const config = useRuntimeConfig();
 const { data, send, open } = useWebSocket(
-  `wss://${config.public.host}/api/webrtcserver`,
+  `ws${config.public.host === "localhost:3000" ? "" : "s"}://${config.public.host}/api/webrtcserver`,
   { immediate: false },
 );
 const input = ref<string>("");
