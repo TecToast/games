@@ -1,15 +1,12 @@
 import { defineStore } from "pinia";
-import { watch } from "vue";
 import {
   type GameUserData,
   type JeopardyData,
   AnswerState,
 } from "~/utils/jeopardy/types";
-import { useRoute } from "vue-router";
 import useGameConfig from "~/composables/useGameConfig";
 
 export const useJeopardyStore = defineStore("jeopardy", () => {
-  const route = useRoute();
   const {
     gdata: jdata,
     status,
@@ -76,7 +73,8 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
 
   function selectQuestion(category: string, points: number) {
     if (!jdata.value) return;
-    const question = jdata.value.categories[category][points];
+    const question = jdata.value?.categories?.[category]?.[points];
+    if (!question) return;
     if (question.used) {
       question.used = false;
       return;
@@ -84,22 +82,8 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
     questionRevealed.value = false;
     answerState.value = AnswerState.Unanswered;
     currentQuestion.value = { category, points };
-    setTimeout(() => {
-      question.used = !question.used;
-    }, 20);
+    question.used = !question.used;
   }
-
-  watch(
-    () => currentQuestion.value,
-    (question) => {
-      if (route.path.endsWith("control")) return;
-      navigateTo(
-        "/jeopardy/play/" +
-          route.params.id +
-          (question ? "/question" : "/main"),
-      );
-    },
-  );
 
   return {
     jdata,

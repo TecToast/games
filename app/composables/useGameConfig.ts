@@ -8,7 +8,7 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
     [key: string]: GUserData;
   }> = ref({});
   const {
-    data: gdata,
+    data: gdataOrig,
     status,
     error,
     refresh: refreshData,
@@ -33,6 +33,14 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
     },
     { deep: true, watch: [() => route.params.id] },
   );
+  const gdata = ref<T | null>(null);
+  watch(
+    gdataOrig,
+    (data) => {
+      gdata.value = data as T;
+    },
+    { immediate: true },
+  );
   const unsavedChanges = ref(false);
 
   function usersUpdatedHandler() {
@@ -41,7 +49,6 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
       userdata.value = {
         ...userdata.value,
         ...Object.fromEntries(
-          // @ts-expect-error participantsList is not in the types
           (data.participantsList as string[])
             .filter((p) => !(p in userdata.value))
             .map((p) => [p, { ...getDefaultGameUserData(gameId) }]),

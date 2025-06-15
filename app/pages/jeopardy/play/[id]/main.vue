@@ -6,7 +6,7 @@ const jdata = computed(() => jAllData.value?.categories);
 
 <template>
   <div
-    v-if="jdata"
+    v-if="jdata && jeopardy.currentQuestion === undefined"
     style="background-image: linear-gradient(#8902c7, #4402c7)"
     class="min-h-screen"
   >
@@ -72,4 +72,5 @@ const jdata = computed(() => jAllData.value?.categories);
       </div>
     </div>
   </div>
+  <JeopardyQuestion v-else-if="jeopardy.currentQuestion !== undefined" />
 </template>
