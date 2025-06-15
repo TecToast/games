@@ -89,6 +89,7 @@ watch(rtcData, (message) => {
   const userid = msg.userid;
   if (msg.newConnection) {
     peers[userid]?.close();
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete peers[userid];
   }
   if (!peers[userid]) {
@@ -159,7 +160,10 @@ watch(rtcData, (message) => {
               class="cursor-pointer bg-gray-800"
               @click="game.revealAnswerFromUser('RICHTIG')"
             >
-              {{ gdata.questions[game.currentQuestionIndex].answer.title }}
+              {{
+                gdata.questions?.[game.currentQuestionIndex]?.answer?.title ??
+                "-"
+              }}
             </div>
           </div>
           <UCheckbox v-model="answersFrozen" label="Antworten gefreezed" />
@@ -196,7 +200,9 @@ watch(rtcData, (message) => {
       <div class="ml-8 flex flex-col gap-4">
         <div class="text-gray-300">
           Aktuelle Frage:
-          {{ gdata.questions[game.currentQuestionIndex].question.title }}
+          {{
+            gdata.questions?.[game.currentQuestionIndex]?.question?.title ?? "-"
+          }}
         </div>
         <div class="flex gap-2">
           <ControlButton

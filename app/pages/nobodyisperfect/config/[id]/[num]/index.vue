@@ -7,7 +7,7 @@ const { gdata } = storeToRefs(game);
 const qData = computed(() => {
   const data = gdata.value;
   if (!data) return null;
-  return data.questions[Number.parseInt(num.toString()) - 1];
+  return data.questions[Number.parseInt(num!.toString()) - 1];
 });
 watch(
   [

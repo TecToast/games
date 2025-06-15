@@ -333,16 +333,16 @@ function muteSpeaker() {
               <span
                 v-if="results[c.player] != undefined"
                 :class="
-                  results[c.player] >= 0 ? 'text-green-400' : 'text-red-500'
+                  results[c.player]! >= 0 ? 'text-green-400' : 'text-red-500'
                 "
               >
-                {{ (results[c.player] >= 0 ? "+" : "") + results[c.player] }}
+                {{ (results[c.player]! >= 0 ? "+" : "") + results[c.player] }}
               </span>
               <br />
               <UTooltip
                 v-if="playerRoles[c.player]"
                 :text="
-                  SpecialRolesDescriptions[playerRoles[c.player]] ??
+                  SpecialRolesDescriptions[playerRoles[c.player]!] ??
                   'Versteckte Rolle'
                 "
                 :popper="{ placement: 'right' }"
