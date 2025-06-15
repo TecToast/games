@@ -28,6 +28,10 @@ export const defaultGameUserData: { [k: string]: any } = {
   nobodyisperfect: { points: 0 } satisfies NIPGameUserData,
 };
 
+export function getDefaultGameUserData(gameId: string) {
+  return JSON.parse(JSON.stringify(defaultGameUserData[gameId]));
+}
+
 export const allGames: Record<string, GameMeta> = {
   jeopardy: {
     displayName: "Jeopardy",

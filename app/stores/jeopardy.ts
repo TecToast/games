@@ -19,6 +19,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
     unsavedChanges,
     markUnsaved,
     saveToDB,
+    usersUpdatedHandler,
   } = useGameConfig<JeopardyData, GameUserData>("jeopardy");
   const currentUser = ref("");
   const currentQuestion: Ref<{ category: string; points: number } | undefined> =
@@ -119,6 +120,7 @@ export const useJeopardyStore = defineStore("jeopardy", () => {
     refreshData,
     markUnsaved,
     saveToDB,
+    usersUpdatedHandler,
   };
 });
 

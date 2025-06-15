@@ -22,7 +22,7 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
         userdata.value = Object.fromEntries(
           result.participantsList.map((p) => [
             p,
-            { ...defaultGameUserData[gameId] },
+            { ...getDefaultGameUserData(gameId) },
           ]),
         );
         return result as T;
@@ -31,8 +31,7 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
         setTimeout(() => resolve(null), 500),
       );
     },
-    // @ts-expect-error deep + watch is apparently not in the types
-    { deep: true, watch: () => route.params.id },
+    { deep: true, watch: [() => route.params.id] },
   );
   const unsavedChanges = ref(false);
 
@@ -45,7 +44,7 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
           // @ts-expect-error participantsList is not in the types
           (data.participantsList as string[])
             .filter((p) => !(p in userdata.value))
-            .map((p) => [p, { ...defaultGameUserData[gameId] }]),
+            .map((p) => [p, { ...getDefaultGameUserData(gameId) }]),
         ),
       };
     }

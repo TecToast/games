@@ -2,27 +2,29 @@
 const route = useRoute();
 const game = useJeopardyStore();
 const gameId = "jeopardy";
-const { jdata, status } = storeToRefs(game);
+const { jdata: gdata, status } = storeToRefs(game);
 const id = route.params.id;
 await until(status).not.toBe("pending");
 
-function reload() {
-  if (game.unsavedChanges) {
-    if (
-      !confirm(
-        "You have unsaved changes. Are you sure you want to reload? This will override your local changes.",
-      )
-    )
-      return;
-  }
-  game.refreshData();
-}
+const allUsers: ParticipantDataWithId[] = Object.entries(
+  getUsersOnServer(),
+).map(([id, data]) => {
+  return { id, ...data };
+});
+watch(
+  () => gdata.value?.participantsList,
+  () => {
+    game.markUnsaved();
+    game.usersUpdatedHandler();
+  },
+  { flush: "sync" },
+);
 </script>
 
 <template>
-  <div v-if="jdata" class="flex w-full justify-around">
+  <div v-if="gdata" class="flex w-full justify-around">
     <div class="flex flex-col">
-      <ConfigLeafGroup name="Joker" :list="jdata.jokers">
+      <ConfigLeafGroup name="Joker" :list="gdata.jokers">
         <HelpModal name="Joker">
           Here you can set the jokers which will be available to the players.
           You can add new jokers by clicking on the "+ New" button. You can
@@ -32,7 +34,7 @@ function reload() {
         </HelpModal>
       </ConfigLeafGroup>
       <ConfigSep />
-      <ConfigLinkGroup name="Categories" :list="jdata.categories" :store="game">
+      <ConfigLinkGroup name="Categories" :list="gdata.categories" :store="game">
         <HelpModal name="Categories">
           Here you can set the categories for the quiz. You can add new
           categories by clicking on the "+ New" button. To edit the questions in
@@ -41,12 +43,11 @@ function reload() {
         </HelpModal>
       </ConfigLinkGroup>
     </div>
-    <div class="flex w-full flex-col items-center gap-2">
+    <div class="flex flex-col items-center gap-2">
       <div class="flex items-center gap-2">
         <div class="my-4 text-center text-3xl font-bold text-gray-300">
           Participants:
         </div>
-        <ConfigReloadButton @click="reload()" />
         <HelpModal name="Participants">
           Here you can see the participants of the quiz. To actually set the
           participants, go on discord and use the
@@ -56,8 +57,21 @@ function reload() {
           click on the reload button to see the new participants.
         </HelpModal>
       </div>
+      <USelectMenu
+        v-model="gdata.participantsList"
+        :options="allUsers"
+        placeholder="Select participants..."
+        multiple
+        value-attribute="id"
+        class="w-64"
+      >
+        <template #option="{ option }">
+          <UAvatar :src="option.avatarUrl" />
+          {{ option.displayName }}
+        </template>
+      </USelectMenu>
       <ControlDiv
-        v-for="user of jdata.participantsList"
+        v-for="user of gdata.participantsList"
         :key="user"
         class="px-2"
       >
