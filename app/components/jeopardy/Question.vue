@@ -57,7 +57,7 @@ useHead({
         v-if="
           !questionData.answer.image || answerState == AnswerState.Unanswered
         "
-        class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center overflow-auto text-wrap border border-gray-800"
+        class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center overflow-auto text-wrap border border-gray-800 whitespace-pre-line"
       >
         {{ questionRevealed ? questionData.question.title : "" }}
       </TextBox>
@@ -73,7 +73,7 @@ useHead({
       />
       <TextBox
         v-if="answerState != AnswerState.Unanswered"
-        class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center overflow-auto text-wrap border-8"
+        class="flex h-52 min-w-[50vw] max-w-[50vw] items-center justify-center overflow-auto text-wrap border-8 whitespace-pre-line"
         :class="{
           'border-red-700': answerState == AnswerState.Incorrect,
           'border-green-700': answerState == AnswerState.Correct,
