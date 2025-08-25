@@ -1,70 +1,20 @@
 <script lang="ts" setup>
-import { peerConnectionConfig } from "~/utils/webrtc";
 const config = useRuntimeConfig();
-const { data, send, open } = useWebSocket(
+const { data, send, status } = useWebSocket(
   `ws${config.public.host === "localhost:3000" ? "" : "s"}://${config.public.host}/api/webrtcserver`,
-  { immediate: false },
+  { immediate: true, autoReconnect: true },
 );
 const input = ref<string>("");
-const peerConnection: Ref<RTCPeerConnection | null> = ref(null);
-const sendChannel: Ref<RTCDataChannel | null> = ref(null);
 const freeze = ref(false);
-const connectionState = ref<"Connect" | "Connecting..." | "Connected!">(
-  "Connect",
-);
 watch(input, (answer) => {
-  sendChannel.value?.send(answer);
+  send(JSON.stringify({ t: "a", m: answer}))
 });
-function connect() {
-  connectionState.value = "Connecting...";
-  open();
-  const conn = new RTCPeerConnection(peerConnectionConfig);
-  peerConnection.value = conn;
-  conn.onicecandidate = (event) => {
-    if (event.candidate) {
-      send(
-        JSON.stringify({
-          ice: event.candidate,
-        }),
-      );
-    }
-  };
-  conn.createOffer().then((offer) => {
-    conn!.setLocalDescription(offer).then(() => {
-      send(
-        JSON.stringify({
-          sdp: offer,
-        }),
-      );
-    });
-  });
-  sendChannel.value = conn.createDataChannel("sendChannel");
-  sendChannel.value.onopen = () => {
-    connectionState.value = "Connected!";
-  };
-  sendChannel.value.onclose = () => {
-    connectionState.value = "Connect";
-  };
-  sendChannel.value.onmessage = (event) => {
-    console.log(event.data);
-    freeze.value = event.data === "FROZEN";
-  };
-}
 watch(data, (message) => {
   const msg = JSON.parse(message);
-  if (msg.reconnect) {
-    connect();
-  }
-  if (!peerConnection.value) {
-    console.log("No peer connection");
-    return;
-  }
-  if (msg.sdp) {
-    peerConnection.value!.setRemoteDescription(
-      new RTCSessionDescription(msg.sdp),
-    );
-  } else if (msg.ice) {
-    peerConnection.value!.addIceCandidate(new RTCIceCandidate(msg.ice));
+  if (msg.t === "f") {
+    freeze.value = true;
+  } else if (msg.t === "u") {
+    freeze.value = false;
   }
 });
 
@@ -75,17 +25,12 @@ const { user } = useUserSession();
     <h1 class="text-2xl text-gray-100">
       Eingabefeld für Quiz-Shows (angemeldet als {{ user?.name }})
     </h1>
-    <UButton
-      :disabled="connectionState != 'Connect'"
-      :loading="connectionState == 'Connecting...'"
-      @click="connect()"
-      >{{ connectionState }}</UButton
-    >
+    {{status}}
     <UTextarea
       v-model="input"
       class="w-1/2"
       autoresize
-      :disabled="freeze || connectionState != 'Connected!'"
+      :disabled="freeze"
     />
   </div>
 </template>

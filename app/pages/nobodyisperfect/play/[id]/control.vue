@@ -35,9 +35,7 @@ function resetTimer() {
 watch(answersFrozen, freezeAnswers);
 
 async function freezeAnswers(frozen: boolean) {
-  Object.values(sendChannels).forEach((channel) => {
-    channel.send(frozen ? "FROZEN" : "FREE");
-  });
+  rtcSend(JSON.stringify({ t: frozen ? "f" : "u" }));
   const data = gdata.value;
   if (frozen && data) {
     await $fetch("/api/perfectanswers", {
@@ -64,8 +62,6 @@ function previousQuestion() {
   }
 }
 
-const peers: { [k: string]: RTCPeerConnection } = {};
-const sendChannels: { [k: string]: RTCDataChannel } = {};
 const config = useRuntimeConfig();
 const {
   data: rtcData,
@@ -83,52 +79,9 @@ watch(rtcStatus, (status) => {
   }
 });
 watch(rtcData, (message) => {
-  console.log(message);
   const msg = JSON.parse(message);
-  console.log("parsing succeeded");
   const userid = msg.userid;
-  if (msg.newConnection) {
-    peers[userid]?.close();
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete peers[userid];
-  }
-  if (!peers[userid]) {
-    peers[userid] = new RTCPeerConnection(peerConnectionConfig);
-    peers[userid].onicecandidate = (event) => {
-      if (event.candidate) {
-        rtcSend(
-          JSON.stringify({
-            to: userid,
-            ice: event.candidate,
-          }),
-        );
-      }
-    };
-    peers[userid].ondatachannel = (event) => {
-      const dataChannel = event.channel;
-      sendChannels[userid] = dataChannel;
-      dataChannel.onmessage = (event) => {
-        if (!answersFrozen.value) game.answers[userid] = event.data;
-      };
-    };
-  }
-  const peer = peers[userid];
-  if (msg.sdp) {
-    peer.setRemoteDescription(new RTCSessionDescription(msg.sdp)).then(() => {
-      peer.createAnswer().then((answer) => {
-        peer.setLocalDescription(answer).then(() => {
-          rtcSend(
-            JSON.stringify({
-              to: userid,
-              sdp: answer,
-            }),
-          );
-        });
-      });
-    });
-  } else if (msg.ice) {
-    peer.addIceCandidate(new RTCIceCandidate(msg.ice));
-  }
+  if (!answersFrozen.value) game.answers[userid] = msg.m;
 });
 </script>
 
@@ -142,23 +95,25 @@ watch(rtcData, (message) => {
             :key="u"
             class="flex items-center gap-4 text-lg text-white"
           >
-            <ControlButton @click="game.revealFromWhichUser(u)"
+            <UButton color="blue" @click="game.revealFromWhichUser(u)"
               >{{ getDisplayName(u) }}
-            </ControlButton>
-            <div
-              class="cursor-pointer bg-gray-800"
-              @click="game.revealAnswerFromUser(u)"
-            >
-              {{ game.answers[u] ?? "-" }}
-            </div>
+            </UButton>
+            <UButton @click="game.revealAnswerFromUser(u)" color="blue">👀</UButton>
+            <UTextarea
+              v-model="game.answers[u]"
+              resize
+              class="w-96"
+            />
           </div>
           <div class="flex items-center gap-4 text-lg text-white">
-            <ControlButton @click="game.revealFromWhichUser('RICHTIG')"
+            <UButton color="blue" @click="game.revealFromWhichUser('RICHTIG')"
               >RICHTIG
-            </ControlButton>
+            </UButton>
+            <UButton color="blue" @click="game.revealAnswerFromUser('RICHTIG')"
+              >👀
+            </UButton>
             <div
               class="cursor-pointer bg-gray-800"
-              @click="game.revealAnswerFromUser('RICHTIG')"
             >
               {{
                 gdata.questions?.[game.currentQuestionIndex]?.answer?.title ??
@@ -168,7 +123,7 @@ watch(rtcData, (message) => {
           </div>
           <UCheckbox v-model="answersFrozen" label="Antworten gefreezed" />
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col z-10">
           <template v-for="u of gdata!.participantsList" :key="u">
             <div class="mt-8 text-lg text-white">
               {{ getDisplayName(u) }}
@@ -190,8 +145,8 @@ watch(rtcData, (message) => {
               </ControlButton>
               <ControlButton
                 @click="game.selectAnswerForUser(u, totalAnswerCount)"
-                >Reset</ControlButton
-              >
+                >Reset
+              </ControlButton>
             </div>
           </template>
         </div>
@@ -225,12 +180,12 @@ watch(rtcData, (message) => {
               resetAnswers();
               game.nextQuestion();
             "
-            >Next question</ControlButton
-          >
+            >Next question
+          </ControlButton>
           <ControlButton @click="resetAnswers()">Reset answers</ControlButton>
           <ControlButton @click="previousQuestion()"
-            >Previous question</ControlButton
-          >
+            >Previous question
+          </ControlButton>
         </div>
         <div class="flex items-center gap-2">
           <ControlButton
@@ -238,8 +193,8 @@ watch(rtcData, (message) => {
               resetTimer();
               resume();
             "
-            >Start timer from start</ControlButton
-          >
+            >Start timer from start
+          </ControlButton>
           <UInput
             v-model="game.timerStart"
             size="2xs"
@@ -255,8 +210,8 @@ watch(rtcData, (message) => {
               pause();
               game.switchToAnswerScreen();
             "
-            >Jump directly to answer screen</ControlButton
-          >
+            >Jump directly to answer screen
+          </ControlButton>
         </div>
       </div>
     </div>

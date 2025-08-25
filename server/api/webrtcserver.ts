@@ -9,33 +9,23 @@ export default defineWebSocketHandler({
     console.log("SESSION", session.user.id, peer.id);
     peerIDToUserID[peer.id] = session.user.id;
     peers[session.user.id] = peer;
-    if (host) {
-      const sendMsg = JSON.stringify({
-        userid: session.user.id,
-        newConnection: true,
-      });
-      peers[host].send(sendMsg);
-    }
   },
   async message(peer, message) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const msg: any = message.json();
-    console.log(peer.id);
-    console.log("V");
-    console.log(msg);
     if (msg.host) {
       console.log("HOST MESSAGE IT IS");
       host = peer.id;
       peers[host] = peer;
-      peer.peers.forEach((p) => {
-        if (peer.id !== p.id) {
-          p.send(JSON.stringify({ reconnect: true }));
-        }
-      });
       return;
     }
     if (peer.id === host) {
-      peers[msg.to].send(JSON.stringify(msg));
+      Object.entries(peers).forEach(([pid, p]) => {
+        if(pid !== host) {
+          p.send(JSON.stringify(msg));
+        }
+      })
+      // peers[msg.to].send(JSON.stringify(msg));
     } else {
       if (host) {
         const sendMsg = JSON.stringify({
