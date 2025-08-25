@@ -46,14 +46,13 @@ export default function <T extends GameConfigBase, GUserData>(gameId: string) {
   function usersUpdatedHandler() {
     const data = gdata.value;
     if (data) {
-      userdata.value = {
-        ...userdata.value,
-        ...Object.fromEntries(
-          (data.participantsList as string[])
-            .filter((p) => !(p in userdata.value))
-            .map((p) => [p, { ...getDefaultGameUserData(gameId) }]),
-        ),
-      };
+      const oldData = userdata.value;
+      userdata.value = Object.fromEntries(
+        data.participantsList.map((p: string) => [
+          p,
+          oldData[p] || ({ ...getDefaultGameUserData(gameId) } as GUserData),
+        ]),
+      );
     }
   }
 
