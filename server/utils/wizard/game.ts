@@ -73,7 +73,10 @@ export class Game {
   stitchValue = 0;
   forcedCards: Card[] = [];
 
-  allCards: Card[] = (() => {
+  allCards: Card[] | null = null;
+
+  getAllCards(): Card[] {
+    if (this.allCards) return this.allCards;
     const cards: Card[] = [];
     const colors = [Color.Red, Color.Yellow, Color.Green, Color.Blue];
 
@@ -105,9 +108,9 @@ export class Game {
         FLEXTAPE,
       );
     }
-
+    this.allCards = cards;
     return cards;
-  })();
+  }
 
   private checkRule(rule: Rule) {
     return this.rules[rule] ?? Rules[rule][0];
@@ -204,7 +207,7 @@ export class Game {
 
   async nextRound(nodelay: boolean) {
     await new Promise((resolve) => setTimeout(resolve, nodelay ? 0 : 1000));
-    if (++this.round * this.players.length > this.allCards.length) {
+    if (++this.round * this.players.length > this.getAllCards().length) {
       this.endGame();
       return;
     }
@@ -230,7 +233,7 @@ export class Game {
   }
 
   giveCards(round: number) {
-    const stack = getShuffled(this.allCards);
+    const stack = getShuffled(this.getAllCards());
     this.players.forEach((player) => (this.cards[player] = []));
     this.forcedCards.forEach((card) => removeCard(stack, card));
     const mutableForced = this.forcedCards.slice();
